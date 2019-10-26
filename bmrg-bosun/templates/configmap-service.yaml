@@ -1,0 +1,29 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "bosun" -}}
+{{- $tier := "config" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+data:
+  application.properties: |
+    server.port=8080
+    spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:{{ $.Values.database.mongodb.password }}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
+    {{- range $k, $v := $.Values.service }}
+    {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $ "tier" "service" "component" $k ) }}
+    {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}/services/{{ $k }}{{ else }}{{ $k }}.service.root=/services/{{ $k }}{{ end }}
+    {{- end }}
+    {{ include "bmrg.core.services" $ | indent 4 }}
+    {{- if $.Values.general.enable.debug }}
+    logging.level.org.springframework.web.client.RestTemplate=DEBUG
+    logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
+    logging.level.root=INFO
+    {{- end }}
+    swagger.enable={{ $.Values.general.enable.apidocs }}
+    boomerang.proxy.enable={{ $.Values.proxy.enable }}
+    boomerang.proxy.host={{ $.Values.proxy.host }}
+    boomerang.proxy.port={{ $.Values.proxy.port }}
+    boomerang.proxy.ignore={{ $.Values.proxy.ignore }}
+    opa.host={{- include "bmrg.name" (dict "context" $ "tier" "opa") }}

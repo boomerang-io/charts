@@ -1,0 +1,104 @@
+# This is a YAML-formatted file.
+# Declare variables, and default values, to be passed into your templates.
+
+#General Configuration
+general:
+  namePrefix:
+  enable:
+    apidocs: false
+    debug: false
+    standalone: true
+
+#Boomerang Integrations
+boomerang:
+  core:
+    namePrefix: bmrg-core
+
+# General Image Configuration
+image:
+  registry: tools.boomerangplatform.net:8500
+  pullPolicy: IfNotPresent
+
+# Job Configuraiton
+job:
+  data:
+    enabled: false
+    profile: bosun
+    image:
+      repository: /ise/bmrg-util-mongo
+      tag: 0.0.1
+
+# Web App Configuration
+web:
+  bosun:
+    image:
+      repository: /ise/bmrg-app-citadel
+      tag: 0.0.77-76
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+
+# Micro Service Configuration
+# Note: There are if conditions in the template referencing the service name i.e. urbancode
+service:
+  bosun:
+    image:
+      repository: /ise/bmrg-service-bosun
+      tag: 1.0.14-82
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+  repository:
+    image:
+      repository: /ise/bmrg-service-repository
+      tag: 1.0.12-35
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: semi-trusted
+    
+opa:
+  image:
+    repository: openpolicyagent/opa
+    tag: 0.13.5
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  zone: trusted
+
+database:
+  mongodb:
+    host: bmrg-mdb001-ibm-mongodb-dev
+    port: 27017
+    user: boomerang
+    password: passw0rd
+
+ingress:
+  enabled: false
+  root: /cicd
+  host: cloud.boomerangplatform.net
+  tlsSecretName: bmrg-tls-cloud
+  auth:
+    enabled: true
+    url:
+      internal: http://bmrg-auth-proxy.bmrg-dev.svc.cluster.local/cicd/oauth/auth
+      external: https://$host/cicd/oauth/start?rd=$uri
+
+hostAliases: []
+
+proxy:
+  enable: false
+  host:
+  port:
+  ignore:
+
+monitoring:
+  newrelic:
+    apm:
+      name: Boomerang Private
+      key:
+    browser:
+      id:
+      key: 

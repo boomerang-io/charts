@@ -1,0 +1,89 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "bosun" -}}
+{{- $tier := "service" -}}
+{{- range $k, $v := $.Values.service }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+spec:
+  replicas: {{ $v.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
+    spec:
+      {{- if $.Values.monitoring.newrelic.apm.key }}
+      initContainers:
+        - name: util-newrelicapm-cntr
+          image: {{ $.Values.image.registry }}/ise/bmrg-util-newrelicapm:5.6.0
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: apm-newrelic
+            mountPath: /opt/newrelic
+      {{- end }}
+      containers:
+        - name: "{{ $tier }}-{{ $k }}-cntr"
+          image: "{{ $.Values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
+          imagePullPolicy: "{{ $.Values.image.pullPolicy }}"
+          env:
+          - name: JAVA_OPTS
+            value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $.Values.monitoring.newrelic.apm.key }}{{- if $.Values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $.Values.proxy.host }} -Dnewrelic.config.proxy_port={{ $.Values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}{{- if eq $k "urbancode" }} -Dspring.datasource.url=jdbc:mysql://10.190.20.153:3306/ibm_ucd{{- end }}{{- if eq $k "controller" }} -Dspring.profiles.active=cicd{{- end }}'
+          - name: NEW_RELIC_LICENSE_KEY
+            value: {{ $.Values.monitoring.newrelic.apm.key }}
+          - name: NEW_RELIC_APP_NAME
+            value: '{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}'
+          - name: NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
+            value: '{{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}'
+          ports:
+          - containerPort: 8080
+            name: {{ $platform }}-port-cntr
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: {{ $platform }}-port-cntr
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            requests:
+              memory: 1Gi
+          volumeMounts:
+          - name: application-config
+            mountPath: "/data"
+            readOnly: true
+          {{- if $.Values.monitoring.newrelic.apm.key }}
+          - name: apm-newrelic
+            mountPath: /opt/newrelic
+          {{- end }}
+      {{- with $.Values.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      volumes:
+      - name: application-config
+        configMap:
+          name: {{ include "bmrg.name" (dict "context" $ "tier" "config" ) }}
+          items:
+          - key: application.properties
+            path: application.properties
+      {{- if $.Values.monitoring.newrelic.apm.key }}
+      - name: apm-newrelic
+        emptyDir: {}
+      {{- end }}
+      imagePullSecrets:
+      - name: boomerang.registrykey
+      restartPolicy: Always
+---
+{{- end }}

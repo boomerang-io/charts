@@ -1,0 +1,19 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "bosun" -}}
+{{- $tier := "opa" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+spec:
+  type: {{ $.Values.opa.service.type }}
+  ports:
+    - name: {{ $platform }}-port-svc
+      port: 8181
+      targetPort: {{ $platform }}-port-cntr
+      protocol: TCP
+  selector:
+    {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.opa.zone) | nindent 4 }}
+  sessionAffinity: None

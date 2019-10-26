@@ -1,0 +1,42 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "bosun" -}}
+{{- $tier := "opa" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+spec:
+  replicas: {{ $.Values.opa.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.opa.zone) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.opa.zone ) | nindent 8 }}
+    spec:
+      containers:
+        - name: "{{ $tier }}-cntr"
+          image: "{{ $.Values.opa.image.repository }}:{{ $.Values.opa.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+          - name: {{ $platform }}-port-cntr
+            containerPort: 8181
+            protocol: TCP
+          args:
+          - "run"
+          - "--ignore=.*"
+          - "--server"
+          - "/policies"
+          volumeMounts:
+          - readOnly: true
+            mountPath: "/policies"
+            name: policy-config
+      volumes:
+      - name: policy-config
+        configMap:
+          name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
