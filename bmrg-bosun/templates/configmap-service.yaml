@@ -23,8 +23,14 @@ data:
     logging.level.root=INFO
     {{- end }}
     swagger.enable={{ $.Values.general.enable.apidocs }}
+    boomerang.environment={{ .Release.Namespace }}
     boomerang.proxy.enable={{ $.Values.proxy.enable }}
     boomerang.proxy.host={{ $.Values.proxy.host }}
     boomerang.proxy.port={{ $.Values.proxy.port }}
     boomerang.proxy.ignore={{ $.Values.proxy.ignore }}
     opa.host={{- include "bmrg.name" (dict "context" $ "tier" "opa") }}
+    opentracing.jaeger.enabled={{ $.Values.monitoring.jaeger.enabled }}
+    opentracing.jaeger.udp-sender.host={{ $.Values.monitoring.jaeger.agent.host }}.{{ $.Values.monitoring.jaeger.namespace }}
+    opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
+    opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
+    opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}
