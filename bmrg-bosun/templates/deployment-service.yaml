@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+    checksum/config: {{ include (print $.Template.BasePath "/configmap-service.yaml") $ | sha256sum }}
 spec:
   replicas: {{ $v.replicaCount }}
   selector:
