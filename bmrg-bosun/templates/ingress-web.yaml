@@ -24,9 +24,9 @@ spec:
       http:
         paths:
           {{- if $.Values.ingress.root }}
-          - path: {{ $.Values.ingress.root }}/{{ $tier }}/{{ $k }}
+          - path: {{ $.Values.ingress.root }}/{{ $product }}/{{ $tier }}/{{ $k }}
           {{- else }}
-          - path: /{{ $tier }}/{{ $k }}
+          - path: /{{ $product }}/{{ $tier }}/{{ $k }}
           {{- end }}
             backend:
               serviceName: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}

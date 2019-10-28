@@ -25,7 +25,7 @@ job:
     enabled: false
     profile: bosun
     image:
-      repository: boomerang-io/bmrg-util-mongo
+      repository: boomerang-io/bmrg-bosun-loader
       tag: 0.0.1
 
 # Web App Configuration
@@ -74,10 +74,11 @@ database:
     port: 27017
     user: boomerang
     password: passw0rd
+    secretName: 
 
 ingress:
   enabled: false
-  root: /cicd
+  root: 
   host: cloud.boomerangplatform.net
   tlsSecretName: bmrg-tls-cloud
   auth:
