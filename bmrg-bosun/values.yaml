@@ -26,7 +26,7 @@ job:
     profile: bosun
     image:
       repository: boomerang-io/boomerang.loader.bosun/bmrg-bosun-loader
-      tag: 0.0.3
+      tag: 0.0.4
 
 # Web App Configuration
 web:
@@ -45,7 +45,7 @@ service:
   bosun:
     image:
       repository: boomerang-io/boomerang.service.bosun/bmrg-service-bosun
-      tag: 2.0.15
+      tag: 2.4.0
     replicaCount: 1
     service:
       type: ClusterIP
