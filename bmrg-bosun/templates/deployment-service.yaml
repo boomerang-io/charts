@@ -42,6 +42,11 @@ spec:
             value: '{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}'
           - name: NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
             value: '{{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}'
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ if $.Values.database.mongodb.secretName }}{{ $.Values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}{{ end }}
+                key: {{ if $.Values.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
           ports:
           - containerPort: 8080
             name: {{ $platform }}-port-cntr

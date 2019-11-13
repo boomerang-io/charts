@@ -10,7 +10,7 @@ metadata:
 data:
   application.properties: |
     server.port=8080
-    spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:{{ $.Values.database.mongodb.password }}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
+    spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
     {{- range $k, $v := $.Values.service }}
     boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $ "tier" "service" "component" $k ) }}
     boomerang.bosun.service.{{ $k }}.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/service/{{ $k }}
