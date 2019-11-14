@@ -3,37 +3,37 @@
 
 #General Configuration
 general:
-  namePrefix:
+  namePrefix: bmrg-bosun
   enable:
     apidocs: false
     debug: false
     standalone: true
 
 #Boomerang Integrations
-boomerang:
-  core:
-    namePrefix: bmrg-core
+#boomerang:
+core:
+  namePrefix: bmrg-core
 
 # General Image Configuration
 image:
-  registry: docker.pkg.github.com
+  registry: docker.pkg.github.com/boomerang-io
   pullPolicy: IfNotPresent
 
 # Job Configuraiton
 job:
   data:
-    enabled: false
+    enabled: true
     profile: bosun
     image:
-      repository: boomerang-io/boomerang.loader.bosun/bmrg-bosun-loader
+      repository: /boomerang.bosun.loader/bmrg-bosun-loader
       tag: 0.0.4
 
 # Web App Configuration
 web:
   bosun:
     image:
-      repository: boomerang-io/boomerang.web.bosun/bmrg-web-bosun
-      tag: 0.0.14
+      repository: /boomerang.bosun.web/bmrg-web-bosun
+      tag: 0.0.22
     replicaCount: 1
     service:
       type: ClusterIP
@@ -44,15 +44,15 @@ web:
 service:
   bosun:
     image:
-      repository: boomerang-io/boomerang.service.bosun/bmrg-service-bosun
-      tag: 2.4.0
+      repository: /boomerang.bosun.service/bmrg-service-bosun
+      tag: 2.4.1
     replicaCount: 1
     service:
       type: ClusterIP
     zone: untrusted
   repository:
     image:
-      repository: boomerang-io/boomerang.service.repository/bmrg-service-repository
+      repository: /boomerang.repository.service/bmrg-service-repository
       tag: 7.0.3
     replicaCount: 1
     service:
