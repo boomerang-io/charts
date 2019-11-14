@@ -17,6 +17,7 @@ data:
     {{- end }}
     {{ include "bmrg.core.services" $ | indent 4 }}
     boomerang.cicd.service.ci.host=http://bmrg-cicd-service-ci
+    opa.host={{- include "bmrg.name" (dict "context" $ "tier" "opa") }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
@@ -28,9 +29,3 @@ data:
     boomerang.proxy.host={{ $.Values.proxy.host }}
     boomerang.proxy.port={{ $.Values.proxy.port }}
     boomerang.proxy.ignore={{ $.Values.proxy.ignore }}
-    opa.host={{- include "bmrg.name" (dict "context" $ "tier" "opa") }}
-    opentracing.jaeger.enabled={{ $.Values.monitoring.jaeger.enabled }}
-    opentracing.jaeger.udp-sender.host={{ $.Values.monitoring.jaeger.agent.host }}.{{ $.Values.monitoring.jaeger.namespace }}
-    opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
-    opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
-    opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}

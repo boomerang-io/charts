@@ -1,5 +1,5 @@
 dependencies:
   - name: bmrg-common
     repository: "@boomerang-charts"
-    version: ~0.2.5
+    version: ~0.2.7
     alias: bmrgcommon

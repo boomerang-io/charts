@@ -10,9 +10,14 @@ general:
     standalone: true
 
 #Boomerang Integrations
-#boomerang:
-core:
-  namePrefix: bmrg-core
+#Needed if general.enable.standalone=false
+boomerang:
+  core:
+    namePrefix: bmrg-core
+    namespace: #needed if installed in different namespace
+  cicd:
+    namePrefix: bmrg-cicd
+    namespace: #needed if installed in different namespace
 
 # General Image Configuration
 image:
@@ -101,5 +106,5 @@ monitoring:
       name: Boomerang Private
       key:
     browser:
-      id:
+      id: 
       key: 

@@ -7,8 +7,6 @@ metadata:
   name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
-  annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
 spec:
   replicas: {{ $.Values.opa.replicaCount }}
   selector:
@@ -31,4 +29,26 @@ spec:
           - "run"
           - "--ignore=.*"
           - "--server"
-          - "/policies"
+          - "--config-file"
+          - "/config/config.yaml"
+          volumeMounts:
+          - readOnly: true
+            mountPath: "/config"
+            name: policy-config
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              port: 8181
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health?bundle=true
+              scheme: HTTP
+              port: 8181
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+      - name: policy-config
+        configMap:
+          name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
