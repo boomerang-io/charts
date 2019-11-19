@@ -1,26 +1,28 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
 {{- $tier := "opa" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 spec:
-  replicas: {{ $.Values.opa.replicaCount }}
+  replicas: {{ $values.opa.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.opa.zone) | nindent 6 }}
+      {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "zone" $values.opa.zone ) | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.opa.zone ) | nindent 8 }}
+        {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "zone" $values.opa.zone ) | nindent 8 }}
     spec:
       containers:
         - name: "{{ $tier }}-cntr"
-          image: "{{ $.Values.opa.image.repository }}:{{ $.Values.opa.image.tag }}"
-          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          image: "{{ $values.opa.image.repository }}:{{ $values.opa.image.tag }}"
+          imagePullPolicy: {{ $values.image.pullPolicy }}
           ports:
           - name: {{ $platform }}-port-cntr
             containerPort: 8181
@@ -51,4 +53,4 @@ spec:
       volumes:
       - name: policy-config
         configMap:
-          name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+          name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}

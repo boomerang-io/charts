@@ -1,14 +1,16 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
 {{- $tier := "opa" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 spec:
-  type: {{ $.Values.opa.service.type }}
+  type: {{ $values.opa.service.type }}
   ports:
     - name: {{ $platform }}-port-svc
       port: 8181

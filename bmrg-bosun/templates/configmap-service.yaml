@@ -1,31 +1,34 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
 {{- $tier := "config" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 data:
   application.properties: |
     server.port=8080
-    spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
-    {{- range $k, $v := $.Values.service }}
-    boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $ "tier" "service" "component" $k ) }}
-    boomerang.bosun.service.{{ $k }}.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/service/{{ $k }}
+    spring.data.mongodb.uri=mongodb://{{ $values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $values.database.mongodb.host }}:{{ $values.database.mongodb.port }}/boomerang
+    {{- range $k, $v := $values.service }}
+    boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $context "tier" "service" "component" $k ) }}
+    boomerang.bosun.service.{{ $k }}.root={{- if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/service/{{ $k }}
     {{- end }}
-    {{ include "bmrg.core.services" $ | indent 4 }}
-    boomerang.cicd.service.ci.host=http://bmrg-cicd-service-ci
-    opa.host={{- include "bmrg.name" (dict "context" $ "tier" "opa") }}
-    {{- if $.Values.general.enable.debug }}
+    {{ include "bmrg.core.services.v2" $context | indent 4 }}
+    boomerang.cicd.service.ci.host=bmrg-cicd-services-ci
+    opa.host={{- include "bmrg.name" (dict "context" $context "tier" "opa") }}
+    {{- if $values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
     logging.level.root=INFO
     {{- end }}
-    swagger.enable={{ $.Values.general.enable.apidocs }}
+    swagger.enable={{ $values.general.enable.apidocs }}
     boomerang.environment={{ .Release.Namespace }}
-    boomerang.proxy.enable={{ $.Values.proxy.enable }}
-    boomerang.proxy.host={{ $.Values.proxy.host }}
-    boomerang.proxy.port={{ $.Values.proxy.port }}
-    boomerang.proxy.ignore={{ $.Values.proxy.ignore }}
+    boomerang.standalone={{ $values.general.enable.standalone }}
+    boomerang.proxy.enable={{ $values.proxy.enable }}
+    boomerang.proxy.host={{ $values.proxy.host }}
+    boomerang.proxy.port={{ $values.proxy.port }}
+    boomerang.proxy.ignore={{ $values.proxy.ignore }}

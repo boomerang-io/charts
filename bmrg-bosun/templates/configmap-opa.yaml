@@ -1,17 +1,18 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
 {{- $tier := "opa" -}}
+{{- $context := . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 data:
   config.yaml: |
     services:
       bosun:
-        url: http://{{- include "bmrg.name" (dict "context" $ "tier" "service" "component" "bosun" ) }}/internal
+        url: http://{{- include "bmrg.name" (dict "context" $context "tier" "service" "component" "bosun" ) }}/internal
 
     bundles:
       bosun:

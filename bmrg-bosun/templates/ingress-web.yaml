@@ -1,41 +1,39 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
 {{- $tier := "web" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 {{- if $.Values.ingress.enabled -}}
 {{- range $k, $v := $.Values.web }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-    ingress.kubernetes.io/auth-signin: "{{ $.Values.ingress.auth.url.external }}"
-    ingress.kubernetes.io/auth-url: "{{ $.Values.ingress.auth.url.internal }}"
+    ingress.kubernetes.io/auth-signin: "{{ $values.ingress.auth.url.external }}"
+    ingress.kubernetes.io/auth-url: "{{ $values.ingress.auth.url.internal }}"
     ingress.kubernetes.io/configuration-snippet: |
-      {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
-      {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_access_control" $context | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_authorization" $context | nindent 6 }}
     ingress.kubernetes.io/ssl-redirect: "true"
     ingress.kubernetes.io/client-max-body-size: 1m
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: {{ $.Values.ingress.host }}
+    - host: {{ $values.ingress.host }}
       http:
         paths:
-          {{- if $.Values.ingress.root }}
-          - path: {{ $.Values.ingress.root }}/{{ $product }}/{{ $tier }}/{{ $k }}
-          {{- else }}
-          - path: /{{ $product }}/{{ $tier }}/{{ $k }}
-          {{- end }}
+          - path: {{ if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}
             backend:
-              serviceName: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+              serviceName: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
               servicePort: {{ $platform }}-port-svc
   tls:
     - hosts:
-        - {{ $.Values.ingress.host }}
-      {{- if $.Values.ingress.tlsSecretName }}
-      secretName: {{ $.Values.ingress.tlsSecretName }}
+        - {{ $values.ingress.host }}
+      {{- if $values.ingress.tlsSecretName }}
+      secretName: {{ $values.ingress.tlsSecretName }}
       {{- end }}
 ---
 {{- end }}
