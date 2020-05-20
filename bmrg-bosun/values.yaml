@@ -83,14 +83,16 @@ database:
 
 ingress:
   enabled: false
-  root: 
+  root: /cicd
   host: cloud.boomerangplatform.net
   tlsSecretName: bmrg-tls-cloud
-  auth:
-    enabled: true
-    url:
-      internal: http://bmrg-auth-proxy.bmrg-dev.svc.cluster.local/cicd/oauth/auth
-      external: https://$host/cicd/oauth/start?rd=$uri
+
+auth:
+  enabled: true
+  mode: basic
+  serviceName: bmrg-auth-proxy
+  namespace: 
+  prefix: /oauth
 
 hostAliases: []
 

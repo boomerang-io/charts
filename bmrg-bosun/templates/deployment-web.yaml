@@ -43,16 +43,20 @@ spec:
               value: "{{ $values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
-            - name: BASE_WWW_ENV_URL
-              value: "https://www.boomerangplatform.net"
             - name: BASE_LAUNCH_ENV_URL
-              value: "https://{{ $values.ingress.host }}{{ $values.ingress.root }}"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}"
             - name: BASE_APPS_ENV_URL
-              value: "https://{{ $values.ingress.host }}{{ $values.ingress.root }}/apps"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/apps"
             - name: BASE_SERVICE_ENV_URL
-              value: "https://{{ $values.ingress.host }}{{ $values.ingress.root }}/services"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/services"
+            - name: PRODUCT_APP_ENV_URL
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/web"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $values.ingress.host }}{{ $values.ingress.root }}/{{ $product }}/service"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/service"
+            - name: CICD_PRODUCT_APP_ENV_URL
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/cicd/apps"
+            - name: CICD_PRODUCT_SERVICE_ENV_URL
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/cicd/services"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr

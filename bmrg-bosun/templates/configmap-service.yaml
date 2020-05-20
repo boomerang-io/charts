@@ -17,7 +17,7 @@ data:
     boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $context "tier" "service" "component" $k ) }}
     boomerang.bosun.service.{{ $k }}.root={{- if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/service/{{ $k }}
     {{- end }}
-    {{ include "bmrg.core.services.v2" $context | indent 4 }}
+    {{ include "bmrg.core.services" $context | indent 4 }}
     boomerang.cicd.service.ci.host=bmrg-cicd-services-ci
     opa.host={{- include "bmrg.name" (dict "context" $context "tier" "opa") }}
     {{- if $values.general.enable.debug }}
@@ -28,7 +28,7 @@ data:
     swagger.enable={{ $values.general.enable.apidocs }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.standalone={{ $values.general.enable.standalone }}
-    boomerang.proxy.enable={{ $values.proxy.enable }}
-    boomerang.proxy.host={{ $values.proxy.host }}
-    boomerang.proxy.port={{ $values.proxy.port }}
-    boomerang.proxy.ignore={{ $values.proxy.ignore }}
+    proxy.enable={{ $values.proxy.enable }}
+    proxy.host={{ $values.proxy.host }}
+    proxy.port={{ $values.proxy.port }}
+    proxy.ignore={{ $values.proxy.ignore }}

@@ -12,11 +12,14 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-    ingress.kubernetes.io/auth-signin: "{{ $values.ingress.auth.url.external }}"
-    ingress.kubernetes.io/auth-url: "{{ $values.ingress.auth.url.internal }}"
+    {{- if eq $.Values.auth.enabled true }}
+    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
+    {{- end }}
     ingress.kubernetes.io/configuration-snippet: |
-      {{- include "bmrg.ingress.config.auth_proxy_access_control" $context | nindent 6 }}
-      {{- include "bmrg.ingress.config.auth_proxy_authorization" $context | nindent 6 }}
+      {{- if eq $.Values.auth.enabled true }}
+      {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
+      {{- end }}
       if ($request_method = 'OPTIONS') {
       add_header 'Access-Control-Allow-Origin' $http_origin;
       add_header 'Access-Control-Allow-Credentials' 'true';
