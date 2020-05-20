@@ -3,7 +3,7 @@ entries:
   bmrg-bosun:
   - apiVersion: v1
     appVersion: 1.0.0
-    created: 2020-05-20T18:30:25.031821+10:00
+    created: 2020-05-20T19:24:53.086171+10:00
     description: Boomerang Bosun
     digest: e041294e3c0109064e7a9d909313b3e9b3ac7374b3ee8cdf923260e000a8a414
     home: https://useboomerang.io
@@ -12,19 +12,6 @@ entries:
     - bosun
     name: bmrg-bosun
     urls:
-    - https://github.com/boomerang-io/boomerang.charts/bmrg-bosun-1.2.5/bmrg-bosun-1.2.5.tgz
+    - https://github.com/boomerang-io/boomerang.charts/releases/download/bmrg-bosun-1.2.5/bmrg-bosun-1.2.5.tgz
     version: 1.2.5
-  - apiVersion: v1
-    appVersion: 1.0.0
-    created: 2020-05-20T12:09:03.617955+10:00
-    description: Boomerang Bosun
-    digest: 3513b7823f2c177e903b22369d854414bea97e541d75f568019580bc3c7dc54b
-    home: https://useboomerang.io
-    keywords:
-    - boomerang
-    - bosun
-    name: bmrg-bosun
-    urls:
-    - https://github.com/boomerang-io/boomerang.charts/releases/download/bmrg-bosun-1.2.4/bmrg-bosun-1.2.4.tgz
-    version: 1.2.4
-generated: 2020-05-20T18:30:25.029537+10:00
+generated: 2020-05-20T19:24:53.083495+10:00
