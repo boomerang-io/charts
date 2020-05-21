@@ -3,9 +3,9 @@ entries:
   bmrg-bosun:
   - apiVersion: v1
     appVersion: 1.0.0
-    created: 2020-05-21T08:18:29.688439747Z
+    created: 2020-05-21T08:19:11.776900206Z
     description: Boomerang Bosun
-    digest: 19297e9f5a7d028d88ee1fd3aadde2f62d4e7ce2b49eb3b7642d567675f9e39f
+    digest: 15e8251fa07469f44d571114b0b79aeff56e9deeffc3300d373c0ab2c2599195
     home: https://useboomerang.io
     keywords:
     - boomerang
@@ -44,9 +44,9 @@ entries:
   bmrg-flow:
   - apiVersion: v1
     appVersion: 2.2.0
-    created: 2020-05-21T08:18:30.593568794Z
+    created: 2020-05-21T08:19:17.857070815Z
     description: Boomerang Flow
-    digest: c70c34e218fc89b70ed1a908ed6a8dfaa72e25551d0bafc7ac8fdda136ced220
+    digest: 9c76951128dd23672562871b9d3214befde6bc60ef24cfe4f6b6230e16e97619
     home: https://useboomerang.io
     keywords:
     - boomerang
@@ -73,4 +73,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/boomerang.charts/releases/download/bmrg-flow-3.0.0/bmrg-flow-3.0.0.tgz
     version: 3.0.0
-generated: 2020-05-21T08:18:30.592001978Z
+generated: 2020-05-21T08:19:17.855499212Z
