@@ -1,0 +1,145 @@
+# Default values for bmrg-apps.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#General Configuration
+general:
+  namePrefix:
+  enable:
+    apidocs: false
+    debug: false
+    standalone: true
+
+workers:
+  security:
+    enable: true
+    policy: ibm-privileged-psp
+  logging: 
+    type: default
+    host: 
+    port: 
+    secret: 
+  enable:
+    deletion: false
+    dedicatedNodes: false
+  
+core:
+  namePrefix: bmrg-core
+
+# General Image Configuration
+image:
+  registry: tools.boomerangplatform.net:8500/ise
+  pullPolicy: IfNotPresent
+
+# Job Configuraiton
+job:
+  data:
+    enabled: true
+    profile: flow
+    image:
+      repository: /bmrg-util-mongo
+      tag: 0.2.10-15
+
+# App Configuration
+apps:
+  flow:
+    image:
+      repository: /bmrg-app-flow
+      tag: 2.1.6-619
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+
+# Micro Service Configuration
+# Note: There are if conditions in the template referencing the service name i.e. urbancode
+services:
+  controller:
+    image:
+      repository: /bmrg-service-controller
+      tag: 4.0.0-rc.1-314
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: semi-trusted
+  flow:
+    image:
+      repository: /bmrg-service-flow
+      tag: 2.3.0-246
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+  listener:
+    image:
+      repository: /bmrg-service-actionlistener
+      tag: 1.0.4-7
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+  webhook:
+    image:
+      repository: /bmrg-flow-service-webhook
+      tag: 1.2.3-33
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+
+database:
+  mongodb:
+    host: bmrg-mdb001-ibm-mongodb-dev
+    port: 27017
+    user: boomerang
+    password: passw0rd
+    secretName: 
+
+ingress:
+  enabled: false
+  root: /flow
+  host: cloud.boomerangplatform.net
+  tlsSecretName: bmrg-tls-cloud
+
+auth:
+  enabled: false
+  mode: basic
+  serviceName: bmrg-auth-proxy
+  namespace: bmrg-core
+  prefix: /oauth
+  tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
+
+hostAliases: []
+
+proxy:
+  enable: false
+  host:
+  port:
+
+monitoring:
+  newrelic:
+    apm:
+      name: Boomerang Private
+      key:
+      image:
+        repository: /bmrg-util-newrelicapm
+        tag: 5.6.0
+    browser:
+      id:
+      key:
+  jaeger: 
+    enabled: false
+    namespace: 
+    agent: 
+      host: jaeger-dev-agent
+      port: 6831
+    collector: 
+      host: jaeger-dev-collector
+      port: 14268
+    remoteControlledSampler: 
+      host: jaeger-dev-agent
+      port: 5778
+
+nats:
+  url: nats://bmrg-nats-operator:4222
+  cluster: bmrg-nats-streamer

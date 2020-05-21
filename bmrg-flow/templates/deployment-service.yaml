@@ -1,0 +1,107 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "flow" -}}
+{{- $tier := "services" -}}
+{{- range $k, $v := $.Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+spec:
+  replicas: {{ $v.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
+    spec:
+      {{- if and (eq $k "controller") ($.Values.workers.security.enable) }}
+      serviceAccountName: {{ $platform }}-{{ $product }}-controller
+      {{- end }}
+      {{- if $.Values.monitoring.newrelic.apm.key }}
+      initContainers:
+        - name: util-newrelicapm-cntr
+          image: {{ $.Values.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: apm-newrelic
+            mountPath: /opt/newrelic
+      {{- end }}
+      containers:
+        - name: "{{ $tier }}-{{ $k }}-cntr"
+          image: "{{ $.Values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
+          imagePullPolicy: "{{ $.Values.image.pullPolicy }}"
+          env:
+          - name: JAVA_OPTS
+            value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $.Values.monitoring.newrelic.apm.key }}{{- if $.Values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $.Values.proxy.host }} -Dnewrelic.config.proxy_port={{ $.Values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}'
+          - name: NEW_RELIC_LICENSE_KEY
+            value: {{ $.Values.monitoring.newrelic.apm.key }}
+          - name: NEW_RELIC_APP_NAME
+            value: '{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}'
+          - name: NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
+            value: '{{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}'
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ if $.Values.database.mongodb.secretName }}{{ $.Values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}{{ end }}
+                key: {{ if $.Values.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
+          ports:
+          - containerPort: 8080
+            name: {{ $platform }}-port-cntr
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: {{ $platform }}-port-cntr
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            requests:
+              memory: 1Gi
+          volumeMounts:
+          - name: application-config
+            mountPath: "/data"
+            readOnly: true
+          {{- if $.Values.monitoring.newrelic.apm.key }}
+          - name: apm-newrelic
+            mountPath: /opt/newrelic
+          {{- end }}
+          {{- if and (eq $k "controller") (eq $.Values.workers.logging.type "elastic" ) }}
+          - name: secret-volume
+            readOnly: true
+            mountPath: "/etc/secrets"
+          command:
+          - "sh"
+          - "-c"
+          - "$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+          {{- end }}
+      volumes:
+      - name: application-config
+        configMap:
+          name: {{ include "bmrg.name" (dict "context" $ "tier" "config" ) }}
+          items:
+          - key: application.properties
+            path: application.properties
+      {{- if $.Values.monitoring.newrelic.apm.key }}
+      - name: apm-newrelic
+        emptyDir: {}
+      {{- end }}
+      {{- if and (eq $k "controller") (eq $.Values.workers.logging.type "elastic" ) }}
+      - name: secret-volume
+        secret:
+          secretName: {{ $.Values.workers.logging.secret }}
+      {{- end }}
+      imagePullSecrets:
+      - name: boomerang.registrykey
+      restartPolicy: Always
+---
+{{- end }}

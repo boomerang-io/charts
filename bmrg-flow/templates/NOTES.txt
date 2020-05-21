@@ -1,0 +1,19 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "flow" -}}
+{{- $tier := "apps" -}}
+** Navigation **
+You can access this application by navigating to;
+{{- range $k, $v := $.Values.apps }}
+  https://{{ $.Values.ingress.host }}{{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/{{ $tier }}/{{ $k }}
+{{- end }}
+{{- if .Values.general.enable.debug }}
+
+** Debug **
+To debug the backend services, you can access directly using;
+{{- $tier := "services" -}}
+  {{- range $k, $v := $.Values.services }}
+ - {{ $k }}:
+  export POD_NAME=$(kubectl get pods --namespace {{ $.Release.Namespace }} -l {{ include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k) | replace ": " "=" | replace "\n" "," }} -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward $POD_NAME 8080:80
+  {{- end }}
+{{- end }}

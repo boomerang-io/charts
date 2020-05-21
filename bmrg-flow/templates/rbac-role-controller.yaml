@@ -1,0 +1,85 @@
+{{- if $.Values.workers.security.enable }}
+{{- $platform := "bmrg" -}}
+{{- $product := "flow" -}}
+{{- $tier := "rbac" -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $platform }}:{{ $product }}:controller
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+rules:
+{{- if .Capabilities.APIVersions.Has "security.openshift.io/v1" }}
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - {{ $.Values.workers.security.policy }}
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+{{- else }}
+- apiGroups:
+  - extensions
+  resourceNames:
+  - {{ $.Values.workers.security.policy }}
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+{{- end }}
+# objects used to create and execute tasks
+# pvc and pv are mentioned as we use auto management of pv
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - persistentvolumeclaims
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - create
+  - watch
+  - delete
+# all workflow tasks are jobs
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - get
+  - list
+  - create
+  - update
+  - watch
+  - delete
+# configmaps specifically need patch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - create
+  - watch
+  - patch
+  - delete
+# logs get/watch are used to stream the pods logs
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+# exec for lifecycle
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - get
+{{- end }}
