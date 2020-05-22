@@ -53,3 +53,15 @@ helm inspect values boomerang-io/bmrg-bosun > bmrg-bosun-values.yaml
 vi bmrg-bosun-values.yaml
 helm install --namespace <namespace> -f bmrg-bosun-values.yaml boomerang-io/bmrg-bosun
 ```
+
+## Repository Structure
+
+This helm repository services dual purposes as both the source control of the raw charts, and also the helm repository.
+
+The helm repository uses the tgz files from the repositories Releases but also the index.yaml in the `index` branch. This branch is protected and only used by the CICD system.
+
+## CICD
+
+The CICD for this repository is currently using an instance of Boomerang CICD inside of IBM. This automation will package the charts and push them back to this repository as mentioned in the repositroy structure above.
+
+## Contributing
