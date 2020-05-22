@@ -4,6 +4,11 @@ Helm charts for Boomerang projects ready to launch on Kubernetes using [Helm](ht
 
 Currently all our charts are Helm v2 charts. We are working on creating v3 supported versions.
 
+## Available Charts
+
+- Boomerang Bosun
+- Boomerang Flow
+
 ## Pre-requisites
 
 - Kubernetes
