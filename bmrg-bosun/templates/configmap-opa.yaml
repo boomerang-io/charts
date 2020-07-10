@@ -11,9 +11,8 @@ metadata:
 data:
   config.yaml: |
     services:
-      bosun:
+      - name: bosun
         url: http://{{- include "bmrg.name" (dict "context" $context "tier" "service" "component" "bosun" ) }}/internal
-
     bundles:
       bosun:
         service: bosun
