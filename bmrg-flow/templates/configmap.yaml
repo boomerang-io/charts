@@ -13,12 +13,7 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
     {{- range $k, $v := $.Values.services }}
     {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $ "tier" "services" "component" $k ) }}
-    {{- if $.Values.ingress.root }}
-    {{ $k }}.service.root={{ $.Values.ingress.root }}/{{ $product }}/services/{{ $k }}
-    {{- else }}
-    {{ $k }}.service.root=/{{ $product }}/services/{{ $k }}
-    {{- end }}
-    {{- end }}
+    {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/services/{{ $k }}
     {{- include "bmrg.core.services" $ | indent 4 }}
     actionlistener.nats.url={{ $.Values.nats.url }}
     actionlistener.nats.cluster={{ $.Values.nats.cluster }}
@@ -40,7 +35,7 @@ data:
     kube.worker.job.deletion={{ $.Values.workers.deletion }}
     kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
-    boomerang.standalone={{ $values.general.enable.standalone }}
+    boomerang.standalone={{ $.Values.general.enable.standalone }}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}
