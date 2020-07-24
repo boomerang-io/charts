@@ -1,6 +1,6 @@
 # Boomerang Charts
 
-Helm charts for Boomerang projects ready to launch on Kubernetes using [Helm](https://helm.sh).
+Helm charts for Boomerang-io projects ready to launch on Kubernetes using [Helm](https://helm.sh).
 
 Currently all our charts are Helm v2 charts. We are working on creating v3 supported versions.
 
@@ -63,5 +63,3 @@ The helm repository uses the tgz files from the repositories Releases but also t
 ## CICD
 
 The CICD for this repository is currently using an instance of Boomerang CICD inside of IBM. This automation will package the charts and push them back to this repository as mentioned in the repositroy structure above.
-
-## Contributing

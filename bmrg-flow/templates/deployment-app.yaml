@@ -24,23 +24,23 @@ spec:
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              value: "{{ if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
+              value: "{{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
-              value: "{{ $values.monitoring.newrelic.apm.name }} - {{ $tier }}"
+              value: "{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}"
             - name: NEW_RELIC_LICENSE_KEY
-              value: "{{ $values.monitoring.newrelic.apm.key }}"
+              value: "{{ $.Values.monitoring.newrelic.apm.key }}"
             - name: NEW_RELIC_PROXY_HOST
-              value: "{{ $values.proxy.host }}"
+              value: "{{ $.Values.proxy.host }}"
             - name: NEW_RELIC_PROXY_PORT
-              value: "{{ $values.proxy.port }}"
+              value: "{{ $.Values.proxy.port }}"
             - name: NEW_RELIC_BROWSER_ID
-              value: "{{ $values.monitoring.newrelic.browser.id }}"
+              value: "{{ $.Values.monitoring.newrelic.browser.id }}"
             - name: NEW_RELIC_BROWSER_KEY
-              value: "{{ $values.monitoring.newrelic.browser.key }}"
+              value: "{{ $.Values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
-              value: {{ if $values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
+              value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
             - name: BASE_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}"
             - name: BASE_APPS_ENV_URL
