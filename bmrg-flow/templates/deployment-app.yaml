@@ -24,37 +24,37 @@ spec:
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              {{- if $.Values.ingress.root }}
-              value: "{{ $.Values.ingress.root }}/{{ $product }}/{{ $tier }}/{{ $k }}"
-              {{- else }}
-              value: "/{{ $product }}/{{ $tier }}/{{ $k }}"
-              {{- end }}
+              value: "{{ if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
-              value: "{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}"
+              value: "{{ $values.monitoring.newrelic.apm.name }} - {{ $tier }}"
             - name: NEW_RELIC_LICENSE_KEY
-              value: "{{ $.Values.monitoring.newrelic.apm.key }}"
+              value: "{{ $values.monitoring.newrelic.apm.key }}"
             - name: NEW_RELIC_PROXY_HOST
-              value: "{{ $.Values.proxy.host }}"
+              value: "{{ $values.proxy.host }}"
             - name: NEW_RELIC_PROXY_PORT
-              value: "{{ $.Values.proxy.port }}"
+              value: "{{ $values.proxy.port }}"
             - name: NEW_RELIC_BROWSER_ID
-              value: "{{ $.Values.monitoring.newrelic.browser.id }}"
+              value: "{{ $values.monitoring.newrelic.browser.id }}"
             - name: NEW_RELIC_BROWSER_KEY
-              value: "{{ $.Values.monitoring.newrelic.browser.key }}"
+              value: "{{ $values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
-              value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
-            - name: BASE_WWW_ENV_URL
-              value: "https://www.boomerangplatform.net"
-            - name: BASE_LAUNCH_ENV_URL
+              value: {{ if $values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
+            - name: BASE_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}"
             - name: BASE_APPS_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/apps"
             - name: BASE_SERVICE_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/services"
+            - name: PRODUCT_ENV_URL
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}"
+            - name: PRODUCT_APPS_ENV_URL
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/apps"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/services"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/service"
+            - name: PRODUCT_STANDALONE
+              value: "{{ $.Values.general.enable.standalone }}"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr

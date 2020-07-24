@@ -11,6 +11,7 @@ general:
     standalone: true
 
 workers:
+  deletion: OnSuccess
   security:
     enable: true
     policy: ibm-privileged-psp
@@ -20,7 +21,6 @@ workers:
     port: 
     secret: 
   enable:
-    deletion: false
     dedicatedNodes: false
   
 core:
