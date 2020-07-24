@@ -50,6 +50,13 @@ spec:
               secretKeyRef:
                 name: {{ if $.Values.database.mongodb.secretName }}{{ $.Values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}{{ end }}
                 key: {{ if $.Values.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
+          {{- if and (eq $k "flow") ($.Values.general.enable.standalone) }}
+          - name: FLOW_OTC
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
+                key: FLOW_OTC
+          {{- end }}
           ports:
           - containerPort: 8080
             name: {{ $platform }}-port-cntr

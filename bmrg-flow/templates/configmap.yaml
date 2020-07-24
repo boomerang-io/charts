@@ -37,6 +37,7 @@ data:
     kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.standalone={{ $.Values.general.enable.standalone }}
+    boomerang.otc=${CORE_OTC}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}
@@ -48,7 +49,6 @@ data:
     newrelic.config.proxy_host={{ $.Values.proxy.host }}
     newrelic.config.proxy_port={{ $.Values.proxy.port }}
     {{- end }}
-    core.platform.environment={{ .Release.Namespace }}
     opentracing.jaeger.enabled={{ $.Values.monitoring.jaeger.enabled }}
     opentracing.jaeger.udp-sender.host={{ $.Values.monitoring.jaeger.agent.host }}.{{ $.Values.monitoring.jaeger.namespace }}
     opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
