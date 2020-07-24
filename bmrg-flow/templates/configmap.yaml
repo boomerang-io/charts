@@ -13,7 +13,8 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
     {{- range $k, $v := $.Values.services }}
     {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $ "tier" "services" "component" $k ) }}
-    {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/services/{{ $k }}
+    {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
+    {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
     actionlistener.nats.url={{ $.Values.nats.url }}
     actionlistener.nats.cluster={{ $.Values.nats.cluster }}
