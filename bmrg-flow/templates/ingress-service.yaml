@@ -12,12 +12,12 @@ metadata:
     {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
     {{- if eq $k "flow" }}
-    ingress.kubernetes.io/proxy-connect-timeout: "600"
+    {{ $.Values.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
     {{- end }}
     {{- if and (ne $k "webhook") (eq $.Values.auth.enabled true) }}
     {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
     {{- end }}
-    ingress.kubernetes.io/configuration-snippet: |
+    {{ $.Values.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- if and (ne $k "webhook") (eq $.Values.auth.enabled true) }}
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
       {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
@@ -31,10 +31,10 @@ metadata:
       add_header 'Content-Length' 0;
       add_header 'Content-Type' 'text/plain charset=UTF-8';
       return 204;}
-    ingress.kubernetes.io/ssl-redirect: "false"
-    ingress.kubernetes.io/rewrite-target: /{{ $k }}/$2
-    ingress.kubernetes.io/client-max-body-size: 1m
-    kubernetes.io/ingress.class: nginx
+    {{ $.Values.ingress.annotationsPrefix}}/ssl-redirect: "false"
+    {{ $.Values.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
+    {{ $.Values.ingress.annotationsPrefix}}/client-max-body-size: 1m
+    kubernetes.io/ingress.class: {{ $.Values.ingress.class}}
 spec:
   rules:
     - host: {{ $.Values.ingress.host }}

@@ -104,6 +104,8 @@ The following table lists the configurable parameters of the chart and their def
 | `auth.enabled` | Enable addition of auth annotations on ingress | `true`
 | `auth.url.internal` |  | `http://bmrg-auth-proxy-bmrg-auth-proxy-4180/oauth/auth`
 | `auth.url.external` |  | `https://$host/oauth/start?rd=$uri`
+| `annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to "nginx.ingress.kubernetes.io" | `ingress.kubernetes.io`
+| `class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to "public-iks-k8s-nginx" | `nginx`
 
 ### Database Configuration
 
