@@ -1,9 +1,15 @@
-apiVersion: v1
+apiVersion: v2
 name: bmrg-bosun
 description: Boomerang Bosun
-version: 1.2.11
+type: application
+version: 2.0.0
 appVersion: "1.0.0"
 home: https://useboomerang.io
+dependencies:
+    - name: bmrg-common
+      repository: https://tools.boomerangplatform.net/artifactory/boomeranglib-helm
+      version: ~1.0.0
+      alias: bmrgcommon
 keywords:
 - boomerang
 - bosun

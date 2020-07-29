@@ -12,7 +12,7 @@ Boomerang Flow is a modern cloud native workflow automation tool built on top of
 - MongoDB 
 - LDAP (OpenLDAP) _optional_
 - NGINX Ingress Controller 0.22+
-- Helm v2
+- Helm v3
 - Boomerang Auth Proxy or an Authentication Provider
 
 For more information on the dependencies please see the Application Architecture.
