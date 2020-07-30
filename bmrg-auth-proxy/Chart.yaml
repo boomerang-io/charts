@@ -1,0 +1,26 @@
+apiVersion: v2
+name: bmrg-auth-proxy
+description: Boomerang Auth Reverse Proxy for integrating to authentication providers
+version: 3.1.0
+type: application
+home: https://useboomerang.io
+dependencies:
+  - name: bmrg-common
+    repository: https://tools.boomerangplatform.net/artifactory/boomeranglib-helm
+    version: ~1.0.2
+    alias: bmrgcommon
+  - name: redis
+    version: 10.6.0
+    repository: https://charts.bitnami.com/bitnami
+    alias: redis
+    condition: redis.enabled
+keywords:
+- boomerang
+- auth
+- SAML
+- ibmid
+- w3id
+- basic authentication
+- Azure AD
+- redis
+- allow email list

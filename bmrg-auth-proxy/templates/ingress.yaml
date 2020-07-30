@@ -1,0 +1,53 @@
+{{- if .Values.ingress.enabled -}}
+{{- $ingressPath := .Values.ingress.path -}}
+{{- $platform := "bmrg" -}}
+{{- $product := "auth" -}}
+{{- $tier := "proxy" -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ ) | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: {{ $.Values.ingress.class}}
+    {{- if ne (default "" $.Values.auth.provider) "saml" }}
+    {{ $.Values.ingress.annotationsPrefix}}/configuration-snippet: |
+      {{- if $.Values.auth.displayHtpasswdForm }}
+      proxy_pass_request_body     on;
+      proxy_set_header X-Auth-Request-Redirect $arg_rd;
+      {{- else }}
+      proxy_pass_request_body     off;
+      {{- end }}      
+      # Cache responses from the auth proxy
+      proxy_cache                   authentication;
+      proxy_cache_key               $cookie_{{ .Release.Name }};
+      proxy_cache_valid             202 401 3s;
+      proxy_cache_lock              on;
+      # Should still cache even with Set-Cookie
+      proxy_ignore_headers          Set-Cookie;
+    {{- end }}
+    {{ $.Values.ingress.annotationsPrefix}}/proxy-buffering: "on"
+    {{ $.Values.ingress.annotationsPrefix}}/client-body-buffer-size: "12M"
+    {{ $.Values.ingress.annotationsPrefix}}/client-max-body-size: "12M"
+    {{ $.Values.ingress.annotationsPrefix}}/proxy-buffer-size: "12M"
+    {{ $.Values.ingress.annotationsPrefix}}/proxy-buffers-number: "8"
+    {{ $.Values.ingress.annotationsPrefix}}/proxy-body-size: "8M"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: {{ $ingressPath }}
+            backend:
+              serviceName:  {{ include "bmrg.name" (dict "context" $ ) }}
+              servicePort: {{ $platform }}-port-svc
+      {{- if $.Values.ingress.host }}
+      host: {{ $.Values.ingress.host }}
+  tls:
+    - hosts:
+        - {{ $.Values.ingress.host }}
+      {{- if $.Values.ingress.tlsSecretName }}
+      secretName: {{ $.Values.ingress.tlsSecretName }}
+      {{- end }}
+      {{- end }}
+{{- end }}

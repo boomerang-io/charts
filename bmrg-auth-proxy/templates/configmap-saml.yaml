@@ -1,0 +1,90 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "auth" -}}
+{{- $component := "config" -}}
+{{- $tier := "saml" -}}
+{{- if eq (default "" $.Values.auth.provider) "saml" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "component" $component "tier" $tier ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "component" $component "tier" $tier  ) | nindent 4 }}
+data:
+  saml_sp.xml:  |
+    <EntityDescriptor entityID="https://poc.cloud.boomerangplatform.net" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <KeyDescriptor use="signing">
+          <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:X509Data>
+              <ds:X509Certificate>MIIC0jCCAboCCQCkBQoNMHWSITANBgkqhkiG9w0BAQsFADArMSkwJwYDVQQDDCBk
+    aXNhLmNsb3VkLmJvb21lcmFuZ3BsYXRmb3JtLm5ldDAeFw0yMDA1MjIxNDA1NTZa
+    Fw0zMDA1MjIxNDA1NTZaMCsxKTAnBgNVBAMMIGRpc2EuY2xvdWQuYm9vbWVyYW5n
+    cGxhdGZvcm0ubmV0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmuOo
+    JtjsGKCewQ6CsN/WHh/vH9M9b66yMEBJtQ5o1r/eRKvxLaxGPzY6kXZcY3r0XHRw
+    0FY5GLp2/m9vdPiYu8dn1GoTw2xevOpq1XmVEcnQi30p3S6amPxADM1f+bLjxVfc
+    kl1Tmj9TaXcdSYiP7JBFs5FfDgfi2BbZ8BWYwojy3jb40KnViLcOUTK6gCKKwr6H
+    FR+K/s/13/z944Lneh1i7OuJw4vRKe45ijETv+TMiJPSdCUKujnQcHpk64NsHCZL
+    n5osLF9nT5vkOekPifij3TTWWpdNFZqpXwkGkdCXkm8b6kKNYRBD2k6a1rghbm7Z
+    rzTR1ayKxxq6ltN4YwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCEB9ARikcNx9RV
+    MdJmPO1aDitTLJJWDMTwWrBYtQm3C29sDGo7CT2f/p/oNeuc1EQn9EBdyA/3+yqS
+    GF9hCgKxflOuOtB/ORvn6TNj0kTkFyid0rQbMvi7nJzLEZ9Yxm5/IvZVYfULYY5t
+    AVgiP1/Yzfsg5NokNmiEcPfU4cvflJhQ6+djXtl6eoWkaVoq5JN1PJmtEvRZGNQZ
+    lYRRron+N+dkxArKjD5E+fwJIVGfj4fbMi9dr+78M7VzFeEO5x4+71v57thqu/lE
+    tOmvribz5JcJoIAn6PRK4SVNDwo6eOqbp2N67H8ms96jSX8eAzYiFLx+T4amuCnD
+    fMTL/ORp</ds:X509Certificate>
+            </ds:X509Data>
+          </ds:KeyInfo>
+        </KeyDescriptor>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://poc.cloud.boomerangplatform.net/bmrg/mellon/logout"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://poc.cloud.boomerangplatform.net/bmrg/mellon/postResponse" index="0"/>
+      </SPSSODescriptor>
+    </EntityDescriptor>
+  saml_sp.cert:  |
+    -----BEGIN CERTIFICATE-----
+    MIIC0jCCAboCCQCkBQoNMHWSITANBgkqhkiG9w0BAQsFADArMSkwJwYDVQQDDCBk
+    aXNhLmNsb3VkLmJvb21lcmFuZ3BsYXRmb3JtLm5ldDAeFw0yMDA1MjIxNDA1NTZa
+    Fw0zMDA1MjIxNDA1NTZaMCsxKTAnBgNVBAMMIGRpc2EuY2xvdWQuYm9vbWVyYW5n
+    cGxhdGZvcm0ubmV0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmuOo
+    JtjsGKCewQ6CsN/WHh/vH9M9b66yMEBJtQ5o1r/eRKvxLaxGPzY6kXZcY3r0XHRw
+    0FY5GLp2/m9vdPiYu8dn1GoTw2xevOpq1XmVEcnQi30p3S6amPxADM1f+bLjxVfc
+    kl1Tmj9TaXcdSYiP7JBFs5FfDgfi2BbZ8BWYwojy3jb40KnViLcOUTK6gCKKwr6H
+    FR+K/s/13/z944Lneh1i7OuJw4vRKe45ijETv+TMiJPSdCUKujnQcHpk64NsHCZL
+    n5osLF9nT5vkOekPifij3TTWWpdNFZqpXwkGkdCXkm8b6kKNYRBD2k6a1rghbm7Z
+    rzTR1ayKxxq6ltN4YwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCEB9ARikcNx9RV
+    MdJmPO1aDitTLJJWDMTwWrBYtQm3C29sDGo7CT2f/p/oNeuc1EQn9EBdyA/3+yqS
+    GF9hCgKxflOuOtB/ORvn6TNj0kTkFyid0rQbMvi7nJzLEZ9Yxm5/IvZVYfULYY5t
+    AVgiP1/Yzfsg5NokNmiEcPfU4cvflJhQ6+djXtl6eoWkaVoq5JN1PJmtEvRZGNQZ
+    lYRRron+N+dkxArKjD5E+fwJIVGfj4fbMi9dr+78M7VzFeEO5x4+71v57thqu/lE
+    tOmvribz5JcJoIAn6PRK4SVNDwo6eOqbp2N67H8ms96jSX8eAzYiFLx+T4amuCnD
+    fMTL/ORp
+    -----END CERTIFICATE-----
+  saml_sp.key:  |
+    -----BEGIN PRIVATE KEY-----
+    MIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQCa46gm2OwYoJ7B
+    DoKw39YeH+8f0z1vrrIwQEm1DmjWv95Eq/EtrEY/NjqRdlxjevRcdHDQVjkYunb+
+    b290+Ji7x2fUahPDbF686mrVeZURydCLfSndLpqY/EAMzV/5suPFV9ySXVOaP1Np
+    dx1JiI/skEWzkV8OB+LYFtnwFZjCiPLeNvjQqdWItw5RMrqAIorCvocVH4r+z/Xf
+    /P3jgud6HWLs64nDi9Ep7jmKMRO/5MyIk9J0JQq6OdBwemTrg2wcJkufmiwsX2dP
+    m+Q56Q+J+KPdNNZal00VmqlfCQaR0JeSbxvqQo1hEEPaTprWuCFubtmvNNHVrIrH
+    GrqW03hjAgMBAAECgf8e2zukgZKHVXhK/ZkLo4wEdFgu/uY+WY8mDaihaT15ir+8
+    7oQdlTRpY2RHlkzRhK0pvgi7eHHnez45cfnCU8QZpKAKsRc+11gISqr93DrWUF47
+    a7PrXF1wHNClvERiekDmD5rhjbYaBIOZfyFWhN4nQpagL1XAddG7OtIwAh1so4xd
+    voz31AFD0Q44GthA4Gn9lgv1Ncrkc9sUj+FjpsXyz2HWdWmf3tGN7+Q6+21LNsj0
+    FZIcAgon/GLddmHREh+TU6RdY+bSe9aAaHQnS8G1ig7OeZWbgadzQM1Suni591Nv
+    9yeQCQdf72MkRs3RwrIcOi3bccz/vy2/YhjJSDkCgYEAzXlfG80fweZRFHwwHUR7
+    wrpLYd1F3HL8BjcM3FAQZdM3q4SuY8i1dNaRAChYYAUeUC0/uppxZRk1gHETZIhE
+    kMzq8Y2JeXTrXsWBUqx8F/jQyQq496i2A7ydOymI3xvNJIWbsHn9N+Sp10Cad3M8
+    oLwsj9ZlW/TI6+myTjutzu0CgYEAwPn2ZfyeSmIKA7ERWi39yLMdn/pTZ8HQLj1t
+    0YG39xxwmw6vV8IzglmcPY+oOd+3CBCw1Z+Ux/EzyTdgvbtTPHUhKWxBjoNSmi6E
+    NGGBfxIuC0hHth/a9DtWhGoNu8QhTeM01zgaNU9nnmkx5qvxYzosweS9GUySai/r
+    tsyyKo8CgYAgx2cD0WJqlWqD4Rfv41f3Ba826ozVkUZhW3DiyKcFB4APDbigVImW
+    HRC+vLD0iHyAf+d1xmOmpDHjzqYwWIjPrNEiPdkblipiURHDdZ7KWDg+ikZdw/1d
+    dT6EDKk4JoBAfkwLCDr8Kq9plnXN7oVSgxJ809ARrmhLMlnunxioNQKBgAw8zb9R
+    8cfNx8zMIcmSORHNKgfHHBrsU4NbKeerTjtBdnKez8fE7PdLL3lH7uccpMLCLDSf
+    1hOH3DzaYiwmAPVIiD3UO6QJ9+cHJCMeO9QPFxRoFQQbqQrr6GSlRRGvMl16FxO+
+    3wqaanvFOADkzn34ZnY1Rziffnl1aIFDIdlJAoGAK042Tu0+iqXMLw95dn/IqbiK
+    LdNNnM7hPw03A0fqmVyuAy1S4tpuRfnBpdghVR6fTjTj1d/IN+146uMyS5SCu66U
+    QvqkAddPtBstdn9VmUwmXmok31jFwJYszRAFvtn/Lsv/ohnHvqr3Ft8xQpCqNG9U
+    6sErDKMmsX5ZzVMh/UY=
+    -----END PRIVATE KEY-----
+{{- end }}

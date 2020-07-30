@@ -1,0 +1,17 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "auth" -}}
+{{- $component := "config" -}}
+{{- $tier := "allowemail" -}}
+{{- if $.Values.allowEmailList.enabled }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ "component" $component "tier" $tier ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ "component" $component "tier" $tier  ) | nindent 4 }}
+data:
+  authenticated-emails-list: |
+  {{- range $emailAddress := $.Values.allowEmailList.emailList }}
+    {{ $emailAddress }}
+  {{- end }}
+{{- end }}

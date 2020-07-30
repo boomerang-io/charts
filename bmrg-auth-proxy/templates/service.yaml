@@ -1,0 +1,19 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "auth" -}}
+{{- $tier := "proxy" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $ ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $ ) | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: {{ $platform }}-port-svc
+      port: 80
+      targetPort: {{ $platform }}-port-cntr
+      protocol: TCP
+  selector:
+    {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.general.zone ) | nindent 4 }}
+  sessionAffinity: None
