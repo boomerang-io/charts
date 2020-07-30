@@ -2,17 +2,18 @@
 
 Helm charts for Boomerang-io projects ready to launch on Kubernetes using [Helm](https://helm.sh).
 
-Currently all our charts are Helm v2 charts. We are working on creating v3 supported versions.
+All our charts are Helm v3 charts. 
 
 ## Available Charts
 
 - Boomerang Bosun
 - Boomerang Flow
+- Boomerang oauth2-proxy (forked from [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy))
 
 ## Pre-requisites
 
 - Kubernetes
-- Helm v2
+- Helm v3
 
 Plus any additional dependencies by chart. For example Boomerang Flow depends on MongoDB. Please read the individual charts READMEs
 
