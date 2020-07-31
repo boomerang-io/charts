@@ -2,9 +2,19 @@ apiVersion: v1
 entries:
   bmrg-auth-proxy:
   - apiVersion: v2
-    created: 2020-07-31T13:17:33.303987+10:00
+    created: "2020-07-31T03:21:15.923364215Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://tools.boomerangplatform.net/artifactory/boomeranglib-helm
+      version: ~1.0.0
+    - alias: redis
+      condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.6.0
     description: Boomerang Auth Reverse Proxy for integrating to authentication providers
-    digest: 9e5a2f34e4402e52adcad7a65961b5c063a815944b533c8d62ece26eef9e92a6
+    digest: 64936547435083dc466a02396a09c61ecd8b5580c1fdbee1a5368c5888dc75c7
     home: https://useboomerang.io
     keywords:
     - boomerang
@@ -17,7 +27,48 @@ entries:
     - redis
     - allow email list
     name: bmrg-auth-proxy
+    type: application
     urls:
-    - bmrg-auth-proxy-3.1.1.tgz
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-auth-proxy-3.1.1/bmrg-auth-proxy-3.1.1.tgz
     version: 3.1.1
-generated: 2020-07-31T13:17:33.302042+10:00
+  bmrg-bosun:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-07-31T03:21:22.254986184Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://tools.boomerangplatform.net/artifactory/boomeranglib-helm
+      version: ~1.0.0
+    description: Boomerang Bosun
+    digest: 03f3f33c78ce604014e4aac1a0a8f3245fe154701247341e4923813c889499e7
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - bosun
+    name: bmrg-bosun
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-bosun-2.0.1/bmrg-bosun-2.0.1.tgz
+    version: 2.0.1
+  bmrg-flow:
+  - apiVersion: v2
+    appVersion: 2.3.0
+    created: "2020-07-31T03:21:23.629127371Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://tools.boomerangplatform.net/artifactory/boomeranglib-helm
+      version: ~1.0.0
+    description: Boomerang Flow
+    digest: 2d81033e9cf505305b3e8a5b85523ea76f8d2c93554dd841ff6c524be167248f
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - flow
+    name: bmrg-flow
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.1/bmrg-flow-4.0.1.tgz
+    version: 4.0.1
+generated: "2020-07-31T03:21:23.626583313Z"
