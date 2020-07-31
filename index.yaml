@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  bmrg-auth-proxy:
+  - apiVersion: v2
+    created: 2020-07-31T13:17:33.303987+10:00
+    description: Boomerang Auth Reverse Proxy for integrating to authentication providers
+    digest: 9e5a2f34e4402e52adcad7a65961b5c063a815944b533c8d62ece26eef9e92a6
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - auth
+    - SAML
+    - ibmid
+    - w3id
+    - basic authentication
+    - Azure AD
+    - redis
+    - allow email list
+    name: bmrg-auth-proxy
+    urls:
+    - bmrg-auth-proxy-3.1.1.tgz
+    version: 3.1.1
+generated: 2020-07-31T13:17:33.302042+10:00
