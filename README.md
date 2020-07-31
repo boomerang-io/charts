@@ -1,4 +1,4 @@
-# Boomerang Charts
+# Boomerang Helm Charts
 
 Helm charts for Boomerang-io projects ready to launch on Kubernetes using [Helm](https://helm.sh).
 
@@ -12,10 +12,10 @@ All our charts are Helm v3 charts.
 
 ## Pre-requisites
 
-- Kubernetes
+- Kubernetes 1.13+
 - Helm v3
 
-Plus any additional dependencies by chart. For example Boomerang Flow depends on MongoDB. Please read the individual charts READMEs
+Plus any additional dependencies by chart. For example Boomerang Flow depends on MongoDB. Please read the individual charts READMEs.
 
 ## Getting Started
 
@@ -34,7 +34,7 @@ kubectl create secret docker-registry boomerang.registrykey --docker-server=dock
 Add the helm repository
 
 ```sh
-helm repo add boomerang-io https://raw.githubusercontent.com/boomerang-io/boomerang.charts/index
+helm repo add boomerang-io https://raw.githubusercontent.com/boomerang-io/helm-charts/index
 ```
 
 **Step 3**
