@@ -1,6 +1,6 @@
-# IBM Boomerang Auth Proxy
+# Boomerang Auth Proxy
 
-IBM Boomerang Auth Reverse Proxy for integrating to authentication providers and has been extended to support manual provider integration for IBM ID, GitHub id, w3 ID, Basic Authentication and Azure AD.
+Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy), for integrating to authentication providers and has been extended to support manual provider integration for IBM ID, GitHub id, Basic Authentication and Azure AD.
 
 ### New in this release
 
@@ -20,7 +20,7 @@ IBM Boomerang Auth Reverse Proxy for integrating to authentication providers and
 
 ### Prerequisites
 
-- IBM Cloud Private 2.1.0.3+
+- Kubernetes 1.13+
 
 ### Known Issues
 - This chart cannot be deployed multiple times into the same namespaces.
@@ -34,38 +34,21 @@ Before deploying the `oauth-proxy` module, please make sure to follow these step
 The helm chart comes with a default generated cookie-secret that is used to secure the cookies. 
 We suggest to generate a new value by using `python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())'`.
 
-#### Production deployment
-  - Update the following attributes with the production server urls.
+#### Deployment
+  - Update the following attributes.
     ```
-    clientId: ***REMOVED***
-    clientSecret: ***REMOVED***
-    issuerUrl: ***REMOVED***
-    loginUrl: ***REMOVED***
-    redeemUrl: ***REMOVED***
-    oidcJwksUrl: ***REMOVED***
+    clientId:
+    clientSecret:
+    issuerUrl:
+    loginUrl:
+    redeemUrl:
+    oidcJwksUrl:
     ```
   - Update the `--cookie-domain` argument with the full domain name of the endpoint, eg. `launch.boomerangplatform.net`,
   - Update the `--cookie-path` argument with the name proxy path, eg. `/` or `/live`,
   - Make sure you have the correct docker version and that the docker version of the `oauth-proxy` has commented out the hard-coded session expiration,
   - Update the `ingress` definition with the production correct values.
   - Run the command to update the installation `helm upgrade --install bmrg-auth-proxy-live -f bmrg-auth-proxy-values.yaml --namespace bmrg-live --tls --debug bmrg-artifactory/bmrg-auth-proxy`.
-
-#### Non-production deployment
-  - Update the following attributes with the development/staging server urls:
-    ```
-    clientId: ***REMOVED***
-    clientSecret: ***REMOVED***
-    issuerUrl: ***REMOVED***
-    loginUrl: ***REMOVED***
-    redeemUrl: ***REMOVED***
-    oidcJwksUrl: ***REMOVED***
-    ```
-  - Update the `--cookie-domain` argument with the full domain name of the endpoint, eg. `wdc3.cloud.boomerangplatform.net`,
-  - Update the `--cookie-path` argument with the name proxy path, eg. `/dev` or `/qa`,
-  - Make sure you have the correct docker version. Optionally, for testing purposes, you can leave the session expiration hard-coded to two minutes,
-  - Update the `ingress` definition with the dev or qa correct values.
-  - Run the command to update the installation `helm upgrade --install bmrg-auth-proxy-dev -f bmrg-auth-proxy-values.yaml --namespace bmrg-dev --tls --debug bmrg-artifactory/bmrg-auth-proxy`
-
 
 ## Managing this Chart in IBM Cloud Private
 
