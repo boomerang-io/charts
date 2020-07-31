@@ -34,7 +34,7 @@ kubectl create secret docker-registry boomerang.registrykey --docker-server=dock
 Add the helm repository
 
 ```sh
-helm repo add boomerang-io https://raw.githubusercontent.com/boomerang-io/helm-charts/index
+helm repo add boomerang-io https://raw.githubusercontent.com/boomerang-io/charts/index
 ```
 
 **Step 3**
