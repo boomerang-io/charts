@@ -55,6 +55,8 @@ spec:
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/web"
             - name: PRODUCT_SERVICE_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/service"
+            - name: PRODUCT_STANDALONE
+              value: "{{ $.Values.general.enable.standalone }}"
             - name: CICD_PRODUCT_APP_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/cicd/apps"
             - name: CICD_PRODUCT_SERVICE_ENV_URL
