@@ -31,15 +31,15 @@ job:
     enabled: true
     profile: bosun
     image:
-      repository: /boomerang.bosun.loader/bmrg-bosun-loader
+      repository: /bosun.loader/bmrg-bosun-loader
       tag: 0.1.0-0
 
 # Web App Configuration
 web:
   bosun:
     image:
-      repository: /boomerang.bosun.web/bmrg-web-bosun
-      tag: 0.0.23
+      repository: /bosun.client.web/bmrg-bosun-web
+      tag: 0.2.8-27
     replicaCount: 1
     service:
       type: ClusterIP
@@ -50,16 +50,16 @@ web:
 service:
   bosun:
     image:
-      repository: /boomerang.bosun.service/bmrg-service-bosun
-      tag: 2.5.1-1
+      repository: /bosun.service.policy/bmrg-bosun-service-policy
+      tag: 2.5.2-2
     replicaCount: 1
     service:
       type: ClusterIP
     zone: untrusted
   repository:
     image:
-      repository: /boomerang.repository.service/bmrg-service-repository
-      tag: 7.0.3
+      repository: /bosun.service.repository/bmrg-bosun-service-repository
+      tag: 0.1.0-0
     replicaCount: 1
     service:
       type: ClusterIP
