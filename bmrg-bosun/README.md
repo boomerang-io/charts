@@ -50,6 +50,7 @@ The following table lists the configurable parameters of the chart and their def
 |---|---|---|
 | `image.registry` | Boomerang Docker Registry | `"tools.boomerangplatform.net:8500"` |
 | `image.pullPolicy` | Image Pull Policy | `IfNotPresent` |
+| `image.pullSecret` | Image Pull Secret. See [here](https://github.com/boomerang-io/charts) for more information on how to access the Boomerang-io docker containers. | `boomerang-io.registrykey` |
 
 ### Job Configuration
 

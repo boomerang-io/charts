@@ -23,7 +23,7 @@ boomerang:
 image:
   registry: docker.pkg.github.com/boomerang-io
   pullPolicy: IfNotPresent
-  pullSecret: boomerang.registrykey
+  pullSecret: boomerang-io.registrykey
 
 # Job Configuraiton
 job:

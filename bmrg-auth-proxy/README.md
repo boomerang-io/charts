@@ -69,7 +69,7 @@ The following table lists the configurable parameters of the oauth2-proxy chart 
 | `extraArgs` | key:value list of extra arguments to give the binary | `{}`
 | `image.registry` | Registry of the image | `tools.boomerangplatform.net:8500/ise`
 | `image.pullPolicy` | Image pull policy | `IfNotPresent`
-| `image.pullSecret` | Specify image pull secret | `boomerang.registrykey`
+| `image.pullSecret` | Specify image pull secret | `boomerang-io.registrykey`
 | `image.replicaCount` | desired number of pods | `1`
 | `general.zone` | The zone where the pod will be deployed. Check the platform's network architecture | `untrusted`
 | `ingress.enabled` | enable ingress | `false`

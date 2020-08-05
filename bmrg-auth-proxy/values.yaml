@@ -40,7 +40,7 @@ auth:
 image:
   registry: docker.pkg.github.com/boomerang-io
   pullPolicy: IfNotPresent
-  pullSecret: boomerang.registrykey
+  pullSecret: boomerang-io.registrykey
   replicaCount: 1
 
 services:

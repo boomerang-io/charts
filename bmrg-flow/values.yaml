@@ -30,7 +30,7 @@ core:
 image:
   registry: tools.boomerangplatform.net:8500/ise
   pullPolicy: IfNotPresent
-  pullSecret: boomerang.registrykey
+  pullSecret: boomerang-io.registrykey
 
 # Job Configuraiton
 job:

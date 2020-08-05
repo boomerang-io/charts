@@ -2,7 +2,7 @@ apiVersion: v2
 name: bmrg-flow
 description: Boomerang Flow
 type: application
-version: 4.0.4
+version: 4.0.5
 appVersion: 2.3.0
 home: https://useboomerang.io
 dependencies:
