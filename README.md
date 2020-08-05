@@ -9,6 +9,7 @@ All our charts are Helm v3 charts.
 - Boomerang Bosun
 - Boomerang Flow
 - Boomerang oauth2-proxy (forked from [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy))
+- Boomerang Common (library chart for common template functions)
 
 ## Pre-requisites
 
