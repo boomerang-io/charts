@@ -79,7 +79,7 @@ spec:
             requests:
               memory: 100Mi
       imagePullSecrets:
-      - name: boomerang.registrykey
+      - name: {{ .Values.image.pullSecret }}
       restartPolicy: Always
 ---
 {{- end }}
