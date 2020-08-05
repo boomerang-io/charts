@@ -38,7 +38,7 @@ job:
 web:
   bosun:
     image:
-      repository: /bosun.client.web/bmrg-bosun-web
+      repository: /bosun.client.web/bmrg-bosun-client-web
       tag: 0.2.8-27
     replicaCount: 1
     service:
@@ -48,7 +48,7 @@ web:
 # Micro Service Configuration
 # Note: There are if conditions in the template referencing the service name i.e. urbancode
 service:
-  bosun:
+  policy:
     image:
       repository: /bosun.service.policy/bmrg-bosun-service-policy
       tag: 2.5.2-2
