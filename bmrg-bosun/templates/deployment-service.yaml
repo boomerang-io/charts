@@ -88,7 +88,7 @@ spec:
         emptyDir: {}
       {{- end }}
       imagePullSecrets:
-      - name: {{ .Values.image.pullSecret }}
+      - name: {{ $values.image.pullSecret }}
       restartPolicy: Always
 ---
 {{- end }}

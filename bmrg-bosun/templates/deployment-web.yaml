@@ -79,7 +79,7 @@ spec:
             requests:
               memory: 100Mi
       imagePullSecrets:
-      - name: {{ .Values.image.pullSecret }}
+      - name: {{ $values.image.pullSecret }}
       restartPolicy: Always
 ---
 {{- end }}
