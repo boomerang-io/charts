@@ -35,6 +35,6 @@ spec:
                 key: mongodb-password
           {{- end }}
       imagePullSecrets:
-      - name: boomerang.registrykey
+      - name: {{ $.Values.image.pullSecret }}
       restartPolicy: Never
 {{- end }}
