@@ -28,7 +28,7 @@ core:
 
 # General Image Configuration
 image:
-  registry: tools.boomerangplatform.net:8500/ise
+  registry: docker.pkg.github.com/boomerang-io
   pullPolicy: IfNotPresent
   pullSecret: boomerang-io.registrykey
 
@@ -38,14 +38,14 @@ job:
     enabled: true
     profile: flow
     image:
-      repository: /bmrg-util-mongo
+      repository: /bmrg-flow-loader
       tag: 0.2.10-15
 
 # App Configuration
 apps:
   flow:
     image:
-      repository: /bmrg-app-flow
+      repository: /bmrg-flow-client-web
       tag: 2.1.6-619
     replicaCount: 1
     service:
@@ -57,15 +57,15 @@ apps:
 services:
   controller:
     image:
-      repository: /bmrg-service-controller
+      repository: /bmrg-flow-service-controller
       tag: 4.0.0-rc.1-314
     replicaCount: 1
     service:
       type: ClusterIP
     zone: semi-trusted
-  flow:
+  workflow:
     image:
-      repository: /bmrg-service-flow
+      repository: /bmrg-flow-service-workflow
       tag: 2.3.0-246
     replicaCount: 1
     service:
@@ -73,7 +73,7 @@ services:
     zone: untrusted
   listener:
     image:
-      repository: /bmrg-service-actionlistener
+      repository: /bmrg-flow-service-actionlistener
       tag: 1.0.4-7
     replicaCount: 1
     service:
