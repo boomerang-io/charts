@@ -28,7 +28,7 @@ spec:
         {{- if .Values.auth.args -}}
         {{- .Values.auth.args | toYaml | nindent 8 -}}
         {{- end -}}
-        {{- if $.Values.auth.displayHtpasswdForm -}}
+        {{- if $.Values.auth.displayHtpasswdForm }}
         - --basic-auth-password=$(UPSTREAM_AUTH_PASSWORD)
         {{- end }}
         {{- if $.Values.redis.enabled }}
