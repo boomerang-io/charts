@@ -2,6 +2,36 @@ apiVersion: v1
 entries:
   bmrg-auth-proxy:
   - apiVersion: v2
+    created: "2020-08-07T08:41:50.626645931Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.0
+    - alias: redis
+      condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.6.0
+    description: Boomerang Auth Reverse Proxy for integrating to authentication providers
+    digest: f809b4dd0aa489161a81735cc036bef9b1170b807cbb620994a8f6df3749d1d0
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - auth
+    - SAML
+    - ibmid
+    - w3id
+    - basic authentication
+    - Azure AD
+    - redis
+    - allow email list
+    name: bmrg-auth-proxy
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-auth-proxy-3.1.7/bmrg-auth-proxy-3.1.7.tgz
+    version: 3.1.7
+  - apiVersion: v2
     created: "2020-08-07T07:28:26.168702613Z"
     dependencies:
     - alias: bmrgcommon
@@ -152,6 +182,25 @@ entries:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-auth-proxy-3.1.2/bmrg-auth-proxy-3.1.2.tgz
     version: 3.1.2
   bmrg-bosun:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-08-07T08:41:56.993296146Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.0
+    description: Boomerang Bosun
+    digest: e0ca7130ab84906f2c5e8f4540ac9baa872927760bc83c3c5a7e0d65136bcdb6
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - bosun
+    name: bmrg-bosun
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-bosun-2.0.11/bmrg-bosun-2.0.11.tgz
+    version: 2.0.11
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2020-08-05T23:19:26.577160076Z"
@@ -341,6 +390,25 @@ entries:
   bmrg-flow:
   - apiVersion: v2
     appVersion: 2.3.0
+    created: "2020-08-07T08:41:58.311884721Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.0
+    description: Boomerang Flow
+    digest: e423f125b9c15c24998bb84815b600bc07d63c125f0aefc2086ac73e8bea7b7b
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - flow
+    name: bmrg-flow
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.10/bmrg-flow-4.0.10.tgz
+    version: 4.0.10
+  - apiVersion: v2
+    appVersion: 2.3.0
     created: "2020-08-06T03:33:40.638458636Z"
     dependencies:
     - alias: bmrgcommon
@@ -491,4 +559,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2020-08-07T07:28:26.162515131Z"
+generated: "2020-08-07T08:41:58.310242161Z"
