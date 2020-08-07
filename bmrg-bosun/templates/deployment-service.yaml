@@ -87,8 +87,10 @@ spec:
       - name: apm-newrelic
         emptyDir: {}
       {{- end }}
+      {{- if $values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Always
 ---
 {{- end }}
