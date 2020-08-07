@@ -124,8 +124,10 @@ spec:
               - key: saml_sp.xml
                 path: saml_sp.xml
         {{- end }}
+      {{- if .Values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ .Values.image.pullSecret }}
+      {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

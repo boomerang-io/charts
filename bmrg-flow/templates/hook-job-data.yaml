@@ -34,7 +34,9 @@ spec:
                 name: {{ $.Values.database.mongodb.secretName }}
                 key: mongodb-password
           {{- end }}
+      {{- if $.Values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $.Values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Never
 {{- end }}

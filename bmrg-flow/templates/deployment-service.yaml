@@ -107,8 +107,10 @@ spec:
         secret:
           secretName: {{ $.Values.workers.logging.secret }}
       {{- end }}
+      {{- if $.Values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $.Values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Always
 ---
 {{- end }}
