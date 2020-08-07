@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   bmrg-auth-proxy:
   - apiVersion: v2
-    created: "2020-08-07T08:41:50.626645931Z"
+    created: "2020-08-07T08:43:14.971643825Z"
     dependencies:
     - alias: bmrgcommon
       name: bmrg-common
@@ -14,7 +14,7 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 10.6.0
     description: Boomerang Auth Reverse Proxy for integrating to authentication providers
-    digest: f809b4dd0aa489161a81735cc036bef9b1170b807cbb620994a8f6df3749d1d0
+    digest: e721cf079490806a2bd7b15468582876119915cd7fa5846db04f2950b83b5050
     home: https://useboomerang.io
     keywords:
     - boomerang
@@ -182,6 +182,25 @@ entries:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-auth-proxy-3.1.2/bmrg-auth-proxy-3.1.2.tgz
     version: 3.1.2
   bmrg-bosun:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-08-07T08:43:16.375609094Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.0
+    description: Boomerang Bosun
+    digest: 171856585e31b2846eb61b0ddd8bb3150629f419a45d8723521c6ee13efabb18
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - bosun
+    name: bmrg-bosun
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-bosun-2.0.12/bmrg-bosun-2.0.12.tgz
+    version: 2.0.12
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2020-08-07T08:41:56.993296146Z"
@@ -390,14 +409,14 @@ entries:
   bmrg-flow:
   - apiVersion: v2
     appVersion: 2.3.0
-    created: "2020-08-07T08:41:58.311884721Z"
+    created: "2020-08-07T08:43:17.139608155Z"
     dependencies:
     - alias: bmrgcommon
       name: bmrg-common
       repository: https://raw.githubusercontent.com/boomerang-io/charts/index
       version: ~1.0.0
     description: Boomerang Flow
-    digest: e423f125b9c15c24998bb84815b600bc07d63c125f0aefc2086ac73e8bea7b7b
+    digest: 9272af89848249d0e09bccb3f659bce787c1aa5d03a5c5f90786dd30d104d982
     home: https://useboomerang.io
     keywords:
     - boomerang
@@ -559,4 +578,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2020-08-07T08:41:58.310242161Z"
+generated: "2020-08-07T08:43:17.138021046Z"
