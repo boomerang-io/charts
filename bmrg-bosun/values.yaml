@@ -31,14 +31,14 @@ job:
     enabled: true
     profile: bosun
     image:
-      repository: /bosun.loader/bmrg-bosun-loader
+      repository: /bosun.loader/bosun-loader
       tag: 0.1.0-0
 
 # Web App Configuration
 web:
   bosun:
     image:
-      repository: /bosun.client.web/bmrg-bosun-client-web
+      repository: /bosun.client.web/bosun-client-web
       tag: 0.2.8-27
     replicaCount: 1
     service:
@@ -50,7 +50,7 @@ web:
 service:
   policy:
     image:
-      repository: /bosun.service.policy/bmrg-bosun-service-policy
+      repository: /bosun.service.policy/bosun-service-policy
       tag: 2.5.2-2
     replicaCount: 1
     service:
@@ -58,7 +58,7 @@ service:
     zone: untrusted
   repository:
     image:
-      repository: /bosun.service.repository/bmrg-bosun-service-repository
+      repository: /bosun.service.repositorybosun-service-repository
       tag: 0.1.0-0
     replicaCount: 1
     service:
