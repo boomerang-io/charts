@@ -2,7 +2,9 @@
 
 Helm charts for Boomerang-io projects ready to launch on Kubernetes using [Helm](https://helm.sh).
 
-All our charts are Helm v3 charts. 
+All our charts are Helm v3 charts.
+
+The containers are available on [DockerHub](https://hub.docker.com/search?q=boomerangio&type=image)
 
 ## Available Charts
 
@@ -17,6 +19,10 @@ All our charts are Helm v3 charts.
 - Helm v3
 
 Plus any additional dependencies by chart. For example Boomerang Flow depends on MongoDB. Please read the individual charts READMEs.
+
+### Image Policies
+
+If you are kubernetes cluster uses ClusterImagePolicy or ImagePolicy you may need to add `docker.io/boomerangio/*:*` to your policies to be able to retrieve the images.
 
 ## Getting Started
 
