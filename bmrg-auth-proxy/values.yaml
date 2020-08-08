@@ -38,9 +38,9 @@ auth:
     - --pass-basic-auth=true
 
 image:
-  registry: docker.pkg.github.com/boomerang-io
+  registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: boomerang-io.registrykey
+  pullSecret: 
   replicaCount: 1
 
 services:

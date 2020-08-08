@@ -28,9 +28,9 @@ core:
 
 # General Image Configuration
 image:
-  registry: docker.pkg.github.com/boomerang-io
+  registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: boomerang-io.registrykey
+  pullSecret: 
 
 # Job Configuraiton
 job:
