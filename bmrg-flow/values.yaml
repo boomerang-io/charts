@@ -57,7 +57,7 @@ apps:
 services:
   controller:
     image:
-      repository: /flow.service.controller/bmrg-flow-service-controller
+      repository: /flow-service-controller
       tag: 4.2.2
     replicaCount: 1
     service:
@@ -73,7 +73,7 @@ services:
     zone: untrusted
   listener:
     image:
-      repository: /flow.service.actionlistener/bmrg-flow-service-actionlistener
+      repository: /flow-service-actionlistener
       tag: 1.1.0
     replicaCount: 1
     service:
@@ -81,7 +81,7 @@ services:
     zone: untrusted
   webhook:
     image:
-      repository: /flow.service.webhook/bmrg-flow-service-webhook
+      repository: /flow-service-webhook
       tag: 1.3.0
     replicaCount: 1
     service:
