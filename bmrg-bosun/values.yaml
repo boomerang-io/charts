@@ -32,14 +32,14 @@ job:
     profile: bosun
     image:
       repository: /bosun.loader/bosun-loader
-      tag: 0.1.0-0
+      tag: 0.1.1
 
 # Web App Configuration
 web:
   bosun:
     image:
       repository: /bosun.client.web/bosun-client-web
-      tag: 0.2.8-27
+      tag: 0.2.11
     replicaCount: 1
     service:
       type: ClusterIP
@@ -51,7 +51,7 @@ service:
   policy:
     image:
       repository: /bosun.service.policy/bosun-service-policy
-      tag: 2.5.2-2
+      tag: 2.5.3
     replicaCount: 1
     service:
       type: ClusterIP
@@ -59,7 +59,7 @@ service:
   repository:
     image:
       repository: /bosun.service.repositorybosun-service-repository
-      tag: 0.1.0-0
+      tag: 0.1.1
     replicaCount: 1
     service:
       type: ClusterIP
