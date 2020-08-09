@@ -214,6 +214,25 @@ entries:
   bmrg-bosun:
   - apiVersion: v2
     appVersion: 1.0.1
+    created: "2020-08-09T01:28:50.604474566Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.0
+    description: Boomerang Bosun
+    digest: 40f98fff73eb2b7e9c0d5f1c5c0a35a85a6682d844d856839fba58a359cd0217
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - bosun
+    name: bmrg-bosun
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-bosun-2.0.16/bmrg-bosun-2.0.16.tgz
+    version: 2.0.16
+  - apiVersion: v2
+    appVersion: 1.0.1
     created: "2020-08-08T00:28:22.104824476Z"
     dependencies:
     - alias: bmrgcommon
@@ -684,4 +703,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2020-08-08T00:28:22.10343053Z"
+generated: "2020-08-09T01:28:50.603095898Z"
