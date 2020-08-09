@@ -38,15 +38,15 @@ job:
     enabled: true
     profile: flow
     image:
-      repository: /flow.loader/bmrg-flow-loader
-      tag: 0.2.10-15
+      repository: /flow-loader
+      tag: 0.4.1
 
 # App Configuration
 apps:
   flow:
     image:
-      repository: /flow.client.web/bmrg-flow-client-web
-      tag: 2.1.6-619
+      repository: /flow-client-web
+      tag: 2.3.0-alpha.3
     replicaCount: 1
     service:
       type: ClusterIP
@@ -58,15 +58,15 @@ services:
   controller:
     image:
       repository: /flow.service.controller/bmrg-flow-service-controller
-      tag: 4.0.0-rc.1-314
+      tag: 4.2.2
     replicaCount: 1
     service:
       type: ClusterIP
     zone: semi-trusted
   workflow:
     image:
-      repository: /flow.service.workflow/bmrg-flow-service-workflow
-      tag: 2.3.0-246
+      repository: /flow-service-workflow
+      tag: 2.3.1
     replicaCount: 1
     service:
       type: ClusterIP
@@ -74,7 +74,7 @@ services:
   listener:
     image:
       repository: /flow.service.actionlistener/bmrg-flow-service-actionlistener
-      tag: 1.0.4-7
+      tag: 1.1.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -82,7 +82,7 @@ services:
   webhook:
     image:
       repository: /flow.service.webhook/bmrg-flow-service-webhook
-      tag: 1.2.3-33
+      tag: 1.3.0
     replicaCount: 1
     service:
       type: ClusterIP
