@@ -11,6 +11,8 @@ data:
   application.properties: |
     server.port=8080
     spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
+    mongo.encrypt.secret=${FLOW_ENCRYPT_SECRET}
+    mongo.encrypt.salt=${FLOW_ENCRYPT_SALT}
     {{- range $k, $v := $.Values.services }}
     {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $ "tier" "services" "component" $k ) }}
     {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
@@ -36,7 +38,7 @@ data:
     kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.standalone={{ $.Values.general.enable.standalone }}
-    boomerang.otc=${CORE_OTC}
+    boomerang.otc=${FLOW_OTC}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}

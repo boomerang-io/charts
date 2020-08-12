@@ -56,6 +56,16 @@ spec:
               secretKeyRef:
                 name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
                 key: FLOW_OTC
+          - name: FLOW_ENCRYPT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
+                key: FLOW_ENCRYPT_SECRET
+          - name: FLOW_ENCRYPT_SALT
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
+                key: FLOW_ENCRYPT_SALT
           {{- end }}
           ports:
           - containerPort: 8080
