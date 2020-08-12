@@ -33,7 +33,6 @@ data:
     kube.worker.logging.port={{ $.Values.workers.logging.port }}
     kube.worker.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
     kube.worker.logging.keystore.password=changeme
-    kube.worker.job.deletion={{ $.Values.workers.deletion }}
     kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.standalone={{ $.Values.general.enable.standalone }}
