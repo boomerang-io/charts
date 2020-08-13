@@ -1,6 +1,17 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "apps" -}}
+{{- if .Values.general.enable.standalone }}
+** Activation **
+To complete the one time setup and activation of Core you need to retrieve the one time code and enter into the platform.
+
+1. Retrieve the code by running
+
+  kubectl get secret --namespace {{ .Release.Namespace }} {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }} -o jsonpath="{.data.FLOW_OTC}" | base64 --decode
+
+2. Navigate to Launchpad (link provided in Access below)
+
+{{- end }}
 ** Navigation **
 You can access this application by navigating to;
 {{- range $k, $v := $.Values.apps }}
