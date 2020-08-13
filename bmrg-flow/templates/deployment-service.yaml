@@ -56,6 +56,8 @@ spec:
               secretKeyRef:
                 name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
                 key: FLOW_OTC
+          {{- end }}
+          {{- if eq $k "flow" }}
           - name: FLOW_ENCRYPT_SECRET
             valueFrom:
               secretKeyRef:
