@@ -11,7 +11,7 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-    {{- if eq $k "flow" }}
+    {{- if eq $k "workflow" }}
     {{ $.Values.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
     {{- end }}
     {{- if and (ne $k "webhook") (eq $.Values.auth.enabled true) }}
