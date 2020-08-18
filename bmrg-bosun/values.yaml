@@ -112,11 +112,13 @@ monitoring:
       id: 
       key: 
 
+# Integration to XRay. Only needed in Standalone mode.
 xray:
   token: 
   url: 
   user: 
 
+# Integration to Sonarqube. Only needed in Standalone mode.
 sonarqube:
   token: 
   url: 
