@@ -32,3 +32,8 @@ data:
     proxy.host={{ $values.proxy.host }}
     proxy.port={{ $values.proxy.port }}
     proxy.ignore={{ $values.proxy.ignore }}
+    xray.url.api.base={{ $values.xray.url }}
+    xray.boomerang.user={{ $values.xray.user }}
+    xray.boomerang.apitoken={{ $values.xray.token }}
+    sonarqube.url.api.base={{ $values.sonarqube.url }}
+    sonarqube.apitoken={{ $values.sonarqube.token }}

@@ -111,3 +111,12 @@ monitoring:
     browser:
       id: 
       key: 
+
+xray:
+  token: 
+  url: 
+  user: 
+
+sonarqube:
+  token: 
+  url: 
