@@ -39,7 +39,7 @@ web:
   bosun:
     image:
       repository: /bosun-client-web
-      tag: 0.2.11
+      tag: 0.2.14
     replicaCount: 1
     service:
       type: ClusterIP
@@ -51,7 +51,7 @@ service:
   policy:
     image:
       repository: /bosun-service-policy
-      tag: 2.5.3
+      tag: 2.5.4
     replicaCount: 1
     service:
       type: ClusterIP
