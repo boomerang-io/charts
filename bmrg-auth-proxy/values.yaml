@@ -46,7 +46,7 @@ image:
 services:
   authProxy:
     image:
-      repository: /oauth2-proxy/oauth2-proxy
+      repository: /oauth2-proxy
       tag: 5.1.0-bmrg.2-1
 #  authProxy:
 #    image:
