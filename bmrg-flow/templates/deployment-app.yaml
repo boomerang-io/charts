@@ -42,11 +42,11 @@ spec:
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
             - name: CORE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{-if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}"
             - name: CORE_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{-if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}/apps"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}/apps"
             - name: CORE_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{-if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}/services"
+              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}/services"
             - name: PRODUCT_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}"
             - name: PRODUCT_APPS_ENV_URL
