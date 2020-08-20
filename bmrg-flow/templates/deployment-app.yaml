@@ -41,11 +41,11 @@ spec:
               value: "{{ $.Values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
-            - name: BASE_ENV_URL
+            - name: CORE_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}"
-            - name: BASE_APPS_ENV_URL
+            - name: CORE_APPS_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/apps"
-            - name: BASE_SERVICE_ENV_URL
+            - name: CORE_SERVICE_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/services"
             - name: PRODUCT_ENV_URL
               value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}"
