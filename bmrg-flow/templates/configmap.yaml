@@ -37,6 +37,7 @@ data:
     boomerang.environment={{ .Release.Namespace }}
     boomerang.standalone={{ $.Values.general.enable.standalone }}
     boomerang.otc=${FLOW_OTC}
+    boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}
