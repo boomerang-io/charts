@@ -114,6 +114,7 @@ auth:
   namespace: bmrg-core
   prefix: /oauth
   tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
+  signOutRedirect: 
 
 hostAliases: []
 
