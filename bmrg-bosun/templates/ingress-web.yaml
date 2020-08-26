@@ -14,13 +14,13 @@ metadata:
   annotations:
     {{- if eq $.Values.auth.enabled true }}
     {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
-    ingress.kubernetes.io/configuration-snippet: |
+    {{ $.Values.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
       {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
     {{- end }}
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/client-max-body-size: 1m
-    kubernetes.io/ingress.class: nginx
+    {{ $.Values.ingress.annotationsPrefix}}/ssl-redirect: "true"
+    {{ $.Values.ingress.annotationsPrefix}}/client-max-body-size: 1m
+    kubernetes.io/ingress.class: {{ $.Values.ingress.class}}
 spec:
   rules:
     - host: {{ $values.ingress.host }}
