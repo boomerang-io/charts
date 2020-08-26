@@ -1,6 +1,12 @@
 # Boomerang Auth Proxy
 
-Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy), for integrating to authentication providers and has been extended to support manual provider integration for IBM ID, GitHub id, Basic Authentication and Azure AD.
+Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy), for integrating with authentication providers. It has been extended to support manual provider integration. Specific integrration details for the following options are described below:
+ - [W3ID](#integrating-with-w3id-provider),
+ - [IBM ID](#integrating-with-iBMid-provider),
+ - [Basic Authentication](#integrating-with-basic-auth-authentication),
+ - [GitHub](#integrating-with-gitHub-provider),
+ - [Azure Active Directory](#integrating-with-azure-aD-provider) and
+ - [SAML](#integrating-with-sAML-based-providers) based providers.
 
 ### New in this release
 
@@ -8,7 +14,7 @@ Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oaut
 2. Support for running on ICP Proxy node
 3. Based on the pusher managed code
 4. Encrypted cookie (including email and user)
-5. Identity providerse without ./well-known/openid-configuration endpoint are managed as manual OIDC
+5. Identity providers without ./well-known/openid-configuration endpoint are managed as manual OIDC
 6. Session refresh code
 7. New config values
 8. Introduced the config parameter `-cookie-path`
@@ -21,6 +27,7 @@ Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oaut
 ### Prerequisites
 
 - Kubernetes 1.13+
+- Helm v3,
 
 ### Known Issues
 - This chart cannot be deployed multiple times into the same namespaces.
@@ -31,33 +38,293 @@ Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oaut
 
 Before deploying the `oauth-proxy` module, please make sure to follow these steps:
 
-The helm chart comes with a default generated cookie-secret that is used to secure the cookies. 
-We suggest to generate a new value by using `python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())'`.
+ - The helm chart comes with a default generated cookie-secret that is used to secure the cookies. We suggest to generate a new value by using `python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())'`.
+ - Depending on the desired identity provider additional configurations must be done. You can check the following section for specific detailed information.
+
+
+#### Integrating with w3id provider
+Configuring the auth-proxy to work with w3id identity provider requires the following setup:
+
+```yaml
+auth:
+  args:
+  - --oidc-issuer-url=https://w3id.alpha.sso.ibm.com/isam
+  - --login-url=https://w3id.alpha.sso.ibm.com/isam/oidc/endpoint/amapp-runtime-oidcidp/authorize
+  - --redeem-url=https://w3id.alpha.sso.ibm.com/isam/oidc/endpoint/amapp-runtime-oidcidp/token
+  - --oidc-jwks-url=https://w3id-ns.sso.ibm.com/keys/stage/w3id-stage.jwk
+  - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
+  - --client-id=<<CLIENT_ID>>
+  - --client-secret=<<CLIENT_SECRET>>
+  - --set-authorization-header=true
+  - --pass-authorization-header=true
+  - --skip-provider-button=true
+  - --skip-oidc-discovery=true
+  - --insecure-oidc-allow-unverified-email=true
+  - --cookie-expire=24h0m0s
+  - --whitelist-domain=w3id.alpha.sso.ibm.com
+  - --set-basic-auth=false
+  displayHtpasswdForm: false
+  provider: oidcw3
+```
+
+
+#### Integrating with IBMid provider
+Configuring the auth-proxy to work with IBMid identity provider requires the following setup:
+
+```yaml
+auth:
+  args:
+  - --oidc-issuer-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default
+  - --login-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default/authorize
+  - --redeem-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default/token
+  - --oidc-jwks-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default/jwks
+  - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
+  - --client-id=<<CLIENT_ID>>
+  - --client-secret=<<CLIENT_SECRET>>
+  - --set-authorization-header=true
+  - --pass-authorization-header=true
+  - --skip-provider-button=true
+  - --skip-oidc-discovery=true
+  - --insecure-oidc-allow-unverified-email=true
+  - --whitelist-domain=prepiam.ice.ibmcloud.com
+  - --set-basic-auth=false
+  displayHtpasswdForm: false
+  provider: oidcibm
+```
+
+
+#### Integrating with basic auth authentication
+To configure the auth-proxy to work with Basic-Auth you need to provide the following args:
+Important arguments are:
+1. Set the `display-htpasswd-form` to activate the auth-basic form.
+2. The `htpasswd-file` is the path to the file that contains the usernames and passwords from within the container
+3. The `basic-auth-password` is to be set to the cookie-secret in order for the up-stream systems to receive the Authorization header in the format of username:password
+4. The `pass-basic-auth` must be set to `true` in order for the Authorization header to be passed to the up-stream systems
+5. The rest of the arguments are well known and they don't need to be explained
+
+```yaml
+auth:
+  args:
+    - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
+    - --client-id=<<CLIENT_ID>>
+    - --client-secret=<<CLIENT_SECRET>>
+    - --cookie-secure=true
+    - --upstream=file:///dev/null
+    - --http-address=0.0.0.0:4180
+    - --skip-oidc-discovery=true
+    - --skip-provider-button=false
+    - --cookie-expire=24h0m0s
+    - --htpasswd-file=/opt/config/htpasswd
+    - --cookie-refresh=0
+    - --pass-basic-auth=true
+    - --basic-auth-password=<<password_to_be_sent_to_upstreams>>
+  displayHtpasswdForm: true
+  provider:
+```
+
+The ingress of the `auth-proxy` has to have the following snippet in the `configuration-snippet`. This is for the request body to be passed on during the authentication method (where the username and password are sent from the HTTP form) and the redirect argument is sent for the multiple authentication attempts, in case the first ones are failed.  
+```
+proxy_pass_request_body     on;
+proxy_set_header X-Auth-Request-Redirect $arg_rd;
+```
+
+The helm chart can be installed, using the values.yaml option in two ways:
+- the default credentials or
+- by creating a custom list of usernames/passwords and passing it as a config-map.
+
+##### Configure using the default credentials for basic-auth provider
+The `auth-proxy` Helm chart comes with a default `bmrgadmin`/`youll-come-a-waltzing-maltilda-with-me` credentials so it can be used easily without any change.
+For this configuration you have to have the following set-up in the values.yaml file.
+```yaml
+configMap:
+  htpasswdData:
+```
+
+This way, the deployment will use the default config-map `auth-proxy-users-config` which has the following data, representing the `bmrgadmin`/`youll-come-a-waltzing-maltilda-with-me` values.
+```yaml
+data:  
+  htpasswd: |
+    bmrgadmin:$2y$05$88dgk3Kl/r9dLVu7RiDreOiPYU325DW4/KeC7xPvTrmsLdfGyfX8e
+```
+
+##### Configuring using a new htpasswd file (containing custom credentials)
+The `auth-proxy` Helm chart comes also with the option to provide your own usernames/passwords file, in the format documented [here](https://httpd.apache.org/docs/2.4/programs/htpasswd.html).
+For this configuration, you have to have the following set-up in the values.yaml file.
+```yaml
+configMap:
+  htpasswdData: <<<name-of-config-map-that-stores-the-custom-credentials>>>
+```
+
+To create the configmap, first generate the htpasswd file, following the instructions from the chapter bellow, and then create a normal kubernetes configmap where the data is pasted right after the `htpasswd: |` entry.
+For example, let's assume you have create a `htpasswd` file with the following content (consisting of two test users):
+```
+testuser:{SHA}RcVxoVbdzvQTUacTvN3uW6fpVGA=
+testuser2:{SHA}O1u359Ev4+VrxpvcDbzDVvZMHXM=
+```
+Your configmap should look like:
+```yaml
+data:  
+  htpasswd: |
+    testuser:{SHA}RcVxoVbdzvQTUacTvN3uW6fpVGA=
+    testuser2:{SHA}O1u359Ev4+VrxpvcDbzDVvZMHXM=
+```
+
+Adding new users to the htpasswd file you can follow the detailed documentation from [here](https://httpd.apache.org/docs/2.4/programs/htpasswd.html). Make sure you generate the password using the sha or bcrypt options.
+
+To create a new file with one entry with username `uname` and password `pword` use the following command.
+```
+htpasswd -cbs testhtpasswd uname pword
+```
+To add additional entries in the file just use the following command. Removing the `-c` will do it.
+```
+htpasswd -bs testhtpasswd uname2 pword2
+```
+
+
+#### Integrating with GitHub provider
+Configuring the auth-proxy to work with GitHub identity provider requires the following setup:
+
+```yaml
+auth:
+  args:
+    - --email-domain=*
+    - --cookie-secure=true
+    - --upstream=file:///dev/null
+    - --http-address=0.0.0.0:4180
+    - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
+    - --scope=user:email
+    - --set-authorization-header=true
+    - --pass-authorization-header=true
+    - --skip-provider-button=true
+    - --skip-oidc-discovery=true
+    - --insecure-oidc-allow-unverified-email=true
+    - --cookie-expire=24h0m0s
+    - --set-basic-auth=false
+  displayHtpasswdForm: false
+  provider: github
+```
+***Note***: Make sure that in the `args` section you don't introduce the `oidc-issuer-url`, `login-url`, `redeem-url` or `oidc-jwks-url` entries that are typically necessary for other providers.
+
+
+#### Integrating with Azure AD provider
+To configure the `auth-proxy` to work with **Azure AD** you need to provide the following important arguments:
+1. Set the `provider: azure` to activate the azure provider.
+2. Because Azure's headers are very high, the auth-proxy provider must use the redis backend for session storage. We do that by `-session-store-type=redis` option. However in the helm chart provided values you don't need to explicitly provide them, this parameter as well as the url connectivity to redis will be activated based on the `redis.enabled` flag.
+3. Enable `redis` middleware deployment.
+
+```yaml
+auth:
+  args:
+  - --cookie-secure=true
+  - --upstream=file:///dev/null
+  - --http-address=0.0.0.0:4180
+  - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
+  - --client-id=<<AZURE_ID_CLIENT_ID>>
+  - --client-secret=<<AZURE_ID_CLIENT_SECRET>>
+  - --skip-provider-button=true
+  - --skip-oidc-discovery=true
+  - --insecure-oidc-allow-unverified-email=true
+  - --set-authorization-header=true
+  - --pass-authorization-header=true
+  - --set-basic-auth=false
+  - --pass-basic-auth=false
+  - --session-store-type=redis
+  - --whitelist-domain=login.microsoftonline.com
+  displayHtpasswdForm: false
+  provider: azure
+redis:
+  enabled: true
+```
+
+Registering and configuring the application in Azure Portal is not in the scope of this framework, however make sure you have selected the following two permissions: `email` and `openid` in the `API permissions` page.
+
+
+#### Integrating with SAML based providers
+SAML based authentication works using certificates validations between the service providers and the identity providers.
+The current implementation for SAML based authentication is using httpd mellon implementation and it's details can be found [here](https://jdennis.fedorapeople.org/doc/mellon-user-guide/mellon_user_guide.html).
+
+***Known issue***: Unable to establish the Upgrade to websocket through the mellon. See the `LocationMatch` entry from proxy.conf file that needs to be adjusted to allow the upgrade of the connection.
+
+To configure the `auth-proxy` to work with **SAML** you need to provide the following configuration:
+1. Set the `provider: saml` to activate the SAML type authentication.
+2. Set the `displayHtpasswdForm: false` in order to disable the basic authentication mechanism.
+3. Because the SAML container is based on apache mellon module the `args` attribute must be empty. The httpd module doesn't take its arguments throught this mechanism. The correct values should be `args: `.
+4. Disable `redis` middleware deployment. It is not being used while SAML authentication is activated.
+5. Make sure to update the service image repository and tag to the SAML based ones. Please check the following snippet for a valid configuration.
+6. Make sure to correctly update the `configmap-saml` file with the certificate, key and metadata xml for the service provider. These can be generated using the `mellon_create_metadata.sh` script from the saml image container repository.
+7. Ingress must be enabled and exposed under a path that is also the `ingress.root` value for the `core`'s installation.
+
+
+```yaml
+auth:
+  provider: saml
+  displayHtpasswdForm: false
+  args:
+services:
+  authProxy:
+    image:
+      repository: /bmrg-saml-proxy
+      tag: 0.1.0-bmrg.1
+ingress:
+  enabled: true
+  host: <<SERVER_HOST>>
+  path: <<PATH_FOR_DEPLOYED_APP>>
+  tlsSecretName: <<SECRET_NAME_FOR_TLS>>
+redis:
+  enabled: false
+```
+
+##### Headers passed to downstream systems
+
+After the authentication is successful, the IDP - identity provider will send back the Response xml with the user's data that was configured in the IDP. The list of attributes sent back to the authentication proxy can be mapped in the deployment `env` section so that the mellon component will send them as headers to the downstream systems.
+
+For example, using `auth0` IDP, you need to:
+1. Update the `auth0` xml response (in the IDP admin page) to send the user's email address as a field name `EmailAddress`.
+2. In the `bmrg-auth-proxy` deployment env section use this section to define an attribute that will be passed back to the downstream systems. The attributes must be prefixed with **SAML_MAP_** in order for the mellon to know to map them correctly.
+```yaml
+- name: SAML_MAP_EmailAddress
+  value: X-WEBAUTH-EMAIL
+```
+3. The user's email address will be now mapped as header attribute under `X-WEBAUTH-EMAIL`.
+
+The current implementation of `auth-proxy` is mapping the following attributes for authentication purposes for core backend:
+ - User's email address under `X-WEBAUTH-EMAIL`,
+ - User's first name under `X-WEBAUTH-FNAME`,
+ - User's last name under `X-WEBAUTH-LNAME`.
+
+
 
 #### Deployment
-  - Update the following attributes.
-    ```
-    clientId:
-    clientSecret:
-    issuerUrl:
-    loginUrl:
-    redeemUrl:
-    oidcJwksUrl:
-    ```
-  - Update the `--cookie-domain` argument with the full domain name of the endpoint, eg. `launch.boomerangplatform.net`,
-  - Update the `--cookie-path` argument with the name proxy path, eg. `/` or `/live`,
-  - Make sure you have the correct docker version and that the docker version of the `oauth-proxy` has commented out the hard-coded session expiration,
-  - Update the `ingress` definition with the production correct values.
-  - Run the command to update the installation `helm upgrade --install bmrg-auth-proxy-live -f bmrg-auth-proxy-values.yaml --namespace bmrg-live --tls --debug bmrg-artifactory/bmrg-auth-proxy`.
+Besides the specific configuration for each identity provider here are the generic configuration that you need to do:
 
-## Managing this Chart in IBM Cloud Private
+  - Update the following arguments:
+   - `--cookie-domain` and `--cookie-path` arguments with the full domain name and the path of the deployed auth-proxy, eg. :
+   ```yaml
+     args:
+       - --cookie-domain=useboomerang.io
+       - --cookie-path=/public
+   ```
+   - `--client-id` and `--client-secret` arguments with the id and the secret received from the identity provider, eg. :
+   ```yaml
+     args:
+       - --client-id=<<CLIENT_ID>>
+       - --client-secret=<<CLIENT_SECRET>>
+   ```
+   - `--cookie-secure` and `--cookie-secret` arguments to secure the cookie that is being sent to the client. We suggest to generate a new cookie secret for each auth-proxy deployment, details above in the section named [Deployment checklist](#deployment-checklist) eg. :
+   ```yaml
+     args:
+       - --cookie-secure=true
+       - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
+   ```
+  - Enable the `ingress` definition and update it with the correct environment specific values,
+  - Make sure you have the correct docker image version,
+  - Run the command to install/update the release, eg. :
 
- - Installing the Chart: To install the chart navigate to **Catalog**, select the chart, and run the configure and install steps.
- - Uninstalling the Chart: Navigate to **Workloads > Helm Releases** and run the uninstall step.
+   `helm upgrade --install <<RELEASE_NAME>> --namespace <<NAMESPACE>> --debug -f <<CUSTOM_CONFIG_FILE>> boomerang-io/bmrg-auth-proxy`.
 
 ## Configuration
 
-The following table lists the configurable parameters of the oauth2-proxy chart and their default values.
+The following table lists the configurable parameters of the auth-proxy chart and their default values.
 
 |                  Parameter                   |             Description               |                         Default                          |
 |----------------------------------------------|---------------------------------------|----------------------------------------------------------|
