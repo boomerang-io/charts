@@ -9,8 +9,7 @@ Boomerang Flow is a modern cloud native workflow automation tool built on top of
 ## Dependencies
 
 - IBM Cloud Private 3.2.+ OR Kubernetes 1.13+
-- MongoDB 
-- LDAP (OpenLDAP) _optional_
+- MongoDB \
 - NGINX Ingress Controller 0.22+
 - Helm v3
 - Boomerang Auth Proxy or an Authentication Provider
@@ -71,9 +70,9 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `image.registry` | Boomerang Docker Registry | `"tools.boomerangplatform.net:8500"` |
+| `image.registry` | Boomerang Docker Registry | `boomerangio` |
 | `image.pullPolicy` | Image Pull Policy | `IfNotPresent` |
-| `image.pullSecret` | Image Pull Secret. See [here](https://github.com/boomerang-io/charts) for more information on how to access the Boomerang-io docker containers. | `boomerang-io.registrykey` |
+| `image.pullSecret` | Image Pull Secret. See [here](https://github.com/boomerang-io/charts) for more information on how to access the Boomerang-io docker containers. | |
 
 ### Job Configuration
 
@@ -88,34 +87,42 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `replicaCount` | How many pods to spin up | `1`
-| `image.repository` | Docker Registry Image Repository | `/ise/<image-name>`
-| `image.tag` | Image Version | `<sem_ver>`
-| `service.type` | Service Type to Expose | `NodePort` or `ClusterIP`
-| `service.nodeport` | Image tag | 
+| `replicaCount` | How many pods to spin up | `1` |
+| `image.repository` | Docker Registry Image Repository | `/ise/<image-name>` |
+| `image.tag` | Image Version | `<sem_ver>` |
+| `service.type` | Service Type to Expose | `NodePort` or `ClusterIP` |
+| `zone` | The network zone to be placed in if the corresponding network policy is used. Options are trusted, semitrusted, and untrusted | |
 
 ### Ingress Configuration
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `enabled` | Enable creation of ingress definitions | `false`
-| `root` | Chart root context path | `/stage`
-| `hosts` | An array of hosts to accept requests on | `wdc1.cloud.boomerangplatform.net`
-| `tlsSecret` | If there is an associated TLS secret | `bmrg-secret-tls`
-| `auth.enabled` | Enable addition of auth annotations on ingress | `true`
-| `auth.url.internal` |  | `http://bmrg-auth-proxy-bmrg-auth-proxy-4180/oauth/auth`
-| `auth.url.external` |  | `https://$host/oauth/start?rd=$uri`
-| `annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to "nginx.ingress.kubernetes.io" | `ingress.kubernetes.io`
-| `class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to "public-iks-k8s-nginx" | `nginx`
+| `ingress.enabled` | Enable creation of ingress definitions | `false` |
+| `ingress.root` | Chart root context path. Can be used for putting an environment designator in front such as `/dev`. | `""` |
+| `ingress.host` | An array of hosts to accept requests on | `cloud.boomerangplatform.net` |
+| `ingress.tlsSecretName` | If there is an associated TLS secret | `bmrg-tls-cloud` |
+| `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io` | `ingress.kubernetes.io` |
+| `ingress.class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx` |
+
+### Auth Configuration
+
+| Parameter | Description | Default Value |
+|---|---|---|
+| `auth.enabled` | Enable addition of auth annotations on ingress | `true` |
+| `auth.mode` | Type of auth being implemented. Relates to the Auth Proxy mode. Options are `basic` or `oauth` | `basic` |
+| `auth.serviceName` | The Boomerang Auth Proxy service to integrate to. | `bmrg-auth-proxy` |
+| `auth.namespace` | The Boomerang Auth Proxy namespace | |
+| `auth.prefix` | The Boomerang Auth Proxy context path. This is appended to the end of `ingress.root` | `/oauth` |
 
 ### Database Configuration
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `mongodb.host` | Connection Host or Internal Service | `bmrg-mdb001-ibm-mongodb-dev`
-| `mongodb.port` | Connection Port| `27017`
-| `mongodb.user` | Database user | `boomerang`
-| `mongodb.password` | Database user password | `passw0rd`
+| `mongodb.host` | Connection Host or Internal Service | `bmrg-mdb001-ibm-mongodb-dev` |
+| `mongodb.port` | Connection Port| `27017` |
+| `mongodb.user` | Database user | `boomerang` |
+| `mongodb.password` | Database user password | `passw0rd` |
+| `database.mongodb.secretName` | The secret to get the password from. | |
 
 ## Known Issues
 
