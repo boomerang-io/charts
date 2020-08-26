@@ -39,7 +39,7 @@ web:
   bosun:
     image:
       repository: /bosun-client-web
-      tag: 0.2.14
+      tag: 0.3.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -59,7 +59,7 @@ service:
   repository:
     image:
       repository: /bosun-service-repository
-      tag: 0.1.1
+      tag: 0.1.3
     replicaCount: 1
     service:
       type: ClusterIP
@@ -84,7 +84,7 @@ database:
 
 ingress:
   enabled: false
-  root: /cicd
+  root: ""
   host: cloud.boomerangplatform.net
   tlsSecretName: bmrg-tls-cloud
 
