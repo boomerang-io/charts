@@ -48,10 +48,10 @@ Configuring the auth-proxy to work with w3id identity provider requires the foll
 ```yaml
 auth:
   args:
-  - --oidc-issuer-url=https://w3id.alpha.sso.ibm.com/isam
-  - --login-url=https://w3id.alpha.sso.ibm.com/isam/oidc/endpoint/amapp-runtime-oidcidp/authorize
-  - --redeem-url=https://w3id.alpha.sso.ibm.com/isam/oidc/endpoint/amapp-runtime-oidcidp/token
-  - --oidc-jwks-url=https://w3id-ns.sso.ibm.com/keys/stage/w3id-stage.jwk
+  - --oidc-issuer-url=<<W3ID_ISSUER_ENDPOINT>>/isam
+  - --login-url=<<W3ID_LOGIN_ENDPOINT>>/amapp-runtime-oidcidp/authorize
+  - --redeem-url=<<W3ID_REDEEM_ENDPOINT>>/amapp-runtime-oidcidp/token
+  - --oidc-jwks-url=<<W3ID_JWKS_ENDPOINT>>.jwk
   - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
   - --client-id=<<CLIENT_ID>>
   - --client-secret=<<CLIENT_SECRET>>
@@ -74,10 +74,10 @@ Configuring the auth-proxy to work with IBMid identity provider requires the fol
 ```yaml
 auth:
   args:
-  - --oidc-issuer-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default
-  - --login-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default/authorize
-  - --redeem-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default/token
-  - --oidc-jwks-url=https://prepiam.ice.ibmcloud.com/oidc/endpoint/default/jwks
+  - --oidc-issuer-url=<<IBMID_ISSUER_ENDPOINT>>/default
+  - --login-url=<<IBMID_LOGIN_ENDPOINT>>/default/authorize
+  - --redeem-url=<<IBMID_REDEEM_ENDPOINT>>/default/token
+  - --oidc-jwks-url=<<IBMID_JWKS_ENDPOINT>>/default/jwks
   - --cookie-secret=L_7zkUsPN3jxRkND9zne3w==
   - --client-id=<<CLIENT_ID>>
   - --client-secret=<<CLIENT_SECRET>>
@@ -86,7 +86,7 @@ auth:
   - --skip-provider-button=true
   - --skip-oidc-discovery=true
   - --insecure-oidc-allow-unverified-email=true
-  - --whitelist-domain=prepiam.ice.ibmcloud.com
+  - --whitelist-domain=<<IBMID_ISSUER_ENDPOINT>>
   - --set-basic-auth=false
   displayHtpasswdForm: false
   provider: oidcibm
