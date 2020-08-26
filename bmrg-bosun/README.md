@@ -82,8 +82,8 @@ The following table lists the configurable parameters of the chart and their def
 |---|---|---|
 | `ingress.enabled` | Enable creation of ingress definitions | `false` |
 | `ingress.root` | Chart root context path. Can be used for putting an environment designator in front such as `/dev`. | `""` |
-| `ingress.host` | An array of hosts to accept requests on | `wdc1.cloud.boomerangplatform.net` |
-| `ingress.tlsSecretName` | If there is an associated TLS secret | `bmrg-secret-tls` |
+| `ingress.host` | An array of hosts to accept requests on | `cloud.boomerangplatform.net` |
+| `ingress.tlsSecretName` | If there is an associated TLS secret | `bmrg-tls-cloud` |
 | `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io` | `ingress.kubernetes.io` |
 | `ingress.class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx` |
 
