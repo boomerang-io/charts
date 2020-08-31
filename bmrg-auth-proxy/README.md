@@ -99,7 +99,7 @@ Important arguments are:
 1. Set the `display-htpasswd-form` to activate the auth-basic form.
 2. The `htpasswd-file` is the path to the file that contains the usernames and passwords from within the container
 3. The `basic-auth-password` is to be set to the cookie-secret in order for the up-stream systems to receive the Authorization header in the format of username:password
-4. The `pass-basic-auth` must be set to `true` in order for the Authorization header to be passed to the up-stream systems
+4. The `pass-basic-auth` and `set-basic-auth` must be set to `true` in order for the Authorization header to be passed to the up-stream systems
 5. The rest of the arguments are well known and they don't need to be explained
 
 ```yaml
@@ -117,6 +117,7 @@ auth:
     - --htpasswd-file=/opt/config/htpasswd
     - --cookie-refresh=0
     - --pass-basic-auth=true
+    - --set-basic-auth=true
     - --basic-auth-password=<<password_to_be_sent_to_upstreams>>
   displayHtpasswdForm: true
   provider:
