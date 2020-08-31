@@ -36,6 +36,7 @@ auth:
     - --whitelist-domain=
     # pass -pass-basic-auth for basic-auth mechanism
     - --pass-basic-auth=true
+    - --user-id-claim=emailAddress
 
 image:
   registry: boomerangio
