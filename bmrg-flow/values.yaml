@@ -129,9 +129,10 @@ monitoring:
     apm:
       name: Boomerang Private
       key:
-      image:
-        repository: /bmrg-util-newrelicapm
-        tag: 5.6.0
+      image: 
+        registry: boomerangio
+        repository: /util-newrelicjavaagent
+        tag: 5.14.0
     browser:
       id:
       key:

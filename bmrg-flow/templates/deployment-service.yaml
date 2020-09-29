@@ -26,7 +26,7 @@ spec:
       {{- if $.Values.monitoring.newrelic.apm.key }}
       initContainers:
         - name: util-newrelicapm-cntr
-          image: {{ $.Values.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
+          image:  {{ $.Values.monitoring.newrelic.apm.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: apm-newrelic
