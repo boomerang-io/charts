@@ -8,12 +8,12 @@ general:
   zone: untrusted
 
 auth:
-  # oidcw3, oidcibm or saml possible providers. 
+  # oidcw3, oidcibm or saml possible providers.
   # if 'displayHtpasswdForm' is activated, this value is ignored
   provider: oidcibm
   # set to true if basic-auth is desired
   displayHtpasswdForm: false
-  args: 
+  args:
     - --oidc-issuer-url=
     - --login-url=
     - --redeem-url=
@@ -36,18 +36,19 @@ auth:
     - --whitelist-domain=
     # pass -pass-basic-auth for basic-auth mechanism
     - --pass-basic-auth=true
+    - --user-id-claim=emailAddress
 
 image:
   registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: 
+  pullSecret:
   replicaCount: 1
 
 services:
   authProxy:
     image:
       repository: /oauth2-proxy
-      tag: 5.1.0-bmrg.2-1
+      tag: 5.1.0-bmrg.2
 #  authProxy:
 #    image:
 #      repository: /bmrg-saml-proxy
@@ -67,7 +68,7 @@ ingress:
   # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
   # you need to set it to "nginx.ingress.kubernetes.io"
   annotationsPrefix: "ingress.kubernetes.io"
-  # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
+  # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
   # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
   class: "nginx"
 
@@ -88,8 +89,8 @@ tolerations: []
 
 allowEmailList:
   enabled: false
-  emailList: 
-    - test@ibm.com 
+  emailList:
+    - test@ibm.com
     - sample@sample.com
 
 redis:
@@ -103,12 +104,12 @@ redis:
   master:
     persistence:
       enabled: false
-#    nodeSelector: 
+#    nodeSelector:
 #      proxy: "true"
-#    tolerations: 
+#    tolerations:
 #    - effect: NoSchedule
 #      key: dedicated
-#      operator: Exists  
+#      operator: Exists
   slave:
     persistence:
       enabled: false
