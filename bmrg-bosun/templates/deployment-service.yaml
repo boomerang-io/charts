@@ -23,7 +23,7 @@ spec:
       {{- if $values.monitoring.newrelic.apm.key }}
       initContainers:
         - name: util-newrelicapm-cntr
-          image: {{ $values.image.registry }}/ise/bmrg-util-newrelicapm:5.6.0
+          image: {{ $.Values.monitoring.newrelic.apm.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: apm-newrelic
