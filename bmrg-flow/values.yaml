@@ -65,7 +65,7 @@ services:
     zone: semi-trusted
   listener:
     image:
-      repository: /flow-service-actionlistener
+      repository: /flow-service-listener
       tag: 1.1.0
     replicaCount: 1
     service:
