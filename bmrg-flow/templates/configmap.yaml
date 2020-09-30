@@ -16,8 +16,9 @@ data:
     {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
-    actionlistener.nats.url={{ $.Values.nats.url }}
-    actionlistener.nats.cluster={{ $.Values.nats.cluster }}
+    eventing.enabled={{ $.Values.general.enable.eventing }}
+    eventing.nats.url={{ $.Values.nats.url }}
+    eventing.nats.cluster={{ $.Values.nats.cluster }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG

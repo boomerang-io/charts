@@ -9,6 +9,7 @@ general:
     apidocs: false
     debug: false
     standalone: true
+    eventing: true
 
 workers:
   security:

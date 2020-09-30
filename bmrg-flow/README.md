@@ -37,6 +37,8 @@ The following table lists the configurable parameters of the chart and their def
 | `general.namePrefix` | The name prefix used in the naming of all Kubernetes objects  | `$.Chart.Name` |
 | `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false` |
 | `general.enable.debug` | Enables additional logging and port forwarding advice on installation | `false` |
+| `general.enable.standalone` | Enables standalone mode and does not require the IBM Essentials Core services to run | `true` |
+| `general.enable.eventing` | Enables eventing as part of the installation. This will require a NATS installation to integrate with | `true` |
 
 ### Worker Configuration
 
