@@ -4,7 +4,7 @@ This is the common helper chart as a sharable library of helper templates which 
 
 ### New in this release
 
-1. The `bmrg.core.services` helper now prefixes generated items with `core.` i.e. `auth.service.host` now becomes `core.auth.service.host`.
+1. The `bmrg.core.services` helper now supports also the metering service.
 
 ## Prerequisites
 
