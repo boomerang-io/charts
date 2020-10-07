@@ -30,21 +30,13 @@ To quickly get started, install into a kubernetes cluster of 1.13+ via Helm usin
 
 **Step 1**
 
-Ensure you have a docker registry secret in your namespace for access to github packages. Follow the instructions [here](https://help.github.com/en/github/managing-packages-with-github-packages/configuring-docker-for-use-with-github-packages#authenticating-to-github-packages) to get the github token.
-
-```sh
-kubectl create secret docker-registry boomerang.registrykey --docker-server=docker.pkg.github.com --docker-username=<github_username> --docker-password=<github_token> --docker-email=<github_email> --namespace=<namespace>
-```
-
-**Step 2**
-
-Add the helm repository
+Make sure you have the helm repository available
 
 ```sh
 helm repo add boomerang-io https://raw.githubusercontent.com/boomerang-io/charts/index
 ```
 
-**Step 3**
+**Step 2**
 
 Install or upgrade the helm chart using the relevant helm commands and passing in any properties
 
