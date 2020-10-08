@@ -11,10 +11,11 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-    {{ $.Values.ingress.annotationsPrefix}}/auth-url: "{{ $.Values.auth.tokenURL }}"
     {{ $.Values.ingress.annotationsPrefix}}/ssl-redirect: "false"
     {{ $.Values.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
     {{ $.Values.ingress.annotationsPrefix}}/client-max-body-size: 1m
+    {{ $.Values.ingress.annotationsPrefix}}/limit-rpm: "100"
+    {{ $.Values.ingress.annotationsPrefix}}/limit-connections: "3"
     kubernetes.io/ingress.class: {{ $.Values.ingress.class}}
 spec:
   rules:
