@@ -2,14 +2,26 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-#General Configuration
+# General Configuration
+# - To enable or disable features, use the feature toggle flags under enable.
 general:
   namePrefix:
   enable:
     apidocs: false
     debug: false
-    standalone: true
+    activation: true
     eventing: true
+    standalone: true
+    feature:
+      quotas: true
+      triggers: true
+      tokens: true
+      teamProperties: true
+      globalProperties: true
+      teamManagement: true
+      userManagement: true
+      taskManager: true
+      settings: true
 
 workers:
   security:

@@ -36,9 +36,11 @@ The following table lists the configurable parameters of the chart and their def
 |---|---|---|
 | `general.namePrefix` | The name prefix used in the naming of all Kubernetes objects  | `$.Chart.Name` |
 | `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false` |
+| `general.enable.activation` | Enables needing the one time code when installing | `true` |
 | `general.enable.debug` | Enables additional logging and port forwarding advice on installation | `false` |
 | `general.enable.standalone` | Enables standalone mode and does not require the IBM Essentials Core services to run | `true` |
 | `general.enable.eventing` | Enables eventing as part of the installation. This will require a NATS installation to integrate with | `true` |
+| `general.enable.feature.*` | Enables different features. See the documentation for more inforamtion |  |
 
 ### Worker Configuration
 
@@ -50,7 +52,7 @@ The following table lists the configurable parameters of the chart and their def
 | `workers.logging.port` | The elasticsearch port. _Only required if type is 'elastic'_ | <ul><li>default:</li><li>elastic: `9200`</li></ul> |
 | `workers.logging.secrets` | The elastic logging certs secret. _Only required if type is 'elastic'_ | <ul><li>default:</li><li>elastic: `logging-elk-certs`</li></ul> |
 | `workers.enable.deletion` | Will delete any workers that are completed and in non error state. | `true` |
-| `workers.enable.dedicatedNodes` | Runs the CICD wokers to run on specific nodes with the taint `dedicated=bmrg-worker:NoSchedule` and also a label of `node-role.kubernetes.io/bmrg-worker=true` | `false` |
+| `workers.enable.dedicatedNodes` | Runs the Flow wokers to run on specific nodes with the taint `dedicated=bmrg-worker:NoSchedule` and also a label of `node-role.kubernetes.io/bmrg-worker=true` | `false` |
 
 *Note:*
 1. If you need the elasticsearch logging certificates, then you will need to have these available in the same namespace. The following command can help achieve this.

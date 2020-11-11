@@ -36,7 +36,10 @@ data:
     kube.worker.logging.keystore.password=changeme
     kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
+    boomerang.product={{ $.Values.general.namePrefix }}
+    boomerang.version={{ $.Chart.version }}
     boomerang.standalone={{ $.Values.general.enable.standalone }}
+    boomerang.activation={{ $.Values.general.enable.activation }}
     boomerang.otc=${FLOW_OTC}
     boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
     boomerang.signOutUrl={{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/sign_out{{ if $.Values.auth.signOutRedirect }}?rd={{ $.Values.auth.signOutRedirect }}{{ end }}
@@ -57,3 +60,12 @@ data:
     opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
     opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
     opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}
+    flow.feature.workflow.quotas={{ $.Values.general.enable.feature.workflowQuotas }}
+    flow.feature.workflow.triggers={{ $.Values.general.enable.feature.workflowTriggers }}
+    flow.feature.workflow.tokens={{ $.Values.general.enable.feature.workflowTokens }}
+    flow.feature.team.properties={{ $.Values.general.enable.feature.teamProperties }}
+    flow.feature.global.properties={{ $.Values.general.enable.feature.globalProperties }}
+    flow.feature.team.management={{ $.Values.general.enable.feature.teamManagement }}
+    flow.feature.user.management={{ $.Values.general.enable.feature.userManagement }}
+    flow.feature.taskManager={{ $.Values.general.enable.feature.taskManager }}
+    flow.feature.settings={{ $.Values.general.enable.feature.settings }}
