@@ -68,6 +68,6 @@ data:
     flow.feature.user.management={{ $.Values.general.enable.feature.userManagement }}
     flow.feature.taskManager={{ $.Values.general.enable.feature.taskManager }}
     flow.feature.settings={{ $.Values.general.enable.feature.settings }}
-    flow.externalUrl.team={{ $.Values.general.externalUrl.team }}
+    flow.externalUrl.team={{ $.Values.general.externalUrl.teams }}
     flow.externalUrl.user={{ $.Values.general.externalUrl.users }}
     flow.externalUrl.navigation={{ $.Values.general.externalUrl.navigation }}
