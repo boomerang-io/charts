@@ -22,6 +22,10 @@ general:
       userManagement: true
       taskManager: true
       settings: true
+  externalUrl: 
+    teams: 
+    users: 
+    navigation: 
 
 workers:
   security:

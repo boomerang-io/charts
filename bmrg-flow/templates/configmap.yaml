@@ -38,7 +38,6 @@ data:
     boomerang.environment={{ .Release.Namespace }}
     boomerang.product={{ $.Values.general.namePrefix }}
     boomerang.version={{ $.Chart.Version }}
-    boomerang.standalone={{ $.Values.general.enable.standalone }}
     boomerang.activation={{ $.Values.general.enable.activation }}
     boomerang.otc=${FLOW_OTC}
     boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
@@ -69,3 +68,6 @@ data:
     flow.feature.user.management={{ $.Values.general.enable.feature.userManagement }}
     flow.feature.taskManager={{ $.Values.general.enable.feature.taskManager }}
     flow.feature.settings={{ $.Values.general.enable.feature.settings }}
+    flow.externalUrl.team={{ $.Values.general.externalUrl.team }}
+    flow.externalUrl.user={{ $.Values.general.externalUrl.users }}
+    flow.externalUrl.navigation={{ $.Values.general.externalUrl.navigation }}
