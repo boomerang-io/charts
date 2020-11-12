@@ -9,9 +9,7 @@ general:
   enable:
     apidocs: false
     debug: false
-    activation: true
     eventing: true
-    standalone: true
     feature:
       quotas: true
       triggers: true
