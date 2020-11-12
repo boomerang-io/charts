@@ -37,7 +37,7 @@ data:
     kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.product={{ $.Values.general.namePrefix }}
-    boomerang.version={{ $.Chart.version }}
+    boomerang.version={{ $.Chart.Version }}
     boomerang.standalone={{ $.Values.general.enable.standalone }}
     boomerang.activation={{ $.Values.general.enable.activation }}
     boomerang.otc=${FLOW_OTC}
