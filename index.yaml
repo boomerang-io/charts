@@ -2,6 +2,37 @@ apiVersion: v1
 entries:
   bmrg-auth-proxy:
   - apiVersion: v2
+    created: "2020-11-13T19:01:16.693011298Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.6
+    - alias: redis
+      condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.6.0
+    description: Boomerang Auth Reverse Proxy for integrating to authentication providers
+    digest: 14faa2699571722ea8361e2191c586b1ef0ea6a84eeafba21930463bd2c59415
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - auth
+    - SAML
+    - ibmid
+    - w3id
+    - basic authentication
+    - Azure AD
+    - GitHub
+    - redis
+    - allow email list
+    name: bmrg-auth-proxy
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-auth-proxy-3.2.5/bmrg-auth-proxy-3.2.5.tgz
+    version: 3.2.5
+  - apiVersion: v2
     created: "2020-11-13T17:09:46.938638005Z"
     dependencies:
     - alias: bmrgcommon
@@ -1837,4 +1868,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2020-11-13T18:54:43.438426731Z"
+generated: "2020-11-13T19:01:16.683274576Z"
