@@ -302,3 +302,4 @@ opentracing.jaeger.instance.[0].udp-sender.host={{ .Values.monitoring.jaeger.age
 opentracing.jaeger.instance.[0].udp-sender.port={{ .Values.monitoring.jaeger.agent.port }}
 opentracing.jaeger.instance.[0].http-sender.url=http://{{ .Values.monitoring.jaeger.collector.host }}.{{ .Values.monitoring.jaeger.namespace }}:{{ .Values.monitoring.jaeger.collector.port }}/api/traces
 {{- end }}
+{{- end -}}
