@@ -16,7 +16,7 @@ data:
     {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
-    eventing.enabled={{ $.Values.general.enable.eventing }}
+    eventing.nats.enabled={{ $.Values.nats.enable }}
     eventing.nats.url={{ $.Values.nats.url }}
     eventing.nats.cluster={{ $.Values.nats.cluster }}
     {{- if $.Values.general.enable.debug }}
