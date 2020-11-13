@@ -167,21 +167,54 @@ access_by_lua_block {
 {{- end -}}
 
 {{/*
-Chart resources to insert in the pod definition.  This works by being fed a dictionary of Values plus the item for which it generates the resource request/limits. 
+Chart resources to insert in the pod definition.  This works by being fed a dictionary of Values plus the item for which it generates the resource request/limits.
 Example Usage: {{- include "bmrg.resources.chart" (dict "context" $.Values "item" $v "tier" $tier ) | nindent 10 }}
 */}}
 {{- define "bmrg.resources.chart" -}}
 {{- if .item.resources }}
 {{- with .item.resources }}
-resources: 
+resources:
 {{ toYaml . | trim | indent 2 }}
 {{- end }}
 {{- else if .context.resources }}
 {{- if hasKey .context.resources .tier }}
 {{- with .context.resources.services }}
-resources: 
+resources:
 {{ toYaml . | trim | indent 2 }}
 {{- end }}
 {{- end }}
 {{- end }}
+{{- end -}}
+
+{{/*
+Define the helper method to define the nodeSelector .
+Example Usage: {{- include "bmrg.config.node_selector" $ }}
+*/}}
+{{- define "bmrg.config.node_selector" -}}
+    {{- with $.Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{- end -}}
+
+{{/*
+Define the helper method to define the affinity .
+Example Usage: {{- include "bmrg.config.affinity" $ }}
+*/}}
+{{- define "bmrg.config.affinity" -}}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{- end -}}
+
+{{/*
+Define the helper method to define the tolerations .
+Example Usage: {{- include "bmrg.config.tolerations" $ }}
+*/}}
+{{- define "bmrg.config.tolerations" -}}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
 {{- end -}}

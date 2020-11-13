@@ -45,7 +45,7 @@ spec:
         imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
         name: {{ .Chart.Name }}
         {{- if $.Values.auth.displayHtpasswdForm }}
-        env: 
+        env:
         - name: UPSTREAM_AUTH_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -116,7 +116,7 @@ spec:
         - name: saml-volume
           configMap:
             name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "saml") }}
-            items: 
+            items:
               - key: saml_sp.cert
                 path: saml_sp.cert
               - key: saml_sp.key
@@ -128,15 +128,6 @@ spec:
       imagePullSecrets:
       - name: {{ .Values.image.pullSecret }}
       {{- end }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+    {{- include "bmrg.config.node_selector" $ }}
+    {{- include "bmrg.config.affinity" $ }}
+    {{- include "bmrg.config.tolerations" $ }}
