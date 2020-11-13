@@ -58,6 +58,8 @@ data:
     opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
     opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
     opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}
+    flow.feature.activity={{ $.Values.general.enable.feature.activity }}
+    flow.feature.insights={{ $.Values.general.enable.feature.insights }}
     flow.feature.workflow.quotas={{ $.Values.general.enable.feature.workflowQuotas }}
     flow.feature.workflow.triggers={{ $.Values.general.enable.feature.workflowTriggers }}
     flow.feature.workflow.tokens={{ $.Values.general.enable.feature.workflowTokens }}

@@ -11,6 +11,8 @@ general:
     debug: false
     eventing: true
     feature:
+      activity: true
+      insights: true
       quotas: true
       triggers: true
       tokens: true
