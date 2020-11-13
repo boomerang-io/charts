@@ -793,6 +793,20 @@ entries:
     version: 2.0.2
   bmrg-common:
   - apiVersion: v2
+    created: "2020-11-13T16:23:22.903406288Z"
+    description: Common helpers for Boomerang charts
+    digest: b2cb5b31450b0c11d0504cfc6fb65fef0a663a3b21ed2cc2098b924fed297939
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - common
+    - helpers
+    name: bmrg-common
+    type: library
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-common-1.0.3/bmrg-common-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
     created: "2020-07-31T03:53:32.674115017Z"
     description: Common helpers for Boomerang charts
     digest: 5b3ea386ef796350b194b42b687ae564fca43f15e955c96666f707ec471872ff
@@ -1719,4 +1733,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2020-11-13T04:57:37.429614804Z"
+generated: "2020-11-13T16:23:22.902701248Z"
