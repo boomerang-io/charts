@@ -2,6 +2,37 @@ apiVersion: v1
 entries:
   bmrg-auth-proxy:
   - apiVersion: v2
+    created: "2020-11-13T16:56:46.116897148Z"
+    dependencies:
+    - alias: bmrgcommon
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: ~1.0.3
+    - alias: redis
+      condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.6.0
+    description: Boomerang Auth Reverse Proxy for integrating to authentication providers
+    digest: 4766c8cba379fbe2fc733591578f5099352570b472b43561f009cdd4a0ebb728
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - auth
+    - SAML
+    - ibmid
+    - w3id
+    - basic authentication
+    - Azure AD
+    - GitHub
+    - redis
+    - allow email list
+    name: bmrg-auth-proxy
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-auth-proxy-3.2.2/bmrg-auth-proxy-3.2.2.tgz
+    version: 3.2.2
+  - apiVersion: v2
     created: "2020-08-31T10:57:29.77727412Z"
     dependencies:
     - alias: bmrgcommon
@@ -792,6 +823,20 @@ entries:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-bosun-2.0.2/bmrg-bosun-2.0.2.tgz
     version: 2.0.2
   bmrg-common:
+  - apiVersion: v2
+    created: "2020-11-13T16:56:47.528909789Z"
+    description: Common helpers for Boomerang charts
+    digest: fbc31c91b58a7166083408e539581ebb80ef607d65736974e24f6a90125d5ead
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - common
+    - helpers
+    name: bmrg-common
+    type: library
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-common-1.0.4/bmrg-common-1.0.4.tgz
+    version: 1.0.4
   - apiVersion: v2
     created: "2020-11-13T16:23:22.903406288Z"
     description: Common helpers for Boomerang charts
@@ -1733,4 +1778,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2020-11-13T16:23:22.902701248Z"
+generated: "2020-11-13T16:56:47.528071095Z"
