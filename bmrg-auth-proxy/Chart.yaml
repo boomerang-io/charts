@@ -9,6 +9,11 @@ dependencies:
     repository: https://raw.githubusercontent.com/boomerang-io/charts/index
     version: ~1.0.6
     alias: bmrgcommon
+  - name: redis
+    version: 10.6.0
+    repository: https://charts.bitnami.com/bitnami
+    alias: redis
+    condition: redis.enabled
 keywords:
 - boomerang
 - auth
