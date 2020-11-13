@@ -2,7 +2,7 @@ apiVersion: v2
 name: bmrg-common
 description: Common helpers for Boomerang charts
 type: library
-version: 1.0.5
+version: 1.0.6
 home: https://useboomerang.io
 keywords:
 - boomerang

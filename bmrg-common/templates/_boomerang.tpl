@@ -103,6 +103,15 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create a string from joining a list with new line.
+Example Usage: {{ include "bmrg.util.joinListWithNL" .Values.allowEmailList.emailList }}
+*/}}
+{{- define "bmrg.util.joinListWithNL" -}}
+{{- $local := dict "first" true -}}
+{{- range $k, $v := . -}}{{- if not $local.first -}}{{ printf "\n    " }}{{- end -}}{{- $v -}}{{- $_ := set $local "first" false -}}{{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "bmrg.util.time" -}}
