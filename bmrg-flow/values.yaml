@@ -159,5 +159,6 @@ monitoring:
       port: 5778
 
 nats:
-  url: nats://bmrg-nats-operator:4222
-  cluster: bmrg-nats-streamer
+  enable: true
+  url: nats://bmrg-nats:4222
+  cluster: bmrg-stan

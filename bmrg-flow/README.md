@@ -39,7 +39,7 @@ The following table lists the configurable parameters of the chart and their def
 | `general.enable.activation` | Enables needing the one time code when installing | `true` |
 | `general.enable.debug` | Enables additional logging and port forwarding advice on installation | `false` |
 | `general.enable.standalone` | Enables standalone mode and does not require the IBM Essentials Core services to run | `true` |
-| `general.enable.eventing` | Enables eventing as part of the installation. This will require a NATS installation to integrate with | `true` |
+| `general.enable.eventing` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
 | `general.enable.feature.*` | Enables different features. See the documentation for more inforamtion |  |
 
 ### Worker Configuration
@@ -127,6 +127,14 @@ The following table lists the configurable parameters of the chart and their def
 | `mongodb.user` | Database user | `boomerang` |
 | `mongodb.password` | Database user password | `passw0rd` |
 | `database.mongodb.secretName` | The secret to get the password from. | |
+
+### NATS Configuration
+
+| Parameter | Description | Default Value |
+|---|---|---|
+| `nats.enable` | Enable NATS | `true` |
+| `nats.url` | The NATS Url | `nats://bmrg-nats:4222` |
+| `nats.cluster` | NATS Streaming Cluster | `bmrg-stan` |
 
 ## Known Issues
 

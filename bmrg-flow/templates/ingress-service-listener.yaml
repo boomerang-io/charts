@@ -1,9 +1,8 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
-{{- if $.Values.ingress.enabled -}}
-{{- range $k, $v := $.Values.services }}
-{{- if eq $k "listener" }}
+{{- $k := "services" -}}
+{{- if and $.Values.ingress.enabled $.Values.general.enable.eventing -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
