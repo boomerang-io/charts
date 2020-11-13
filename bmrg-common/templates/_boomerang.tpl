@@ -187,6 +187,39 @@ resources:
 {{- end -}}
 
 {{/*
+Define the helper method to define the nodeSelector .
+Example Usage: {{- include "bmrg.config.node_selector" $ }}
+*/}}
+{{- define "bmrg.config.node_selector" -}}
+    {{- with $.Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{- end -}}
+
+{{/*
+Define the helper method to define the affinity .
+Example Usage: {{- include "bmrg.config.affinity" $ }}
+*/}}
+{{- define "bmrg.config.affinity" -}}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{- end -}}
+
+{{/*
+Define the helper method to define the tolerations .
+Example Usage: {{- include "bmrg.config.tolerations" $ }}
+*/}}
+{{- define "bmrg.config.tolerations" -}}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{- end -}}
+
+{{/*
 Insert the Jaeger agents deployed as side-cars to the app cntr
 Example Usage: {{- include "bmrg.jaeger.deployment.agents" (dict "context" $.Values) | nindent 8 }}
 */}}
@@ -269,4 +302,3 @@ opentracing.jaeger.instance.[0].udp-sender.host={{ .Values.monitoring.jaeger.age
 opentracing.jaeger.instance.[0].udp-sender.port={{ .Values.monitoring.jaeger.agent.port }}
 opentracing.jaeger.instance.[0].http-sender.url=http://{{ .Values.monitoring.jaeger.collector.host }}.{{ .Values.monitoring.jaeger.namespace }}:{{ .Values.monitoring.jaeger.collector.port }}/api/traces
 {{- end }}
-{{- end -}}
