@@ -23,6 +23,7 @@ Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oaut
 11. Redis back-end session support
 12. Support for SAML based auth
 13. Migrated to helm v3 structure
+14. Introduced email-list storage configmap and secret
 
 ### Prerequisites
 
@@ -359,4 +360,5 @@ The following table lists the configurable parameters of the auth-proxy chart an
 | `auth.displayHtpasswdForm` | Enables or disables the basic-auth form | `false`
 | `auth.provider` | Selects the identity provider. Possible values are: oidcw3, oidcibm, saml or empty (in case of basic auth)  | `oidcw3`
 | `allowEmailList.enabled` | Enables the access filtered by the selected email list | `false`
+| `allowEmailList.persistence` | Defines how the email-list file will be projected, via a configmap or secret | `configmap`
 | `allowEmailList.emailList` | Authenticate against emails via file (one per line) | `[]`

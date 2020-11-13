@@ -2,7 +2,7 @@
 {{- $product := "auth" -}}
 {{- $component := "config" -}}
 {{- $tier := "allowemail" -}}
-{{- if $.Values.allowEmailList.enabled }}
+{{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "configmap") }}
 kind: ConfigMap
 apiVersion: v1
 metadata:

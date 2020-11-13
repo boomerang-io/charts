@@ -1,19 +1,14 @@
 apiVersion: v2
 name: bmrg-auth-proxy
 description: Boomerang Auth Reverse Proxy for integrating to authentication providers
-version: 3.2.4
+version: 3.2.5
 type: application
 home: https://useboomerang.io
 dependencies:
   - name: bmrg-common
     repository: https://raw.githubusercontent.com/boomerang-io/charts/index
-    version: ~1.0.4
+    version: ~1.0.6
     alias: bmrgcommon
-  - name: redis
-    version: 10.6.0
-    repository: https://charts.bitnami.com/bitnami
-    alias: redis
-    condition: redis.enabled
 keywords:
 - boomerang
 - auth

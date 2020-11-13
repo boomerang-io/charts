@@ -106,11 +106,19 @@ spec:
           configMap:
             name: {{ if $.Values.configMap.htpasswdData }}{{ $.Values.configMap.htpasswdData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "htpasswd") }}{{ end }}
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "configmap") }}
         - name: auth-emails-data
           configMap:
             name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
             defaultMode: 420
+        {{- end }}
+        {{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "secret") }}
+        - name: auth-emails-data
+          secret:
+            items:
+            - key: authenticated-emails-list
+              path: authenticated-emails-list
+            secretName: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
         {{- end }}
         {{- if eq (default "" $.Values.auth.provider) "saml" }}
         - name: saml-volume
