@@ -103,6 +103,15 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create a string from joining a list with new line.
+Example Usage: {{ include "bmrg.util.joinListWithNL" .Values.allowEmailList.emailList }}
+*/}}
+{{- define "bmrg.util.joinListWithNL" -}}
+{{- $local := dict "first" true -}}
+{{- range $k, $v := . -}}{{- if not $local.first -}}{{ printf "\n    " }}{{- end -}}{{- $v -}}{{- $_ := set $local "first" false -}}{{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "bmrg.util.time" -}}
@@ -302,3 +311,4 @@ opentracing.jaeger.instance.[0].udp-sender.host={{ .Values.monitoring.jaeger.age
 opentracing.jaeger.instance.[0].udp-sender.port={{ .Values.monitoring.jaeger.agent.port }}
 opentracing.jaeger.instance.[0].http-sender.url=http://{{ .Values.monitoring.jaeger.collector.host }}.{{ .Values.monitoring.jaeger.namespace }}:{{ .Values.monitoring.jaeger.collector.port }}/api/traces
 {{- end }}
+{{- end -}}
