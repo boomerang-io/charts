@@ -142,6 +142,18 @@ Get the http_origin from the values host, should return boomerangplatform.net
 {{- end -}}
 {{- end -}}
 
+{{/*
+Define the email domain list based on csv string
+*/}}
+{{- define "bmrg.authorization.email-domains" -}}
+{{- if $.Values.authorization.emailDomains -}}
+{{- $parts := splitList "," .Values.authorization.emailDomains -}}
+{{- range $k, $v := $parts }}
+{{ printf "- --email-domain=%s" $v | indent 8 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Define the Access-Control-Allow header to be set up for up stream systems.
