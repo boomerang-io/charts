@@ -35,11 +35,10 @@ spec:
         - --session-store-type=redis
         - --redis-connection-url=redis://{{ .Release.Name }}-redis-master:{{ $.Values.redis.redisPort }}
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if $.Values.authorization.allowEmailList.enabled }}
         - --authenticated-emails-file=/etc/oauth2-proxy/authenticated-emails-list
-        {{- else }}
-        - --email-domain=*
         {{- end }}
+        {{- include "bmrg.authorization.email-domains" $ }}
         {{- end }}
         image: "{{ $.Values.image.registry }}{{ .Values.services.authProxy.image.repository }}:{{ .Values.services.authProxy.image.tag }}"
         imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
@@ -85,7 +84,7 @@ spec:
           - mountPath: /opt/config
             name: htpasswd-data
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if $.Values.authorization.allowEmailList.enabled }}
           - mountPath: /etc/oauth2-proxy
             name: auth-emails-data
         {{- end }}
@@ -106,13 +105,13 @@ spec:
           configMap:
             name: {{ if $.Values.configMap.htpasswdData }}{{ $.Values.configMap.htpasswdData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "htpasswd") }}{{ end }}
         {{- end }}
-        {{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "configmap") }}
+        {{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap") }}
         - name: auth-emails-data
           configMap:
             name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
             defaultMode: 420
         {{- end }}
-        {{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "secret") }}
+        {{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "secret") }}
         - name: auth-emails-data
           secret:
             items:
