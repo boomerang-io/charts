@@ -108,7 +108,7 @@ Example Usage: {{ include "bmrg.util.joinListWithNL" .Values.allowEmailList.emai
 */}}
 {{- define "bmrg.util.joinListWithNL" -}}
 {{- $local := dict "first" true -}}
-{{- range $k, $v := . -}}{{- if not $local.first -}}{{ printf "\n    " }}{{- end -}}{{- $v -}}{{- $_ := set $local "first" false -}}{{- end -}}
+{{- range $k, $v := . -}}{{- if not $local.first -}}{{ printf "\n" }}{{- end -}}{{- $v -}}{{- $_ := set $local "first" false -}}{{- end -}}
 {{- end -}}
 
 {{/*
