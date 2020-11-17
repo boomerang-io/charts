@@ -2,13 +2,15 @@
 {{- $product := "auth" -}}
 {{- $component := "config" -}}
 {{- $tier := "allowemail" -}}
-{{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap") }}
+{{- if and (and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap")) ($.Values.authorization.allowEmailList.forceRegenerateList) }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
   name: {{ include "bmrg.name" (dict "context" $ "component" $component "tier" $tier ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $ "component" $component "tier" $tier  ) | nindent 4 }}
+  annotations:
+    "helm.sh/resource-policy": keep
 data:
   authenticated-emails-list: |
   {{- range $emailAddress := $.Values.authorization.allowEmailList.emailList }}
