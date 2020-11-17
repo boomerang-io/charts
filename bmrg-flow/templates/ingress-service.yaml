@@ -14,9 +14,6 @@ metadata:
     {{- if eq $k "workflow" }}
     {{ $.Values.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
     {{- end }}
-    {{- if and (ne $k "webhook") (eq $.Values.auth.enabled true) }}
-    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
-    {{- end }}
     {{ $.Values.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- if and (ne $k "webhook") (eq $.Values.auth.enabled true) }}
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}

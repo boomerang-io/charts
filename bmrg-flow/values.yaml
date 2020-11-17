@@ -2,14 +2,30 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-#General Configuration
+# General Configuration
+# - To enable or disable features, use the feature toggle flags under enable.
 general:
   namePrefix:
   enable:
     apidocs: false
     debug: false
-    standalone: true
     eventing: true
+    feature:
+      activity: true
+      insights: true
+      quotas: true
+      triggers: true
+      tokens: true
+      teamProperties: true
+      globalProperties: true
+      teamManagement: true
+      userManagement: true
+      taskManager: true
+      settings: true
+  externalUrl: 
+    teams: 
+    users: 
+    navigation: 
 
 workers:
   security:
@@ -68,14 +84,6 @@ services:
     image:
       repository: /flow-service-listener
       tag: 1.1.0
-    replicaCount: 1
-    service:
-      type: ClusterIP
-    zone: untrusted
-  webhook:
-    image:
-      repository: /flow-service-webhook
-      tag: 1.3.2
     replicaCount: 1
     service:
       type: ClusterIP
@@ -151,5 +159,6 @@ monitoring:
       port: 5778
 
 nats:
-  url: nats://bmrg-nats-operator:4222
-  cluster: bmrg-nats-streamer
+  enable: true
+  url: nats://bmrg-nats:4222
+  cluster: bmrg-stan

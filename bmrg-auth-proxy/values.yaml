@@ -89,6 +89,8 @@ tolerations: []
 
 allowEmailList:
   enabled: false
+  # Persistence method of email-list file: (configmap or secret)
+  persistence: configmap
   emailList:
     - test@ibm.com
     - sample@sample.com

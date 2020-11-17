@@ -45,7 +45,7 @@ spec:
         imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
         name: {{ .Chart.Name }}
         {{- if $.Values.auth.displayHtpasswdForm }}
-        env: 
+        env:
         - name: UPSTREAM_AUTH_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -106,17 +106,25 @@ spec:
           configMap:
             name: {{ if $.Values.configMap.htpasswdData }}{{ $.Values.configMap.htpasswdData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "htpasswd") }}{{ end }}
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "configmap") }}
         - name: auth-emails-data
           configMap:
             name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
             defaultMode: 420
         {{- end }}
+        {{- if and ($.Values.allowEmailList.enabled) (eq .Values.allowEmailList.persistence "secret") }}
+        - name: auth-emails-data
+          secret:
+            items:
+            - key: authenticated-emails-list
+              path: authenticated-emails-list
+            secretName: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
+        {{- end }}
         {{- if eq (default "" $.Values.auth.provider) "saml" }}
         - name: saml-volume
           configMap:
             name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "saml") }}
-            items: 
+            items:
               - key: saml_sp.cert
                 path: saml_sp.cert
               - key: saml_sp.key
@@ -128,15 +136,6 @@ spec:
       imagePullSecrets:
       - name: {{ .Values.image.pullSecret }}
       {{- end }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+    {{- include "bmrg.config.node_selector" $ }}
+    {{- include "bmrg.config.affinity" $ }}
+    {{- include "bmrg.config.tolerations" $ }}
