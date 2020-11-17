@@ -83,13 +83,13 @@ Insert the core services
 {{- if hasKey .Values "core" }}
 {{- $prefix := .Values.core.namePrefix -}}
 {{- $namespace := .Values.core.namespace -}}
-{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" ) }}
+{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" "metering" ) }}
 core.{{ . }}.service.host={{ $prefix }}-services-{{ . }}{{ if $namespace }}.{{ $namespace }}{{ end }}
 {{- end -}}
 {{- else -}}
 {{- $prefix := .Values.boomerang.core.namePrefix -}}
 {{- $namespace := .Values.boomerang.core.namespace -}}
-{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" ) }}
+{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" "metering" ) }}
 core.{{ . }}.service.host={{ $prefix }}-services-{{ . }}{{ if $namespace }}.{{ $namespace }}{{ end }}
 {{- end -}}
 {{- end -}}
