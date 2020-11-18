@@ -59,6 +59,10 @@ configMap:
   # leaving it empty will use the default admin/admin
   htpasswdData:
 #  htpasswdData: auth-proxy-users-config
+  # name of the configmap that defines the custom sign-in and error html pages
+  # leaving it empty will use the default essentials one
+  templatesData:
+#  templatesData: auth-proxy-templates-config
 
 ingress:
   enabled: false
@@ -93,13 +97,15 @@ authorization:
     enabled: false
     # How the email-list file will be projected, via a configmap or secret
     persistence: configmap
-    # Forces the recreation of the email-list file based on the provided values
-    # or if set to false it reuses the existing configmap/secret
-    forceRegenerateList: false
+    # Name of the external secret/configmap to use as allow email-list
+    # If not provided it will generate the file based on the provided values
+    name:
+    # List of allowed email addresses
     emailList:
     - test@ibm.com
     - sample@sample.com
   # Enables authorization based on email domain list, csv based list
+  # TODO document the cases, in readme and here
   emailDomains: "*"
 
 redis:

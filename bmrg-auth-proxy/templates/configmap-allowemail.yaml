@@ -2,7 +2,7 @@
 {{- $product := "auth" -}}
 {{- $component := "config" -}}
 {{- $tier := "allowemail" -}}
-{{- if and (and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap")) ($.Values.authorization.allowEmailList.forceRegenerateList) }}
+{{- if and (and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap")) (not $.Values.authorization.allowEmailList.name) }}
 kind: ConfigMap
 apiVersion: v1
 metadata:

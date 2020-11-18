@@ -25,6 +25,7 @@ spec:
         - --redirect-url={{ $.Values.ingress.path }}/callback
         - --proxy-prefix={{ $.Values.ingress.path }}
         - --display-htpasswd-form={{ $.Values.auth.displayHtpasswdForm }}
+        - --custom-templates-dir=/etc/oauth2-proxy/templates
         {{- if .Values.auth.args -}}
         {{- .Values.auth.args | toYaml | nindent 8 -}}
         {{- end -}}
@@ -80,6 +81,8 @@ spec:
           protocol: TCP
           {{- end }}
         volumeMounts:
+          - mountPath: /etc/oauth2-proxy/templates
+            name: html-templates-data
         {{- if $.Values.auth.displayHtpasswdForm }}
           - mountPath: /opt/config
             name: htpasswd-data
@@ -100,6 +103,9 @@ spec:
             subPath: saml_sp.xml
         {{- end }}
       volumes:
+        - name: html-templates-data
+          configMap:
+            name: {{ if $.Values.configMap.templatesData }}{{ $.Values.configMap.templatesData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "templates") }}{{ end }}
         {{- if $.Values.auth.displayHtpasswdForm }}
         - name: htpasswd-data
           configMap:
@@ -108,7 +114,7 @@ spec:
         {{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap") }}
         - name: auth-emails-data
           configMap:
-            name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
+            name: {{ if $.Values.authorization.allowEmailList.name }}{{ $.Values.authorization.allowEmailList.name }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}{{ end }}
             defaultMode: 420
         {{- end }}
         {{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "secret") }}
@@ -117,7 +123,7 @@ spec:
             items:
             - key: authenticated-emails-list
               path: authenticated-emails-list
-            secretName: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
+            secretName: {{ if $.Values.authorization.allowEmailList.name }}{{ $.Values.authorization.allowEmailList.name }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}{{ end }}
         {{- end }}
         {{- if eq (default "" $.Values.auth.provider) "saml" }}
         - name: saml-volume
