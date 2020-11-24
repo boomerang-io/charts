@@ -168,7 +168,7 @@ add_header 'Access-Control-Allow-Credentials' 'true';}
 Define the auth-* annotations for the ingress controller.
 */}}
 {{- define "bmrg.ingress.config.auth_proxy_auth_annotations" -}}
-{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix}}/auth-signin: "https://$host{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/{{ if eq $.Values.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$request_uri"
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix}}/auth-signin: "https://$host{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/{{ if eq $.Values.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
 {{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix}}/auth-url: "http://{{ $.Values.auth.serviceName }}.{{ $.Values.auth.namespace }}.svc.cluster.local{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/auth"
 {{- if eq $.Values.auth.mode "basic" }}
 {{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix}}/auth-response-headers: "Authorization, X-Forwarded-User"
