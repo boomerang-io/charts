@@ -359,6 +359,8 @@ The following table lists the configurable parameters of the auth-proxy chart an
 | `redis.*` | Configuration specific to redis backend | `{}`
 | `auth.displayHtpasswdForm` | Enables or disables the basic-auth form | `false`
 | `auth.provider` | Selects the identity provider. Possible values are: oidcw3, oidcibm, saml or empty (in case of basic auth)  | `oidcw3`
-| `allowEmailList.enabled` | Enables the access filtered by the selected email list | `false`
-| `allowEmailList.persistence` | Defines how the email-list file will be projected, via a configmap or secret | `configmap`
-| `allowEmailList.emailList` | Authenticate against emails via file (one per line) | `[]`
+| `authorization.allowEmailList.enabled` | Enables the access filtered by the selected email list | `false`
+| `authorization.allowEmailList.persistence` | Defines how the email-list file will be projected, via a configmap or secret | `configmap`
+| `authorization.allowEmailList.forceRegenerateList` | If set on true it recreates the configmap or secret based list of email-addresses. If set to false it expects to find and will reuse the k8s object from the previous release | `false`
+| `authorization.allowEmailList.emailList` | Authenticate against emails via file (one per line) | `[]`
+| `authorization.emailDomains` | CSV email domain list used by the auth-proxy to allow access | `*`
