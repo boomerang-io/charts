@@ -2,8 +2,8 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "rbac" -}}
-{{-$values := $values -}}
-{{- $context := $context -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:

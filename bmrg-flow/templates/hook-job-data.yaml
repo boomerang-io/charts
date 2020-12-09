@@ -2,8 +2,8 @@
 {{- $product := "flow" -}}
 {{- $tier := "util" -}}
 {{- $component := "data" -}}
-{{-$values := $values -}}
-{{- $context := $context -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 {{- if $values.job.data.enabled -}}
 apiVersion: batch/v1
 kind: Job

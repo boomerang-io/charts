@@ -2,8 +2,8 @@
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
 {{- $k := "services" -}}
-{{-$values := $values -}}
-{{- $context := $context -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 {{- if and $.Values.ingress.enabled $values.general.enable.eventing -}}
 apiVersion: extensions/v1beta1
 kind: Ingress

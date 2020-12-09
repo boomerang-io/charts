@@ -1,8 +1,8 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "apps" -}}
-{{-$values := $values -}}
-{{- $context := $context -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 {{- if $values.general.enable.standalone }}
 ** Activation **
 To complete the one time setup and activation of Core you need to retrieve the one time code and enter into the platform.
