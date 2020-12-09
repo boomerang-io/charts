@@ -2,8 +2,8 @@
 {{- $product := "flow" -}}
 {{- $tier := "util" -}}
 {{- $component := "data" -}}
-{{- $values := .Values -}}
-{{- $context := . -}}
+{{-$values := $values -}}
+{{- $context := $context -}}
 {{- if $values.job.data.enabled -}}
 apiVersion: batch/v1
 kind: Job
@@ -28,7 +28,7 @@ spec:
           imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:{{ if .Values.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.database.mongodb.password }}{{ end }}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang"
+            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:{{ if $values.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.database.mongodb.password }}{{ end }}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang"
           {{- if $.Values.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:

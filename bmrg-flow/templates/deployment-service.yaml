@@ -1,8 +1,8 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
-{{- $values := .Values -}}
-{{- $context := . -}}
+{{-$values := $values -}}
+{{- $context := $context -}}
 {{- range $k, $v := $values.services }}
 apiVersion: apps/v1
 kind: Deployment

@@ -1,8 +1,8 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "config" -}}
-{{- $values := .Values -}}
-{{- $context := . -}}
+{{-$values := $values -}}
+{{- $context := $context -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -27,9 +27,9 @@ data:
     logging.level.root=INFO
     {{- end }}
     kube.namespace={{ $.Release.Namespace }}
-    kube.worker.debug={{ $values.general.enable.debug }}
-    kube.api.debug={{ $values.general.enable.debug }}
-    kube.worker.hostaliases={{ $values.hostAliases | toJson }}
+    kube.worker.debug={{ $.Values.general.enable.debug }}
+    kube.api.debug={{ $.Values.general.enable.debug }}
+    kube.worker.hostaliases={{ $.Values.hostAliases | toJson }}
     kube.worker.serviceaccount={{- if $values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
     kube.worker.logging.type={{ $values.workers.logging.type }}
     kube.worker.logging.host={{ $values.workers.logging.host }}
@@ -60,17 +60,17 @@ data:
     opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
     opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
     opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}
-    flow.feature.activity={{ $.Values.general.enable.feature.activity }}
-    flow.feature.insights={{ $.Values.general.enable.feature.insights }}
-    flow.feature.workflow.quotas={{ $.Values.general.enable.feature.workflowQuotas }}
-    flow.feature.workflow.triggers={{ $.Values.general.enable.feature.workflowTriggers }}
-    flow.feature.workflow.tokens={{ $.Values.general.enable.feature.workflowTokens }}
-    flow.feature.team.properties={{ $.Values.general.enable.feature.teamProperties }}
-    flow.feature.global.properties={{ $.Values.general.enable.feature.globalProperties }}
-    flow.feature.team.management={{ $.Values.general.enable.feature.teamManagement }}
-    flow.feature.user.management={{ $.Values.general.enable.feature.userManagement }}
-    flow.feature.taskManager={{ $.Values.general.enable.feature.taskManager }}
-    flow.feature.settings={{ $.Values.general.enable.feature.settings }}
-    flow.externalUrl.team={{ $.Values.general.externalUrl.teams }}
-    flow.externalUrl.user={{ $.Values.general.externalUrl.users }}
-    flow.externalUrl.navigation={{ $.Values.general.externalUrl.navigation }}
+    flow.feature.activity={{$values.general.enable.feature.activity }}
+    flow.feature.insights={{$values.general.enable.feature.insights }}
+    flow.feature.workflow.quotas={{$values.general.enable.feature.workflowQuotas }}
+    flow.feature.workflow.triggers={{$values.general.enable.feature.workflowTriggers }}
+    flow.feature.workflow.tokens={{$values.general.enable.feature.workflowTokens }}
+    flow.feature.team.properties={{$values.general.enable.feature.teamProperties }}
+    flow.feature.global.properties={{$values.general.enable.feature.globalProperties }}
+    flow.feature.team.management={{$values.general.enable.feature.teamManagement }}
+    flow.feature.user.management={{$values.general.enable.feature.userManagement }}
+    flow.feature.taskManager={{$values.general.enable.feature.taskManager }}
+    flow.feature.settings={{$values.general.enable.feature.settings }}
+    flow.externalUrl.team={{$values.general.externalUrl.teams }}
+    flow.externalUrl.user={{$values.general.externalUrl.users }}
+    flow.externalUrl.navigation={{$values.general.externalUrl.navigation }}

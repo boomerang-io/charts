@@ -1,8 +1,8 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
-{{- $values := .Values -}}
-{{- $context := . -}}
+{{-$values := $values -}}
+{{- $context := $context -}}
 {{- if $.Values.ingress.enabled -}}
 {{- range $k, $v := $values.services }}
 {{- if and (ne $k "controller") (ne $k "listener") }}

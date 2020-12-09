@@ -2,9 +2,9 @@
 
 Boomerang Flow is a modern cloud native workflow automation tool built on top of Kubernetes. Enable new ways of approaching your business tasks or combine with existing tools to extend your current workloads.
 
-[What's new in this release?](https://launch.boomerangplatform.net/docs/boomerang-flow/introduction/whats-new)
+[What's new in this release?](https://www.useboomerang.io/docs/boomerang-flow/introduction/whats-new)
 
-[How to install?](https://launch.boomerangplatform.net/docs/boomerang-flow/installing/installing)
+[How to install?](https://www.useboomerang.io/docs/boomerang-flow/installing/installing)
 
 ## Dependencies
 
@@ -141,3 +141,11 @@ The following table lists the configurable parameters of the chart and their def
 - We are currently applying the `ingress.kubernetes.io/client-max-body-size: 1m` annotation to the ingress for [issue](https://github.com/kubernetes/ingress-nginx/issues/2494).
 - Starting with IBM Boomerang Flow helm chart version 2.0.0 the backwards compatibility is broken due to the ICP 3.2+ and NGINX Ingress Controller 0.22.0 versions
 - We only support single host ingresses
+
+## Chart Development
+
+In the template yaml files when reference the context `.` or Values `.Values` consideration has to be made as to whether you want to reference the static root or dynamic.
+
+For example when installing the chart by itself `$.Values` and `.Values` (when outside a loop) however when referencing them inside an embedded chart, they have different meanings. `$.Values` would reference the values of the root chart where as `.Values` would reference this charts values in a relative fashion.
+
+To handle the looping we set the Values and Context as variables outside of the loop at the top metadata in the template yamls.
