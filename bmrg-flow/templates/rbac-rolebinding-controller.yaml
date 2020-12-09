@@ -7,15 +7,15 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ $platform }}:{{ $product }}:controller
+  name: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ $platform }}:{{ $product }}:controller
+  name: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
 subjects:
 - kind: ServiceAccount
-  name: {{ $platform }}-{{ $product }}-controller
+  name: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
   namespace: {{ $.Release.Namespace }}
 {{- end }}
