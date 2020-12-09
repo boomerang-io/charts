@@ -1,26 +1,28 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
-{{- range $k, $v := $.Values.services }}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- range $k, $v := $values.services }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
     checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
 spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
+      {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
+        {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
-      {{- if and (eq $k "controller") ($.Values.workers.security.enable) }}
+      {{- if and (eq $k "controller") ($values.workers.security.enable) }}
       serviceAccountName: {{ $platform }}-{{ $product }}-controller
       {{- end }}
       {{- if $.Values.monitoring.newrelic.apm.key }}
@@ -34,8 +36,8 @@ spec:
       {{- end }}
       containers:
         - name: "{{ $tier }}-{{ $k }}-cntr"
-          image: "{{ $.Values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
-          imagePullPolicy: "{{ $.Values.image.pullPolicy }}"
+          image: "{{ $values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
+          imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
             value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $.Values.monitoring.newrelic.apm.key }}{{- if $.Values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $.Values.proxy.host }} -Dnewrelic.config.proxy_port={{ $.Values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}{{- if eq $k "workflow" }} -Dmongo.encrypt.secret=${FLOW_ENCRYPT_SECRET}  -Dmongo.encrypt.salt=${FLOW_ENCRYPT_SALT}{{- end }}'
@@ -44,29 +46,29 @@ spec:
           - name: NEW_RELIC_APP_NAME
             value: '{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}'
           - name: NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
-            value: '{{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}'
+            value: '{{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}'
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ if $.Values.database.mongodb.secretName }}{{ $.Values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}{{ end }}
+                name: {{ if $.Values.database.mongodb.secretName }}{{ $.Values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
                 key: {{ if $.Values.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
-          {{- if and (eq $k "workflow") ($.Values.general.enable.standalone) }}
+          {{- if and (eq $k "workflow") }}
           - name: FLOW_OTC
             valueFrom:
               secretKeyRef:
-                name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
+                name: {{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}
                 key: FLOW_OTC
           {{- end }}
           {{- if eq $k "workflow" }}
           - name: FLOW_ENCRYPT_SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
+                name: {{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}
                 key: FLOW_ENCRYPT_SECRET
           - name: FLOW_ENCRYPT_SALT
             valueFrom:
               secretKeyRef:
-                name: {{ include "bmrg.name" (dict "context" $ "tier" "secrets" ) }}
+                name: {{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}
                 key: FLOW_ENCRYPT_SALT
           {{- end }}
           ports:
@@ -94,7 +96,7 @@ spec:
           - name: apm-newrelic
             mountPath: /opt/newrelic
           {{- end }}
-          {{- if and (eq $k "controller") (eq $.Values.workers.logging.type "elastic" ) }}
+          {{- if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}
           - name: secret-volume
             readOnly: true
             mountPath: "/etc/secrets"
@@ -106,7 +108,7 @@ spec:
       volumes:
       - name: application-config
         configMap:
-          name: {{ include "bmrg.name" (dict "context" $ "tier" "config" ) }}
+          name: {{ include "bmrg.name" (dict "context" $context "tier" "config" ) }}
           items:
           - key: application.properties
             path: application.properties
@@ -114,14 +116,14 @@ spec:
       - name: apm-newrelic
         emptyDir: {}
       {{- end }}
-      {{- if and (eq $k "controller") (eq $.Values.workers.logging.type "elastic" ) }}
+      {{- if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}
       - name: secret-volume
         secret:
-          secretName: {{ $.Values.workers.logging.secret }}
+          secretName: {{ $values.workers.logging.secret }}
       {{- end }}
-      {{- if $.Values.image.pullSecret }}
+      {{- if $values.image.pullSecret }}
       imagePullSecrets:
-      - name: {{ $.Values.image.pullSecret }}
+      - name: {{ $values.image.pullSecret }}
       {{- end }}
       restartPolicy: Always
 ---

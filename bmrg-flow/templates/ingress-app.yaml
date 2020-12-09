@@ -1,14 +1,16 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "apps" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 {{- if $.Values.ingress.enabled -}}
-{{- range $k, $v := $.Values.apps }}
+{{- range $k, $v := $values.apps }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
   annotations:
     {{- if eq $.Values.auth.enabled true }}
@@ -31,7 +33,7 @@ spec:
           - path: /{{ $product }}/{{ $tier }}/{{ $k }}
           {{- end }}
             backend:
-              serviceName: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+              serviceName: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
               servicePort: {{ $platform }}-port-svc
   tls:
     - hosts:

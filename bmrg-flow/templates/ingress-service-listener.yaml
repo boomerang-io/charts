@@ -2,13 +2,15 @@
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
 {{- $k := "services" -}}
-{{- if and $.Values.ingress.enabled $.Values.general.enable.eventing -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- if and $.Values.ingress.enabled $values.general.enable.eventing -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
     {{ $.Values.ingress.annotationsPrefix}}/ssl-redirect: "false"
     {{ $.Values.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
@@ -23,7 +25,7 @@ spec:
         paths:
           - path: {{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}(/|$)(.*)
             backend:
-              serviceName:  {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+              serviceName:  {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
               servicePort: {{ $platform }}-port-svc
   tls:
     - hosts:

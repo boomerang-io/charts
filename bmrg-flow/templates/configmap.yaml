@@ -1,40 +1,42 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "config" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 data:
   application.properties: |
     server.port=8080
     spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
-    {{- range $k, $v := $.Values.services }}
-    {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $ "tier" "services" "component" $k ) }}
+    {{- range $k, $v := $values.services }}
+    {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
     {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
-    eventing.nats.enabled={{ $.Values.nats.enable }}
-    eventing.nats.url={{ $.Values.nats.url }}
-    eventing.nats.cluster={{ $.Values.nats.cluster }}
+    eventing.nats.enabled={{ $values.nats.enable }}
+    eventing.nats.url={{ $values.nats.url }}
+    eventing.nats.cluster={{ $values.nats.cluster }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
     logging.level.root=INFO
     {{- end }}
     kube.namespace={{ $.Release.Namespace }}
-    kube.worker.debug={{ $.Values.general.enable.debug }}
-    kube.api.debug={{ $.Values.general.enable.debug }}
-    kube.worker.hostaliases={{ $.Values.hostAliases | toJson }}
-    kube.worker.serviceaccount={{- if $.Values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
-    kube.worker.logging.type={{ $.Values.workers.logging.type }}
-    kube.worker.logging.host={{ $.Values.workers.logging.host }}
-    kube.worker.logging.port={{ $.Values.workers.logging.port }}
+    kube.worker.debug={{ $values.general.enable.debug }}
+    kube.api.debug={{ $values.general.enable.debug }}
+    kube.worker.hostaliases={{ $values.hostAliases | toJson }}
+    kube.worker.serviceaccount={{- if $values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
+    kube.worker.logging.type={{ $values.workers.logging.type }}
+    kube.worker.logging.host={{ $values.workers.logging.host }}
+    kube.worker.logging.port={{ $values.workers.logging.port }}
     kube.worker.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
     kube.worker.logging.keystore.password=changeme
-    kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
+    kube.worker.node.dedicated={{ $values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.product={{ $.Values.general.namePrefix }}
     boomerang.version={{ $.Chart.Version }}

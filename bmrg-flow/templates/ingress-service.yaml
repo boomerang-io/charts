@@ -1,15 +1,17 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 {{- if $.Values.ingress.enabled -}}
-{{- range $k, $v := $.Values.services }}
+{{- range $k, $v := $values.services }}
 {{- if and (ne $k "controller") (ne $k "listener") }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
     {{- if eq $.Values.auth.enabled true }}
     {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
@@ -42,7 +44,7 @@ spec:
         paths:
           - path: {{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}(/|$)(.*)
             backend:
-              serviceName:  {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+              serviceName:  {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
               servicePort: {{ $platform }}-port-svc
   tls:
     - hosts:
