@@ -97,13 +97,15 @@ services:
       type: ClusterIP
     zone: untrusted
 
-database:
-  mongodb:
-    host: bmrg-mdb001-ibm-mongodb-dev
-    port: 27017
-    user: boomerang
-    password: passw0rd
-    secretName: 
+# Global configuration. This can be overriden by a parent chart.
+global:
+  database:
+    mongodb:
+      host: bmrg-mdb001-ibm-mongodb-dev
+      port: 27017
+      user: boomerang
+      password: passw0rd
+      secretName: 
 
 ingress:
   enabled: false
