@@ -64,6 +64,8 @@ Example Usage:
 {{- printf "%s-%s-%s" (include "bmrg.name.prefix" .context) .tier .component | trunc 63 | trimSuffix "-" -}}
 {{- else if (.tier) -}}
 {{- printf "%s-%s" (include "bmrg.name.prefix" .context) .tier | trunc 63 | trimSuffix "-" -}}
+{{- else if (.component) -}}
+{{- printf "%s-%s" (include "bmrg.name.prefix" .context) .component | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s" (include "bmrg.name.prefix" .context) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
