@@ -1,14 +1,14 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "util" -}}
-{{- $component := "data" -}}
+{{- $component := "dataloader" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
 {{- if $values.job.data.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namePrefix: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $component ) | nindent 4 }}
   annotations:
