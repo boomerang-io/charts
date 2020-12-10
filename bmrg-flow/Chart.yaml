@@ -8,7 +8,7 @@ home: https://useboomerang.io
 dependencies:
   - name: bmrg-common
     repository: https://raw.githubusercontent.com/boomerang-io/charts/index
-    version: ~1.0.10
+    version: ~2.0.0
     alias: ch
 keywords:
 - boomerang

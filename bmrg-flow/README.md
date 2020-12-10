@@ -146,6 +146,6 @@ The following table lists the configurable parameters of the chart and their def
 
 In the template yaml files when reference the context `.` or Values `.Values` consideration has to be made as to whether you want to reference the static root or dynamic.
 
-For example when installing the chart by itself `$.Values` and `.Values` (when outside a loop) however when referencing them inside an embedded chart, they have different meanings. `$.Values` would reference the values of the root chart where as `.Values` would reference this charts values in a relative fashion.
-
 To handle the looping we set the Values and Context as variables outside of the loop at the top metadata in the template yamls.
+
+Additionally, we have a number of the properties in the Values under `global` so that they can be provided by the parent chart.
