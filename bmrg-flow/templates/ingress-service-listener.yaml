@@ -4,7 +4,7 @@
 {{- $k := "services" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- if and $.Values.ingress.enabled $values.general.enable.eventing -}}
+{{- if and $.Values.global.ingress.enabled $values.general.enable.eventing -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -12,25 +12,25 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-    {{ $.Values.ingress.annotationsPrefix}}/ssl-redirect: "false"
-    {{ $.Values.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
-    {{ $.Values.ingress.annotationsPrefix}}/client-max-body-size: 1m
-    {{ $.Values.ingress.annotationsPrefix}}/limit-rpm: "100"
-    {{ $.Values.ingress.annotationsPrefix}}/limit-connections: "3"
-    kubernetes.io/ingress.class: {{ $.Values.ingress.class}}
+    {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "false"
+    {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
+    {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
+    {{ $.Values.global.ingress.annotationsPrefix}}/limit-rpm: "100"
+    {{ $.Values.global.ingress.annotationsPrefix}}/limit-connections: "3"
+    kubernetes.io/ingress.class: {{ $.Values.global.ingress.class}}
 spec:
   rules:
-    - host: {{ $.Values.ingress.host }}
+    - host: {{ $.Values.global.ingress.host }}
       http:
         paths:
-          - path: {{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}(/|$)(.*)
+          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}(/|$)(.*)
             backend:
               serviceName:  {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
               servicePort: {{ $platform }}-port-svc
   tls:
     - hosts:
-        - {{ $.Values.ingress.host }}
-      {{- if $.Values.ingress.tlsSecretName }}
-      secretName: {{ $.Values.ingress.tlsSecretName }}
+        - {{ $.Values.global.ingress.host }}
+      {{- if $.Values.global.ingress.tlsSecretName }}
+      secretName: {{ $.Values.global.ingress.tlsSecretName }}
       {{- end }}
 {{- end }}

@@ -15,7 +15,7 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang
     {{- range $k, $v := $values.services }}
     {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
-    {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
+    {{ $k }}.service.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
     eventing.nats.enabled={{ $values.nats.enable }}
@@ -42,8 +42,8 @@ data:
     boomerang.version={{ $.Chart.Version }}
     boomerang.otc=${FLOW_OTC}
     boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
-    boomerang.signOutUrl={{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/sign_out{{ if $.Values.auth.signOutRedirect }}?rd={{ $.Values.auth.signOutRedirect }}{{ end }}
-    boomerang.baseUrl=https://{{ $.Values.ingress.host }}
+    boomerang.signOutUrl={{ if $.Values.global.ingress.enabled }}{{ $.Values.global.ingress.root }}{{ end }}{{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
+    boomerang.baseUrl=https://{{ $.Values.global.ingress.host }}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}

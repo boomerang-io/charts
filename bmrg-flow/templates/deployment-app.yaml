@@ -26,7 +26,7 @@ spec:
           imagePullPolicy: {{ $values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              value: "{{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
+              value: "{{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
@@ -44,17 +44,17 @@ spec:
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
             - name: CORE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}"
             - name: CORE_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}/apps"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}{{- end }}/apps"
             - name: CORE_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}/services/workflow{{- else }}/services{{- end }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}{{- if $.Values.general.enable.standalone }}/{{ $product }}/services/workflow{{- else }}/services{{- end }}"
             - name: PRODUCT_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/{{ $product }}"
             - name: PRODUCT_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/apps"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/{{ $product }}/apps"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/services"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/{{ $product }}/services"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr
