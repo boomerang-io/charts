@@ -8,7 +8,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
+  namePrefix: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $component ) | nindent 4 }}
   annotations:
