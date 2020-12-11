@@ -135,7 +135,7 @@ Get the http_origin from the values host, should return boomerangplatform.net
 {{- $host := "" -}}
 {{- if hasKey $.Values.global "ingress.host" }}
 {{- $host := $.Values.global.ingress.host -}}
-{{- else if hasKey $.Values "ingress.host" -}}
+{{- else if hasKey $.Values.ingress "host" -}}
 {{- $host := $.Values.ingress.host -}}
 {{- end -}}
 {{- if $host -}}
