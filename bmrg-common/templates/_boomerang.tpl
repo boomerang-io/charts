@@ -132,9 +132,10 @@ proxy_set_header Authorization $token;
 Get the http_origin from the values host, should return boomerangplatform.net
 */}}
 {{- define "bmrg.host.suffix" -}}
-{{- if hasKey $.Values "global.ingress.host" }}
+{{- $host := "" -}}
+{{- if hasKey $.Values.global "ingress.host" }}
 {{- $host := $.Values.global.ingress.host -}}
-{{- else -}}
+{{- else if hasKey $.Values "ingress.host" -}}
 {{- $host := $.Values.ingress.host -}}
 {{- end -}}
 {{- if $host -}}
@@ -171,34 +172,35 @@ add_header Access-Control-Allow-Origin $http_origin;
 add_header 'Access-Control-Allow-Credentials' 'true';}
 {{- end -}}
 
-{{/*
-Define the auth-* annotations for the ingress controller.
-*/}}
 {{- define "bmrg.ingress.config.auth_proxy_auth_annotations" -}}
-{{- if hasKey $.Values "global.ingress" }}
-{{- $ingressEnabled := $.Values.global.ingress.enabled -}}
-{{- $ingressRoot := $.Values.global.ingress.root -}}
-{{- $ingressAnnotationsPrefix := $.Values.global.ingress.host -}}
-{{- else -}}
-{{- $ingressEnabled := $.Values.ingress.enabled -}}
-{{- $ingressRoot := $.Values.ingress.root -}}
-{{- $ingressAnnotationsPrefix := $.Values.ingress.annotationsPrefix -}}
+{{- if hasKey $.Values.global "ingress" -}}
+{{- if hasKey $.Values.global "auth" -}}
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ if $.Values.global.ingress.enabled }}{{ $.Values.global.ingress.root }}{{ end }}{{ $.Values.global.auth.prefix }}/{{ if eq $.Values.global.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-url: "http://{{ $.Values.global.auth.serviceName }}.{{ $.Values.global.auth.namespace }}.svc.cluster.local{{ if $.Values.global.ingress.enabled }}{{ $.Values.global.ingress.root }}{{ end }}{{ $.Values.global.auth.prefix }}/auth"
+{{- if eq $.Values.global.auth.mode "basic" }}
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
 {{- end -}}
-{{- if hasKey $.Values "global.auth" }}
-{{- $authPrefix := $.Values.global.auth.prefix -}}
-{{- $authMode := $.Values.global.auth.mode -}}
-{{- $authServiceName := $.Values.global.auth.serviceName -}}
-{{- $authNamespace := $.Values.global.auth.namespace -}}
-{{- else -}}
-{{- $authPrefix := $.Values.auth.prefix -}}
-{{- $authMode := $.Values.auth.mode -}}
-{{- $authServiceName := $.Values.auth.serviceName -}}
-{{- $authNamespace := $.Values.auth.namespace -}}
+{{- else if hasKey $.Values "auth" -}}
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ if $.Values.global.ingress.enabled }}{{ $.Values.global.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/{{ if eq $.Values.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-url: "http://{{ $.Values.auth.serviceName }}.{{ $.Values.auth.namespace }}.svc.cluster.local{{ if $.Values.global.ingress.enabled }}{{ $.Values.global.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/auth"
+{{- if eq $.Values.auth.mode "basic" }}
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
 {{- end -}}
-{{ default "ingress.kubernetes.io" $ingressAnnotationsPrefix }}/auth-signin: "https://$host{{ if $ingressEnabled }}{{ $ingressRoot }}{{ end }}{{ $authPrefix }}/{{ if eq $authMode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
-{{ default "ingress.kubernetes.io" $ingressAnnotationsPrefix }}/auth-url: "http://{{ $authServiceName }}.{{ $authNamespace }}.svc.cluster.local{{ if $ingressEnabled }}{{ $ingressRoot }}{{ end }}{{ $authPrefix }}/auth"
-{{- if eq $authMode "basic" }}
-{{ default "ingress.kubernetes.io" $ingressAnnotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
+{{- end -}}
+{{- else if hasKey $.Values "ingress" -}}
+{{- if hasKey $.Values.global "auth" -}}
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.global.auth.prefix }}/{{ if eq $.Values.global.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-url: "http://{{ $.Values.global.auth.serviceName }}.{{ $.Values.global.auth.namespace }}.svc.cluster.local{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.global.auth.prefix }}/auth"
+{{- if eq $.Values.global.auth.mode "basic" }}
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
+{{- end -}}
+{{- else if hasKey $.Values "auth" -}}
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/{{ if eq $.Values.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-url: "http://{{ $.Values.auth.serviceName }}.{{ $.Values.auth.namespace }}.svc.cluster.local{{ if $.Values.ingress.enabled }}{{ $.Values.ingress.root }}{{ end }}{{ $.Values.auth.prefix }}/auth"
+{{- if eq $.Values.auth.mode "basic" }}
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
+{{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
