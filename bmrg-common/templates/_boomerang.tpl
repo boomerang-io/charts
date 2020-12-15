@@ -204,6 +204,7 @@ add_header 'Access-Control-Allow-Credentials' 'true';}
 {{- end -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
 
 {{/*
 Define the Access-Control LUA block to set the header for up stream systems.
