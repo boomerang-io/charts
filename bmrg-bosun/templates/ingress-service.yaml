@@ -13,12 +13,12 @@ metadata:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
     {{- if eq $.Values.global.auth.enabled true }}
-    {{- include "bmrg.global.ingress.config.global.auth_proxy_auth_annotations.global" $ | nindent 4 }}
+    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
     {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- if eq $.Values.global.auth.enabled true }}
-      {{- include "bmrg.global.ingress.config.global.auth_proxy_access_control" $ | nindent 6 }}
-      {{- include "bmrg.global.ingress.config.global.auth_proxy_authorization" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
       {{- end }}
       if ($request_method = 'OPTIONS') {
       add_header 'Access-Control-Allow-Origin' $http_origin;
