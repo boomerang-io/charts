@@ -26,12 +26,8 @@ spec:
   rules:
     - host: {{ $.Values.global.ingress.host }}
       http:
-        paths:
-          {{- if $.Values.global.ingress.root }}
-          - path: {{ $.Values.global.ingress.root }}/{{ $product }}/{{ $tier }}/{{ $k }}
-          {{- else }}
-          - path: /{{ $product }}/{{ $tier }}/{{ $k }}
-          {{- end }}
+        paths:    
+          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $tier }}/{{ $k }}
             backend:
               serviceName: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
               servicePort: {{ $platform }}-port-svc

@@ -41,6 +41,7 @@ workers:
   
 core:
   namePrefix: bmrg-core
+  ingressRoot: ""
 
 # General Image Configuration
 image:
@@ -108,7 +109,7 @@ global:
       secretName: 
   ingress:
     enabled: false
-    root: ""
+    root: /flow
     host: cloud.boomerangplatform.net
     tlsSecretName: bmrg-tls-cloud
     # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
