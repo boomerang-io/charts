@@ -14,7 +14,7 @@ metadata:
   annotations:
   annotations:
     {{- if eq $.Values.global.auth.enabled true }}
-    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
+    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
     {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
       {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}

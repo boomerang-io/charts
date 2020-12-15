@@ -14,7 +14,7 @@ metadata:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
     {{- if eq $.Values.global.auth.enabled true }}
-    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}
+    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
     {{- end }}
     {{- if eq $k "workflow" }}
     {{ $.Values.global.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
