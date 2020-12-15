@@ -45,8 +45,8 @@ spec:
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ if $values.database.mongodb.secretName }}{{ $values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
-                key: {{ if $values.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
+                name: {{ if $values.global.database.mongodb.secretName }}{{ $values.global.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
+                key: {{ if $values.global.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
           ports:
           - containerPort: 8080
             name: {{ $platform }}-port-cntr

@@ -27,12 +27,12 @@ spec:
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $.Values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:{{ if $.Values.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.database.mongodb.password }}{{ end }}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang"
-          {{- if $.Values.database.mongodb.secretName }}
+            value: "-Dspring.profiles.active={{ $.Values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:{{ if $.Values.global.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.global.database.mongodb.password }}{{ end }}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang"
+          {{- if $.Values.global.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ $.Values.database.mongodb.secretName }}
+                name: {{ $.Values.global.database.mongodb.secretName }}
                 key: mongodb-password
           {{- end }}
       {{- if .Values.image.pullSecret }}

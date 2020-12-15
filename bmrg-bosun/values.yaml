@@ -11,10 +11,11 @@ general:
 
 #Boomerang Integrations
 #Needed if general.enable.standalone=false
+core:
+  namePrefix: bmrg-core
+  namespace: #needed if installed in different namespace
+  ingressRoot: 
 boomerang:
-  core:
-    namePrefix: bmrg-core
-    namespace: #needed if installed in different namespace
   cicd:
     namePrefix: bmrg-cicd
     namespace: #needed if installed in different namespace
@@ -74,32 +75,34 @@ opa:
     type: ClusterIP
   zone: trusted
 
-database:
-  mongodb:
-    host: bmrg-mdb001-ibm-mongodb-dev
-    port: 27017
-    user: boomerang
-    password: passw0rd
-    secretName: 
-
-ingress:
-  enabled: false
-  root: ""
-  host: cloud.boomerangplatform.net
-  tlsSecretName: bmrg-tls-cloud
-  # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
-  # you need to set it to "nginx.ingress.kubernetes.io"
-  annotationsPrefix: "ingress.kubernetes.io"
-  # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
-  # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
-  class: "nginx"
-
-auth:
-  enabled: true
-  mode: basic
-  serviceName: bmrg-auth-proxy
-  namespace: 
-  prefix: /oauth
+# Global configuration. This can be overriden by a parent chart.
+global:
+  database:
+    mongodb:
+      host: bmrg-mdb001-ibm-mongodb-dev
+      port: 27017
+      user: boomerang
+      password: passw0rd
+      secretName: 
+  ingress:
+    enabled: false
+    root: /bosun
+    host: cloud.boomerangplatform.net
+    tlsSecretName: bmrg-tls-cloud
+    # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
+    # you need to set it to "nginx.global.ingress.kubernetes.io"
+    annotationsPrefix: "ingress.kubernetes.io"
+    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
+    # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
+    class: "nginx"
+  auth:
+    enabled: false
+    mode: basic
+    serviceName: bmrg-auth-proxy
+    namespace: bmrg-core
+    prefix: /oauth
+    tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
+    signOutRedirect: 
 
 hostAliases: []
 
