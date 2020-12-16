@@ -25,27 +25,27 @@ spec:
         - --redirect-url={{ $.Values.ingress.path }}/callback
         - --proxy-prefix={{ $.Values.ingress.path }}
         - --display-htpasswd-form={{ $.Values.auth.displayHtpasswdForm }}
+        - --custom-templates-dir=/etc/oauth2-proxy/templates
         {{- if .Values.auth.args -}}
         {{- .Values.auth.args | toYaml | nindent 8 -}}
         {{- end -}}
-        {{- if $.Values.auth.displayHtpasswdForm -}}
+        {{- if $.Values.auth.displayHtpasswdForm }}
         - --basic-auth-password=$(UPSTREAM_AUTH_PASSWORD)
         {{- end }}
         {{- if $.Values.redis.enabled }}
         - --session-store-type=redis
         - --redis-connection-url=redis://{{ .Release.Name }}-redis-master:{{ $.Values.redis.redisPort }}
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if $.Values.authorization.allowEmailList.enabled }}
         - --authenticated-emails-file=/etc/oauth2-proxy/authenticated-emails-list
-        {{- else }}
-        - --email-domain=*
         {{- end }}
+        {{- include "bmrg.authorization.email-domains" $ }}
         {{- end }}
         image: "{{ $.Values.image.registry }}{{ .Values.services.authProxy.image.repository }}:{{ .Values.services.authProxy.image.tag }}"
         imagePullPolicy: {{ default "" .Values.image.pullPolicy | quote }}
         name: {{ .Chart.Name }}
         {{- if $.Values.auth.displayHtpasswdForm }}
-        env: 
+        env:
         - name: UPSTREAM_AUTH_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -81,11 +81,13 @@ spec:
           protocol: TCP
           {{- end }}
         volumeMounts:
+          - mountPath: /etc/oauth2-proxy/templates
+            name: html-templates-data
         {{- if $.Values.auth.displayHtpasswdForm }}
           - mountPath: /opt/config
             name: htpasswd-data
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if $.Values.authorization.allowEmailList.enabled }}
           - mountPath: /etc/oauth2-proxy
             name: auth-emails-data
         {{- end }}
@@ -101,22 +103,33 @@ spec:
             subPath: saml_sp.xml
         {{- end }}
       volumes:
+        - name: html-templates-data
+          configMap:
+            name: {{ if $.Values.configMap.templatesData }}{{ $.Values.configMap.templatesData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "templates") }}{{ end }}
         {{- if $.Values.auth.displayHtpasswdForm }}
         - name: htpasswd-data
           configMap:
             name: {{ if $.Values.configMap.htpasswdData }}{{ $.Values.configMap.htpasswdData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "htpasswd") }}{{ end }}
         {{- end }}
-        {{- if $.Values.allowEmailList.enabled }}
+        {{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "configmap") }}
         - name: auth-emails-data
           configMap:
-            name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}
+            name: {{ if $.Values.authorization.allowEmailList.name }}{{ $.Values.authorization.allowEmailList.name }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}{{ end }}
             defaultMode: 420
+        {{- end }}
+        {{- if and ($.Values.authorization.allowEmailList.enabled) (eq .Values.authorization.allowEmailList.persistence "secret") }}
+        - name: auth-emails-data
+          secret:
+            items:
+            - key: authenticated-emails-list
+              path: authenticated-emails-list
+            secretName: {{ if $.Values.authorization.allowEmailList.name }}{{ $.Values.authorization.allowEmailList.name }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "allowemail") }}{{ end }}
         {{- end }}
         {{- if eq (default "" $.Values.auth.provider) "saml" }}
         - name: saml-volume
           configMap:
             name: {{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "saml") }}
-            items: 
+            items:
               - key: saml_sp.cert
                 path: saml_sp.cert
               - key: saml_sp.key
@@ -124,17 +137,10 @@ spec:
               - key: saml_sp.xml
                 path: saml_sp.xml
         {{- end }}
+      {{- if .Values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ .Values.image.pullSecret }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+      {{- end }}
+    {{- include "bmrg.config.node_selector" $ }}
+    {{- include "bmrg.config.affinity" $ }}
+    {{- include "bmrg.config.tolerations" $ }}

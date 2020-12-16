@@ -12,10 +12,10 @@ metadata:
 data:
   application.properties: |
     server.port=8080
-    spring.data.mongodb.uri=mongodb://{{ $values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $values.database.mongodb.host }}:{{ $values.database.mongodb.port }}/boomerang
+    spring.data.mongodb.uri=mongodb://{{ $values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $values.global.database.mongodb.host }}:{{ $values.global.database.mongodb.port }}/boomerang
     {{- range $k, $v := $values.service }}
     boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $context "tier" "service" "component" $k ) }}
-    boomerang.bosun.service.{{ $k }}.root={{- if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/service/{{ $k }}
+    boomerang.bosun.service.{{ $k }}.root={{ default "" $values.global.ingress.root }}/service/{{ $k }}
     {{- end }}
     {{ include "bmrg.core.services" $context | indent 4 }}
     boomerang.cicd.service.ci.host=bmrg-cicd-services-ci
@@ -32,3 +32,8 @@ data:
     proxy.host={{ $values.proxy.host }}
     proxy.port={{ $values.proxy.port }}
     proxy.ignore={{ $values.proxy.ignore }}
+    xray.url.api.base={{ $values.xray.url }}
+    xray.boomerang.user={{ $values.xray.user }}
+    xray.boomerang.apitoken={{ $values.xray.token }}
+    sonarqube.url.api.base={{ $values.sonarqube.url }}
+    sonarqube.apitoken={{ $values.sonarqube.token }}

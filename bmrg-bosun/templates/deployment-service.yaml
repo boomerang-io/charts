@@ -9,21 +9,24 @@ kind: Deployment
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
+      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
       {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
   template:
     metadata:
       labels:
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       {{- if $values.monitoring.newrelic.apm.key }}
       initContainers:
         - name: util-newrelicapm-cntr
-          image: {{ $values.image.registry }}/ise/bmrg-util-newrelicapm:5.6.0
+          image: {{ $.Values.monitoring.newrelic.apm.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: apm-newrelic
@@ -45,8 +48,8 @@ spec:
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ if $values.database.mongodb.secretName }}{{ $values.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
-                key: {{ if $values.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
+                name: {{ if $values.global.database.mongodb.secretName }}{{ $values.global.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
+                key: {{ if $values.global.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
           ports:
           - containerPort: 8080
             name: {{ $platform }}-port-cntr
@@ -87,8 +90,10 @@ spec:
       - name: apm-newrelic
         emptyDir: {}
       {{- end }}
+      {{- if $values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Always
 ---
 {{- end }}

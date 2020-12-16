@@ -14,10 +14,12 @@ spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
+      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
       {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
   template:
     metadata:
       labels:
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       containers:
@@ -26,7 +28,7 @@ spec:
           imagePullPolicy: {{ $values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              value: "{{ if $values.ingress.root }}{{ $values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
+              value: "{{ default "" $values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
@@ -44,23 +46,23 @@ spec:
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
             - name: BASE_LAUNCH_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}"
             - name: BASE_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/web"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/web"
             - name: BASE_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/services"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/services"
             - name: PRODUCT_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
             - name: PRODUCT_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/web"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/web"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/service"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/service"
             - name: PRODUCT_STANDALONE
               value: "{{ $.Values.general.enable.standalone }}"
             - name: CICD_PRODUCT_APP_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/cicd/apps"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
             - name: CICD_PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/cicd/services"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/services"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr
@@ -78,8 +80,10 @@ spec:
           resources:
             requests:
               memory: 100Mi
+      {{- if $values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Always
 ---
 {{- end }}

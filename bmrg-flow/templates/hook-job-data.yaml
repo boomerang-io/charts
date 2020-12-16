@@ -1,14 +1,17 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "util" -}}
-{{- $component := "data" -}}
-{{- if $.Values.job.data.enabled -}}
+{{- $component := "dataloader" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- if $values.job.data.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $component ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $component ) | nindent 4 }}
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $component ) | nindent 4 }}
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: hook-succeeded
@@ -18,23 +21,26 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $component ) | nindent 8 }}
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
+        {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $component ) | nindent 8 }}
     spec:
       containers:
         - name: "pre-install-{{ $tier }}-cntr"
-          image: "{{ $.Values.image.registry }}{{ $.Values.job.data.image.repository }}:{{ $.Values.job.data.image.tag }}"
-          imagePullPolicy: "{{ $.Values.image.pullPolicy }}"
+          image: "{{ $values.image.registry }}{{ $values.job.data.image.repository }}:{{ $values.job.data.image.tag }}"
+          imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $.Values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:{{ if $.Values.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.database.mongodb.password }}{{ end }}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang"
-          {{- if $.Values.database.mongodb.secretName }}
+            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:{{ if $.Values.global.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.global.database.mongodb.password }}{{ end }}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang"
+          {{- if $.Values.global.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ $.Values.database.mongodb.secretName }}
+                name: {{ $.Values.global.database.mongodb.secretName }}
                 key: mongodb-password
           {{- end }}
+      {{- if $values.image.pullSecret }}
       imagePullSecrets:
-      - name: {{ $.Values.image.pullSecret }}
+      - name: {{ $values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Never
 {{- end }}

@@ -1,23 +1,26 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "config" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 data:
   application.properties: |
     server.port=8080
-    spring.data.mongodb.uri=mongodb://{{ $.Values.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.database.mongodb.host }}:{{ $.Values.database.mongodb.port }}/boomerang
-    {{- range $k, $v := $.Values.services }}
-    {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $ "tier" "services" "component" $k ) }}
-    {{ $k }}.service.root={{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{ end }}/{{ $product }}/services/{{ $k }}
+    spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang
+    {{- range $k, $v := $values.services }}
+    {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
+    {{ $k }}.service.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
-    actionlistener.nats.url={{ $.Values.nats.url }}
-    actionlistener.nats.cluster={{ $.Values.nats.cluster }}
+    eventing.nats.enabled={{ $values.nats.enable }}
+    eventing.nats.url={{ $values.nats.url }}
+    eventing.nats.cluster={{ $values.nats.cluster }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
@@ -27,17 +30,20 @@ data:
     kube.worker.debug={{ $.Values.general.enable.debug }}
     kube.api.debug={{ $.Values.general.enable.debug }}
     kube.worker.hostaliases={{ $.Values.hostAliases | toJson }}
-    kube.worker.serviceaccount={{- if $.Values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
-    kube.worker.logging.type={{ $.Values.workers.logging.type }}
-    kube.worker.logging.host={{ $.Values.workers.logging.host }}
-    kube.worker.logging.port={{ $.Values.workers.logging.port }}
+    kube.worker.serviceaccount={{- if $values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
+    kube.worker.logging.type={{ $values.workers.logging.type }}
+    kube.worker.logging.host={{ $values.workers.logging.host }}
+    kube.worker.logging.port={{ $values.workers.logging.port }}
     kube.worker.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
     kube.worker.logging.keystore.password=changeme
-    kube.worker.job.deletion={{ $.Values.workers.deletion }}
-    kube.worker.node.dedicated={{ $.Values.workers.enable.dedicatedNodes }}
+    kube.worker.node.dedicated={{ $values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
-    boomerang.standalone={{ $.Values.general.enable.standalone }}
-    boomerang.otc=${CORE_OTC}
+    boomerang.product={{ $.Values.general.namePrefix }}
+    boomerang.version={{ $.Chart.Version }}
+    boomerang.otc=${FLOW_OTC}
+    boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
+    boomerang.signOutUrl={{ $.Values.core.ingressRoot }}{{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
+    boomerang.baseUrl=https://{{ $.Values.global.ingress.host }}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}
@@ -54,3 +60,17 @@ data:
     opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
     opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
     opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}
+    flow.feature.activity={{$values.general.enable.feature.activity }}
+    flow.feature.insights={{$values.general.enable.feature.insights }}
+    flow.feature.workflow.quotas={{$values.general.enable.feature.workflowQuotas }}
+    flow.feature.workflow.triggers={{$values.general.enable.feature.workflowTriggers }}
+    flow.feature.workflow.tokens={{$values.general.enable.feature.workflowTokens }}
+    flow.feature.team.properties={{$values.general.enable.feature.teamProperties }}
+    flow.feature.global.properties={{$values.general.enable.feature.globalProperties }}
+    flow.feature.team.management={{$values.general.enable.feature.teamManagement }}
+    flow.feature.user.management={{$values.general.enable.feature.userManagement }}
+    flow.feature.taskManager={{$values.general.enable.feature.taskManager }}
+    flow.feature.settings={{$values.general.enable.feature.settings }}
+    flow.externalUrl.team={{$values.general.externalUrl.teams }}
+    flow.externalUrl.user={{$values.general.externalUrl.users }}
+    flow.externalUrl.navigation={{$values.general.externalUrl.navigation }}

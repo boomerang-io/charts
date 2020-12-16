@@ -2,16 +2,32 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-#General Configuration
+# General Configuration
+# - To enable or disable features, use the feature toggle flags under enable.
 general:
   namePrefix:
   enable:
     apidocs: false
     debug: false
-    standalone: true
+    eventing: true
+    feature:
+      activity: true
+      insights: true
+      workflowQuotas: true
+      workflowTriggers: true
+      workflowTokens: true
+      teamProperties: true
+      globalProperties: true
+      teamManagement: true
+      userManagement: true
+      taskManager: true
+      settings: true
+  externalUrl: 
+    teams: 
+    users: 
+    navigation: 
 
 workers:
-  deletion: OnSuccess
   security:
     enable: true
     policy: ibm-privileged-psp
@@ -25,12 +41,13 @@ workers:
   
 core:
   namePrefix: bmrg-core
+  ingressRoot: ""
 
 # General Image Configuration
 image:
-  registry: tools.boomerangplatform.net:8500/ise
+  registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: boomerang-io.registrykey
+  pullSecret: 
 
 # Job Configuraiton
 job:
@@ -38,15 +55,15 @@ job:
     enabled: true
     profile: flow
     image:
-      repository: /bmrg-util-mongo
-      tag: 0.2.10-15
+      repository: /flow-loader
+      tag: 0.4.7
 
 # App Configuration
 apps:
   flow:
     image:
-      repository: /bmrg-app-flow
-      tag: 2.1.6-619
+      repository: /flow-client-web
+      tag: 2.3.0-rc.5
     replicaCount: 1
     service:
       type: ClusterIP
@@ -57,64 +74,58 @@ apps:
 services:
   controller:
     image:
-      repository: /bmrg-service-controller
-      tag: 4.0.0-rc.1-314
+      repository: /flow-service-controller
+      tag: 5.0.3
     replicaCount: 1
     service:
       type: ClusterIP
+    serviceAccount: null
     zone: semi-trusted
-  flow:
-    image:
-      repository: /bmrg-service-flow
-      tag: 2.3.0-246
-    replicaCount: 1
-    service:
-      type: ClusterIP
-    zone: untrusted
   listener:
     image:
-      repository: /bmrg-service-actionlistener
-      tag: 1.0.4-7
+      repository: /flow-service-listener
+      tag: 1.1.0
     replicaCount: 1
     service:
       type: ClusterIP
     zone: untrusted
-  webhook:
+  workflow:
     image:
-      repository: /bmrg-flow-service-webhook
-      tag: 1.2.3-33
+      repository: /flow-service-workflow
+      tag: 2.3.30
     replicaCount: 1
     service:
       type: ClusterIP
     zone: untrusted
 
-database:
-  mongodb:
-    host: bmrg-mdb001-ibm-mongodb-dev
-    port: 27017
-    user: boomerang
-    password: passw0rd
-    secretName: 
-
-ingress:
-  enabled: false
-  root: /flow
-  host: cloud.boomerangplatform.net
-  tlsSecretName: bmrg-tls-cloud
-  # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
-  # you need to set it to "nginx.ingress.kubernetes.io"
-  annotationsPrefix: "ingress.kubernetes.io"
-  # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
-  # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
-  class: "nginx"
-
-auth:
-  enabled: false
-  mode: basic
-  serviceName: bmrg-auth-proxy
-  namespace: bmrg-core
-  prefix: /oauth
-  tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
+# Global configuration. This can be overriden by a parent chart.
+global:
+  database:
+    mongodb:
+      host: bmrg-mdb001-ibm-mongodb-dev
+      port: 27017
+      user: boomerang
+      password: passw0rd
+      secretName: 
+  ingress:
+    enabled: false
+    root: /flow
+    host: cloud.boomerangplatform.net
+    tlsSecretName: bmrg-tls-cloud
+    # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
+    # you need to set it to "nginx.ingress.kubernetes.io"
+    annotationsPrefix: "ingress.kubernetes.io"
+    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
+    # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
+    class: "nginx"
+  auth:
+    enabled: false
+    mode: basic
+    serviceName: bmrg-auth-proxy
+    namespace: bmrg-core
+    prefix: /oauth
+    tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
+    signOutRedirect: 
 
 hostAliases: []
 
@@ -128,9 +139,10 @@ monitoring:
     apm:
       name: Boomerang Private
       key:
-      image:
-        repository: /bmrg-util-newrelicapm
-        tag: 5.6.0
+      image: 
+        registry: boomerangio
+        repository: /util-newrelicjavaagent
+        tag: 5.14.0
     browser:
       id:
       key:
@@ -148,5 +160,6 @@ monitoring:
       port: 5778
 
 nats:
-  url: nats://bmrg-nats-operator:4222
-  cluster: bmrg-nats-streamer
+  enable: true
+  url: nats://bmrg-nats:4222
+  cluster: bmrg-stan

@@ -1,13 +1,15 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
-{{- range $k, $v := $.Values.services }}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- range $k, $v := $values.services }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
   type: {{ $v.service.type }}
   ports:
@@ -16,7 +18,8 @@ spec:
       targetPort: {{ $platform }}-port-cntr
       protocol: TCP
   selector:
-    {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 4 }}
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+    {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 4 }}
   sessionAffinity: None
 ---
 {{- end }}

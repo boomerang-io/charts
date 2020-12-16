@@ -1,19 +1,21 @@
-{{- if $.Values.workers.security.enable }}
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "rbac" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- if $values.workers.security.enable }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ $platform }}:{{ $product }}:worker
+  name: {{ include "bmrg.name" (dict "context" $context "component" "worker" ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 rules:
 {{- if .Capabilities.APIVersions.Has "security.openshift.io/v1" }}
 - apiGroups:
   - security.openshift.io
   resourceNames:
-  - {{ $.Values.workers.security.policy }}
+  - {{ $values.workers.security.policy }}
   resources:
   - securitycontextconstraints
   verbs:
@@ -22,7 +24,7 @@ rules:
 - apiGroups:
   - extensions
   resourceNames:
-  - {{ $.Values.workers.security.policy }}
+  - {{ $values.workers.security.policy }}
   resources:
   - podsecuritypolicies
   verbs:

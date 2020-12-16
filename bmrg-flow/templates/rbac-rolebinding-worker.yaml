@@ -1,19 +1,21 @@
-{{- if $.Values.workers.security.enable }}
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "rbac" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- if $values.workers.security.enable }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ $platform }}:{{ $product }}:worker
+  name: {{ include "bmrg.name" (dict "context" $context "component" "worker" ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ $platform }}:{{ $product }}:worker
+  name: {{ include "bmrg.name" (dict "context" $context "component" "worker" ) }}
 subjects:
 - kind: ServiceAccount
-  name: {{ $platform }}-{{ $product }}-worker
+  name: {{ include "bmrg.name" (dict "context" $context "component" "worker" ) }}
   namespace: {{ $.Release.Namespace }}
 {{- end }}

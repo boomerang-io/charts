@@ -8,15 +8,18 @@ kind: Deployment
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 spec:
   replicas: {{ $values.opa.replicaCount }}
   selector:
     matchLabels:
+      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
       {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "zone" $values.opa.zone ) | nindent 6 }}
   template:
     metadata:
       labels:
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "zone" $values.opa.zone ) | nindent 8 }}
     spec:
       containers:

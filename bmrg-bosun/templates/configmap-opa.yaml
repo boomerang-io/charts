@@ -12,7 +12,7 @@ data:
   config.yaml: |
     services:
       - name: bosun
-        url: http://{{- include "bmrg.name" (dict "context" $context "tier" "service" "component" "bosun" ) }}/internal
+        url: http://{{- include "bmrg.name" (dict "context" $context "tier" "service" "component" "policy" ) }}/internal
     bundles:
       bosun:
         service: bosun

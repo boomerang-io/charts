@@ -11,19 +11,20 @@ general:
 
 #Boomerang Integrations
 #Needed if general.enable.standalone=false
+core:
+  namePrefix: bmrg-core
+  namespace: #needed if installed in different namespace
+  ingressRoot: 
 boomerang:
-  core:
-    namePrefix: bmrg-core
-    namespace: #needed if installed in different namespace
   cicd:
     namePrefix: bmrg-cicd
     namespace: #needed if installed in different namespace
 
 # General Image Configuration
 image:
-  registry: docker.pkg.github.com/boomerang-io
+  registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: boomerang-io.registrykey
+  pullSecret: 
 
 # Job Configuraiton
 job:
@@ -31,15 +32,15 @@ job:
     enabled: true
     profile: bosun
     image:
-      repository: /boomerang.bosun.loader/bmrg-bosun-loader
-      tag: 0.1.0-0
+      repository: /bosun-loader
+      tag: 0.1.1
 
 # Web App Configuration
 web:
   bosun:
     image:
-      repository: /boomerang.bosun.web/bmrg-web-bosun
-      tag: 0.0.23
+      repository: /bosun-client-web
+      tag: 0.3.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -48,18 +49,18 @@ web:
 # Micro Service Configuration
 # Note: There are if conditions in the template referencing the service name i.e. urbancode
 service:
-  bosun:
+  policy:
     image:
-      repository: /boomerang.bosun.service/bmrg-service-bosun
-      tag: 2.5.1-1
+      repository: /bosun-service-policy
+      tag: 2.5.4
     replicaCount: 1
     service:
       type: ClusterIP
     zone: untrusted
   repository:
     image:
-      repository: /boomerang.repository.service/bmrg-service-repository
-      tag: 7.0.3
+      repository: /bosun-service-repository
+      tag: 0.1.3
     replicaCount: 1
     service:
       type: ClusterIP
@@ -74,26 +75,34 @@ opa:
     type: ClusterIP
   zone: trusted
 
-database:
-  mongodb:
-    host: bmrg-mdb001-ibm-mongodb-dev
-    port: 27017
-    user: boomerang
-    password: passw0rd
-    secretName: 
-
-ingress:
-  enabled: false
-  root: /cicd
-  host: cloud.boomerangplatform.net
-  tlsSecretName: bmrg-tls-cloud
-
-auth:
-  enabled: true
-  mode: basic
-  serviceName: bmrg-auth-proxy
-  namespace: 
-  prefix: /oauth
+# Global configuration. This can be overriden by a parent chart.
+global:
+  database:
+    mongodb:
+      host: bmrg-mdb001-ibm-mongodb-dev
+      port: 27017
+      user: boomerang
+      password: passw0rd
+      secretName: 
+  ingress:
+    enabled: false
+    root: /bosun
+    host: cloud.boomerangplatform.net
+    tlsSecretName: bmrg-tls-cloud
+    # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
+    # you need to set it to "nginx.global.ingress.kubernetes.io"
+    annotationsPrefix: "ingress.kubernetes.io"
+    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
+    # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
+    class: "nginx"
+  auth:
+    enabled: false
+    mode: basic
+    serviceName: bmrg-auth-proxy
+    namespace: bmrg-core
+    prefix: /oauth
+    tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
+    signOutRedirect: 
 
 hostAliases: []
 
@@ -108,6 +117,21 @@ monitoring:
     apm:
       name: Boomerang Private
       key:
+      image: 
+        registry: boomerangio
+        repository: /util-newrelicjavaagent
+        tag: 5.14.0
     browser:
       id: 
       key: 
+
+# Integration to XRay. Only needed in Standalone mode.
+xray:
+  token: 
+  url: 
+  user: 
+
+# Integration to Sonarqube. Only needed in Standalone mode.
+sonarqube:
+  token: 
+  url: 

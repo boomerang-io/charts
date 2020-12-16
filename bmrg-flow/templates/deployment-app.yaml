@@ -1,30 +1,34 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "apps" -}}
-{{- range $k, $v := $.Values.apps }}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- range $k, $v := $values.apps }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
-      {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone ) | nindent 6 }}
+      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+      {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone ) | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+        {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       containers:
         - name: {{ $tier }}-{{ $k }}-cntr
-          image: "{{ $.Values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
-          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          image: "{{ $values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
+          imagePullPolicy: {{ $values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              value: "{{ if $.Values.ingress.root }}{{ $.Values.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
+              value: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
@@ -41,20 +45,18 @@ spec:
               value: "{{ $.Values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
-            - name: BASE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}"
-            - name: BASE_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/apps"
-            - name: BASE_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/services"
+            - name: CORE_ENV_URL
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}"
+            - name: CORE_APPS_ENV_URL
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/apps"
+            - name: CORE_SERVICE_ENV_URL
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/services"
             - name: PRODUCT_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
             - name: PRODUCT_APPS_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/apps"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.ingress.host }}{{ $.Values.ingress.root }}/{{ $product }}/service"
-            - name: PRODUCT_STANDALONE
-              value: "{{ $.Values.general.enable.standalone }}"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/services"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr
@@ -72,8 +74,10 @@ spec:
           resources:
             requests:
               memory: 100Mi
+      {{- if $values.image.pullSecret }}
       imagePullSecrets:
-      - name: {{ $.Values.image.pullSecret }}
+      - name: {{ $values.image.pullSecret }}
+      {{- end }}
       restartPolicy: Always
 ---
 {{- end }}
