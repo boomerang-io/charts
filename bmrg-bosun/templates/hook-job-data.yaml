@@ -9,6 +9,7 @@ kind: Job
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
   labels:
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $component ) | nindent 4 }}
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
@@ -19,6 +20,7 @@ spec:
   template:
     metadata:
       labels:
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $component ) }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $component ) | nindent 8 }}
     spec:
       containers:

@@ -14,10 +14,12 @@ spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
+      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
       {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
   template:
     metadata:
       labels:
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       containers:
@@ -26,7 +28,7 @@ spec:
           imagePullPolicy: {{ $values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              value: "{{ if $values.global.ingress.root }}{{ $values.global.ingress.root }}{{- end }}/{{ $product }}/{{ $tier }}/{{ $k }}"
+              value: "{{ default "" $values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
