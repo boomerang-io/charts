@@ -31,7 +31,7 @@ The chart exposes common helper methods to allow teams to have a unified approac
 
 The following table lists the helper methods of the `bmrg-common` chart and their description.
 
-|                  Common helper                   |             Description               |                         How to use                          |
+|                  Method                   |             Description               |                         Example Usage                          |
 |--------------------------------------------------|---------------------------------------|-------------------------------------------------------------|
 | `bmrg.labels.standard`                           | This will generate all the labels used in a resources spec block of match labels and metadata labels | `{{ include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "component" $k ) | nindent 6 }}`
 | `bmrg.labels.chart` | This will generate labels for the top metadata and should conside with the recommended helm labels | `{{ include "bmrg.labels.chart" (dict "context" $ "tier" $tier "component" $k ) | nindent 6 }}`
