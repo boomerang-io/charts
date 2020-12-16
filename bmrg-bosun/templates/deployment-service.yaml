@@ -9,15 +9,18 @@ kind: Deployment
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
   labels:
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
+      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
       {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
   template:
     metadata:
       labels:
+        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       {{- if $values.monitoring.newrelic.apm.key }}

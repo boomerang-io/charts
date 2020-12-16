@@ -17,5 +17,6 @@ spec:
       targetPort: {{ $platform }}-port-cntr
       protocol: TCP
   selector:
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
     {{- include "bmrg.labels.standard" (dict "context" . "platform" $platform "product" $product "tier" $tier "zone" .Values.opa.zone) | nindent 4 }}
   sessionAffinity: None
