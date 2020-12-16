@@ -28,7 +28,7 @@ spec:
           imagePullPolicy: {{ $values.image.pullPolicy }}
           env:
             - name: APP_ROOT
-              value: "{{ $.Values.global.ingress.root | default "" }}/{{ $tier }}/{{ $k }}"
+              value: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
             - name: NEW_RELIC_APP_NAME
