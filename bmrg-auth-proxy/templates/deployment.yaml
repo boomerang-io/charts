@@ -25,7 +25,6 @@ spec:
         - --redirect-url={{ $.Values.ingress.path }}/callback
         - --proxy-prefix={{ $.Values.ingress.path }}
         - --display-htpasswd-form={{ $.Values.auth.displayHtpasswdForm }}
-        - --custom-templates-dir=/etc/oauth2-proxy/templates
         {{- if .Values.auth.args -}}
         {{- .Values.auth.args | toYaml | nindent 8 -}}
         {{- end -}}
@@ -81,8 +80,6 @@ spec:
           protocol: TCP
           {{- end }}
         volumeMounts:
-          - mountPath: /etc/oauth2-proxy/templates
-            name: html-templates-data
         {{- if $.Values.auth.displayHtpasswdForm }}
           - mountPath: /opt/config
             name: htpasswd-data
@@ -103,9 +100,6 @@ spec:
             subPath: saml_sp.xml
         {{- end }}
       volumes:
-        - name: html-templates-data
-          configMap:
-            name: {{ if $.Values.configMap.templatesData }}{{ $.Values.configMap.templatesData }}{{ else }}{{ include "bmrg.name" (dict "context" $ "component" "config" "tier" "templates") }}{{ end }}
         {{- if $.Values.auth.displayHtpasswdForm }}
         - name: htpasswd-data
           configMap:

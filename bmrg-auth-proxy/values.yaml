@@ -61,8 +61,6 @@ configMap:
 #  htpasswdData: auth-proxy-users-config
   # name of the configmap that defines the custom sign-in and error html pages
   # leaving it empty will use the default essentials one
-  templatesData:
-#  templatesData: auth-proxy-templates-config
 
 ingress:
   enabled: false
