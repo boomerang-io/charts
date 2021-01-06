@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:{{ if $.Values.global.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.global.database.mongodb.password }}{{ end }}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang"
+            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:{{ if $.Values.global.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.global.database.mongodb.password }}{{ end }}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang  -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }} "
           {{- if $.Values.global.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:
