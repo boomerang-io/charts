@@ -16,8 +16,8 @@ general:
       workflowQuotas: true
       workflowTriggers: true
       workflowTokens: true
-      teamProperties: true
-      globalProperties: true
+      teamParameters: true
+      globalParameters: true
       teamManagement: true
       userManagement: true
       taskManager: true
