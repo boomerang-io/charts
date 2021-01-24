@@ -76,3 +76,4 @@ data:
     flow.externalUrl.team={{$values.general.externalUrl.teams }}
     flow.externalUrl.user={{$values.general.externalUrl.users }}
     flow.externalUrl.navigation={{$values.general.externalUrl.navigation }}
+    flow.externalUrl.platformNavigation={{$values.general.externalUrl.headerNavigation }}

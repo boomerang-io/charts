@@ -26,6 +26,7 @@ general:
     teams: 
     users: 
     navigation: 
+    headerNavigation:
 
 workers:
   security:
