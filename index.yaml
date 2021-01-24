@@ -1281,6 +1281,26 @@ entries:
   bmrg-flow:
   - apiVersion: v2
     appVersion: 3.1.0
+    created: "2021-01-24T23:11:32.986142934Z"
+    dependencies:
+    - alias: ch
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: 2.0.7
+    description: Boomerang Flow
+    digest: 6556f3914425c0beba51d2624292c3b12c576c27d2e0089122825fd1464d5fde
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - flow
+    - workflows
+    name: bmrg-flow
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.6.9/bmrg-flow-4.6.9.tgz
+    version: 4.6.9
+  - apiVersion: v2
+    appVersion: 3.1.0
     created: "2021-01-22T01:31:31.020140956Z"
     dependencies:
     - alias: ch
@@ -2860,4 +2880,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.0.2/bmrg-flow-4.0.2.tgz
     version: 4.0.2
-generated: "2021-01-22T01:31:31.017591003Z"
+generated: "2021-01-24T23:11:32.983373738Z"
