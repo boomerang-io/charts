@@ -21,7 +21,7 @@ In order to use this chart, you need to add the following snippet in your `Chart
 dependencies:
   - name: bmrg-common
     repository: https://raw.githubusercontent.com/boomerang-io/charts/index
-    version: ~2.0.7
+    version: ~3.0.0
     alias: ch
 ```
 
@@ -44,8 +44,8 @@ The following table lists the helper methods of the `bmrg-common` chart and thei
 | `bmrg.util.joinListWithNL` | Create a string from joining a list with new line. | `{{ include "bmrg.util.joinListWithNL" .Values.authorization.allowEmailList.emailList | b64enc }}`
 | `bmrg.ingress.config.auth_proxy_authorization` | Inserts nginx configuration snippet to set the Authorization header | `{{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}`
 | `bmrg.ingress.config.auth_proxy_access_control` | Inserts nginx configuration snippet for Access Control for auth proxy. | `{{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}`
-| `bmrg.ingress.config.auth_proxy_auth_annotations` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These in turn pick up the `ingress.*` and `auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}`
-| `bmrg.ingress.config.auth_proxy_auth_annotations.global` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These in turn pick up the `global.ingress.*` and `global.auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}`
+| `bmrg.ingress.config.auth_proxy_auth_annotations` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These rely on `auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}`
+| `bmrg.ingress.config.auth_proxy_auth_annotations.global` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These rely on `global.auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}`
 | `bmrg.ingress.config.auth_proxy_lua` | Define the Access-Control LUA block to set the header for up stream systems. | `{{- include "bmrg.ingress.config.auth_proxy_lua" $ | nindent 6 }}`
 | `bmrg.host.suffix` | Get the http_origin from the `global.ingress.host` or `ingress.host` values yaml, should return boomerangplatform.net | `{{ include "bmrg.host.suffix" $ }}`
 | `bmrg.authorization.email-domains` | Creates a list of `--email-domain=` entries based on the provided `authorization.emailDomains` values yaml. | `{{- include "bmrg.authorization.email-domains" $ }}`
