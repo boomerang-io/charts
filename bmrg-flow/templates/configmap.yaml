@@ -44,7 +44,7 @@ data:
     boomerang.version={{ $.Chart.Version }}
     boomerang.otc=${FLOW_OTC}
     boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
-    boomerang.signOutUrl={{ $.Values.auth.ingressRoot }}{{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
+    boomerang.signOutUrl={{ $.Values.global.auth.ingressRoot }}{{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
     boomerang.baseUrl=https://{{ $.Values.global.ingress.host }}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
