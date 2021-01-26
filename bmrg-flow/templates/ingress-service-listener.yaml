@@ -1,7 +1,7 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
-{{- $k := "services" -}}
+{{- $k := "listener" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
 {{- if and $.Values.global.ingress.enabled $values.general.enable.eventing -}}
