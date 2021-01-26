@@ -2,13 +2,13 @@ apiVersion: v2
 name: bmrg-flow
 description: Boomerang Flow
 type: application
-version: 4.7.1
+version: 4.7.2
 appVersion: 3.1.0
 home: https://useboomerang.io
 dependencies:
   - name: bmrg-common
     repository: https://raw.githubusercontent.com/boomerang-io/charts/index
-    version: 3.0.0
+    version: 3.0.1
     alias: ch
 keywords:
 - boomerang

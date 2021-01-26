@@ -125,7 +125,6 @@ global:
     serviceName: bmrg-auth-proxy
     namespace: bmrg-core
     prefix: /oauth
-    ingressRoot: 
     tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
     signOutRedirect: 
 
