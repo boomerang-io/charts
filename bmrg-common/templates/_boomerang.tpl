@@ -174,7 +174,7 @@ add_header 'Access-Control-Allow-Credentials' 'true';}
 
 {{- define "bmrg.ingress.config.auth_proxy_auth_annotations" -}}
 {{- if hasKey $.Values "auth" -}}
-{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ $.Values.auth.ingressRoot }}{{ $.Values.auth.prefix }}/{{ if eq $.Values.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+{{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ $.Values.auth.prefix }}/{{ if eq $.Values.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
 {{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-url: "http://{{ $.Values.auth.serviceName }}.{{ $.Values.auth.namespace }}.svc.cluster.local{{ $.Values.auth.prefix }}/auth"
 {{- if eq $.Values.auth.mode "basic" }}
 {{ default "ingress.kubernetes.io" $.Values.ingress.annotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
@@ -184,7 +184,7 @@ add_header 'Access-Control-Allow-Credentials' 'true';}
 
 {{- define "bmrg.ingress.config.auth_proxy_auth_annotations.global" -}}
 {{- if hasKey $.Values.global "auth" -}}
-{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ $.Values.global.auth.ingressRoot }}{{ $.Values.global.auth.prefix }}/{{ if eq $.Values.global.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+{{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-signin: "https://$host{{ $.Values.global.auth.prefix }}/{{ if eq $.Values.global.auth.mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
 {{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-url: "http://{{ $.Values.global.auth.serviceName }}.{{ $.Values.global.auth.namespace }}.svc.cluster.local{{ $.Values.global.auth.prefix }}/auth"
 {{- if eq $.Values.global.auth.mode "basic" }}
 {{ default "ingress.kubernetes.io" $.Values.global.ingress.annotationsPrefix }}/auth-response-headers: "Authorization, X-Forwarded-User"
