@@ -3,9 +3,8 @@
 {{- $tier := "apps" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- if $values.general.enable.activation }}
 ** Activation **
-To complete the one time setup and activation of Core you need to retrieve the one time code and enter into the platform.
+To complete the one time setup and activation of Core you need to retrieve the one time code and enter into the platform. This is only needed in some scenarios.
 
 1. Retrieve the code by running
 
@@ -13,7 +12,6 @@ To complete the one time setup and activation of Core you need to retrieve the o
 
 2. Navigate to the application (link provided in Access below)
 
-{{- end }}
 ** Navigation **
 You can access this application by navigating to;
 {{- range $k, $v := $values.apps }}
