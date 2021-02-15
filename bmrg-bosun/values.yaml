@@ -36,11 +36,11 @@ job:
       tag: 0.1.1
 
 # Web App Configuration
-web:
+apps:
   bosun:
     image:
       repository: /bosun-client-web
-      tag: 0.3.0
+      tag: 0.4.5
     replicaCount: 1
     service:
       type: ClusterIP
@@ -48,7 +48,7 @@ web:
 
 # Micro Service Configuration
 # Note: There are if conditions in the template referencing the service name i.e. urbancode
-service:
+services:
   policy:
     image:
       repository: /bosun-service-policy

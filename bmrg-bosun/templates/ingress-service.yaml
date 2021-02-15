@@ -1,6 +1,6 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
-{{- $tier := "service" -}}
+{{- $tier := "services" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
 {{- if $.Values.global.ingress.enabled -}}

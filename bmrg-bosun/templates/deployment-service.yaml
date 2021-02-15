@@ -1,9 +1,9 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
-{{- $tier := "service" -}}
+{{- $tier := "services" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- range $k, $v := .Values.service }}
+{{- range $k, $v := .Values.services }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

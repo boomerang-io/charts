@@ -1,9 +1,9 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
-{{- $tier := "web" -}}
+{{- $tier := "apps" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- range $k, $v := .Values.web }}
+{{- range $k, $v := .Values.apps }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,15 +48,15 @@ spec:
             - name: BASE_LAUNCH_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}"
             - name: BASE_APPS_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/web"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/apps"
             - name: BASE_SERVICE_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/services"
             - name: PRODUCT_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
             - name: PRODUCT_APPS_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/web"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/service"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/services"
             - name: PRODUCT_STANDALONE
               value: "{{ $.Values.general.enable.standalone }}"
             - name: CICD_PRODUCT_APP_ENV_URL

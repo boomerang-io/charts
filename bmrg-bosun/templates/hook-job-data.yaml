@@ -1,7 +1,7 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
 {{- $tier := "util" -}}
-{{- $component := "data" -}}
+{{- $component := "dataloader" -}}
 {{- $context := . -}}
 {{- if $.Values.job.data.enabled -}}
 apiVersion: batch/v1
