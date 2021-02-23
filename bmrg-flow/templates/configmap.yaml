@@ -15,6 +15,8 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang
     flow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }}
     flow.apps.flow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/apps/flow
+    flow.services.workflow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/services/workflow
+    flow.services.listener.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/services/listener
     {{- range $k, $v := $values.services }}
     {{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
     {{ $k }}.service.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/services/{{ $k }}

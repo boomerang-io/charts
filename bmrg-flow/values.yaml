@@ -5,7 +5,7 @@
 # General Configuration
 # - To enable or disable features, use the feature toggle flags under enable.
 general:
-  namePrefix:
+  namePrefix: bmrg-flow
   enable:
     apidocs: false
     debug: false
