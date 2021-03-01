@@ -23,8 +23,10 @@ data:
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
     eventing.nats.enabled={{ $values.nats.enable }}
+    {{- if $.Values.nats.enable }}
     eventing.nats.url={{ $values.nats.url }}
     eventing.nats.cluster={{ $values.nats.cluster }}
+    {{- end }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
