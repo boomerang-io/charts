@@ -107,6 +107,10 @@ spec:
           - "-c"
           - "$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
           {{- end }}
+      {{- with $.Values.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       volumes:
       - name: application-config
         configMap:

@@ -42,7 +42,7 @@ The following table lists the configurable parameters of the chart and their def
 | `general.enable.eventing` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
 | `general.enable.feature.*` | Enables different features. See the documentation for more inforamtion |  |
 
-### Worker Configuration
+### Task Worker Configuration
 
 | Parameter | Description | Default Value |
 |---|---|---|
