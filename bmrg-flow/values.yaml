@@ -164,3 +164,6 @@ nats:
   enable: true
   url: nats://bmrg-nats:4222
   cluster: bmrg-stan
+
+tekton: 
+  enabled: false
