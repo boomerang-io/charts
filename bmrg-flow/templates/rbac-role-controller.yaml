@@ -31,11 +31,21 @@ rules:
   - use
 {{- end }}
 # objects used to create and execute tasks
-# pvc and pv are mentioned as we use auto management of pv
+  # Controller needs to watch Pods created by TaskRuns to see them progress.
+  # logs get/watch are used to stream the pods logs
+- apiGroups:
+  - ""
+  resources: 
+  - pods
+  - pods/log
+  verbs: 
+  - get
+  - list
+  - watch
+  # pvc and pv are mentioned as we use auto management of pv
 - apiGroups:
   - ""
   resources:
-  - pods
   - persistentvolumeclaims
   - persistentvolumes
   verbs:
@@ -44,16 +54,21 @@ rules:
   - create
   - watch
   - delete
-# all workflow tasks are jobs
+  # all workflow tasks are tekton TaskRuns and Tasks
+  # https://github.com/cdfoundation/tekton-helm-chart/blob/master/charts/tekton-pipeline/templates/tekton-pipelines-controller-cluster-access-clusterrole.yaml
 - apiGroups:
-  - batch
+  - tekton.dev
   resources:
-  - jobs
+  - tasks
+  - taskruns
+  - tasks/status
+  - taskruns/status
   verbs:
   - get
   - list
   - create
   - update
+  - patch
   - watch
   - delete
 # configmaps specifically need patch
@@ -68,20 +83,4 @@ rules:
   - watch
   - patch
   - delete
-# logs get/watch are used to stream the pods logs
-- apiGroups:
-  - ""
-  resources:
-  - pods/log
-  verbs:
-  - get
-  - list
-  - watch
-# exec for lifecycle
-- apiGroups:
-  - ""
-  resources:
-  - pods/exec
-  verbs:
-  - get
 {{- end }}
