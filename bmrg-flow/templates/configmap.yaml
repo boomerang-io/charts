@@ -32,7 +32,6 @@ data:
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
     logging.level.root=INFO
     {{- end }}
-    kube.namespace={{ $.Release.Namespace }}
     kube.worker.debug={{ $.Values.general.enable.debug }}
     kube.api.debug={{ $.Values.general.enable.debug }}
     kube.worker.hostaliases={{ $.Values.hostAliases | toJson }}
@@ -44,6 +43,7 @@ data:
     kube.worker.logging.keystore.password=changeme
     kube.worker.node.dedicated={{ $values.workers.enable.dedicatedNodes }}
     boomerang.environment={{ .Release.Namespace }}
+    boomerang.instance={{ .Release.Name }}
     boomerang.product={{ $.Values.general.namePrefix }}
     boomerang.version={{ $.Chart.Version }}
     boomerang.otc=${FLOW_OTC}
