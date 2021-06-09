@@ -8,6 +8,11 @@ Boomerang Auth Reverse Proxy, forked from [oauth2-proxy](https://github.com/oaut
  - [Azure Active Directory](#integrating-with-azure-aD-provider) and
  - [SAML](#integrating-with-sAML-based-providers) based providers.
 
+## Deprecated
+
+This chart is deprecated in favour of **OAuth2-Proxy**'s Official Helm Chart.
+See https://github.com/oauth2-proxy/manifests for installation instructions.
+
 ### New in this release
 
 1. IBM OIDC provider
