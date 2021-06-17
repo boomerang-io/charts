@@ -47,18 +47,16 @@ The following table lists the configurable parameters of the chart and their def
 | Parameter | Description | Default Value |
 |---|---|---|
 | `workers.rbac.role` | The kubernetes service account name that allows priviledged access. | `ibm-privileged-clusterrole` |
-| `workers.logging.type` | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `elastic` | `default` |
-| `workers.logging.host` | The elasticsearch host service name. _Only required if type is 'elastic'_ | <ul><li>default:</li><li>elastic: `elasticsearch.kube-system`</li></ul> |
-| `workers.logging.port` | The elasticsearch port. _Only required if type is 'elastic'_ | <ul><li>default:</li><li>elastic: `9200`</li></ul> |
-| `workers.logging.secrets` | The elastic logging certs secret. _Only required if type is 'elastic'_ | <ul><li>default:</li><li>elastic: `logging-elk-certs`</li></ul> |
+| `workers.logging.type` | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `loki` | `default` |
+| `workers.logging.host` | The elasticsearch host service name. _Only required if type is 'loki'_ | <ul><li>default:</li><li>loki: `loki.svc.cluster.local`</li></ul> |
+| `workers.logging.port` | The elasticsearch port. _Only required if type is 'loki'_ | <ul><li>default:</li><li>loki: `3100`</li></ul> |
+| `workers.logging.secrets` | The elastic logging certs secret. | <ul><li>default:</li><li>loki:</li></ul> |
 | `workers.enable.deletion` | Will delete any workers that are completed and in non error state. | `true` |
 | `workers.enable.dedicatedNodes` | Runs the Flow wokers to run on specific nodes with the taint `dedicated=bmrg-worker:NoSchedule` and also a label of `node-role.kubernetes.io/bmrg-worker=true` | `false` |
 
 *Note:*
-1. If you need the elasticsearch logging certificates, then you will need to have these available in the same namespace. The following command can help achieve this.
-```kubectl get secret logging-elk-certs --namespace=kube-system --export -o yaml | kubectl --namespace="bmrg-dev" apply -f -```
-2. If you choose `elastic` make sure to adjust your retention period. https://www.ibm.com/support/knowledgecenter/en/SSBS6K_3.1.1/manage_metrics/log_change_retention.html
-3. If you choose `default` be aware of the kubernetes log rotation and storage requirements.
+1. If you choose `loki` make sure to adjust your retention period. https://www.ibm.com/support/knowledgecenter/en/SSBS6K_3.1.1/manage_metrics/log_change_retention.html
+2. If you choose `default` be aware of the kubernetes log rotation and storage requirements.
 
 *References:*
 - [Kubernetes Taints and Tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)

@@ -22,24 +22,24 @@ general:
       userManagement: true
       taskManager: true
       settings: true
-  externalUrl: 
-    teams: 
-    users: 
-    navigation: 
+  externalUrl:
+    teams:
+    users:
+    navigation:
     headerNavigation:
 
 workers:
   security:
     enable: true
     policy: ibm-privileged-psp
-  logging: 
+  logging:
     type: default
-    host: 
-    port: 
-    secret: 
+    host:
+    port:
+    secret:
   enable:
     dedicatedNodes: false
-  
+
 core:
   namePrefix: bmrg-core
   ingressRoot: ""
@@ -48,7 +48,7 @@ core:
 image:
   registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: 
+  pullSecret:
 
 # Job Configuraiton
 job:
@@ -107,7 +107,7 @@ global:
       port: 27017
       user: boomerang
       password: passw0rd
-      secretName: 
+      secretName:
   ingress:
     enabled: false
     root: /flow
@@ -116,7 +116,7 @@ global:
     # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
     # you need to set it to "nginx.ingress.kubernetes.io"
     annotationsPrefix: "ingress.kubernetes.io"
-    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
+    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
     # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
     class: "nginx"
   auth:
@@ -126,7 +126,7 @@ global:
     namespace: bmrg-core
     prefix: /oauth
     tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
-    signOutRedirect: 
+    signOutRedirect:
 
 hostAliases: []
 
@@ -140,23 +140,23 @@ monitoring:
     apm:
       name: Boomerang Private
       key:
-      image: 
+      image:
         registry: boomerangio
         repository: /util-newrelicjavaagent
         tag: 5.14.0
     browser:
       id:
       key:
-  jaeger: 
+  jaeger:
     enabled: false
-    namespace: 
-    agent: 
+    namespace:
+    agent:
       host: jaeger-dev-agent
       port: 6831
-    collector: 
+    collector:
       host: jaeger-dev-collector
       port: 14268
-    remoteControlledSampler: 
+    remoteControlledSampler:
       host: jaeger-dev-agent
       port: 5778
 
