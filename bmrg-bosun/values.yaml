@@ -14,7 +14,7 @@ general:
 core:
   namePrefix: bmrg-core
   namespace: #needed if installed in different namespace
-  ingressRoot: 
+  ingressRoot:
 boomerang:
   cicd:
     namePrefix: bmrg-cicd
@@ -24,7 +24,7 @@ boomerang:
 image:
   registry: boomerangio
   pullPolicy: IfNotPresent
-  pullSecret: 
+  pullSecret:
 
 # Job Configuraiton
 job:
@@ -36,7 +36,7 @@ job:
       tag: 0.1.1
 
 # Web App Configuration
-web:
+apps:
   bosun:
     image:
       repository: /bosun-client-web
@@ -48,7 +48,7 @@ web:
 
 # Micro Service Configuration
 # Note: There are if conditions in the template referencing the service name i.e. urbancode
-service:
+services:
   policy:
     image:
       repository: /bosun-service-policy
@@ -65,7 +65,7 @@ service:
     service:
       type: ClusterIP
     zone: semi-trusted
-    
+
 opa:
   image:
     repository: openpolicyagent/opa
@@ -83,7 +83,7 @@ global:
       port: 27017
       user: boomerang
       password: passw0rd
-      secretName: 
+      secretName:
   ingress:
     enabled: false
     root: /bosun
@@ -92,7 +92,7 @@ global:
     # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
     # you need to set it to "nginx.global.ingress.kubernetes.io"
     annotationsPrefix: "ingress.kubernetes.io"
-    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific 
+    # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
     # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
     class: "nginx"
   auth:
@@ -102,7 +102,7 @@ global:
     namespace: bmrg-core
     prefix: /oauth
     tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
-    signOutRedirect: 
+    signOutRedirect:
 
 hostAliases: []
 
@@ -117,21 +117,21 @@ monitoring:
     apm:
       name: Boomerang Private
       key:
-      image: 
+      image:
         registry: boomerangio
         repository: /util-newrelicjavaagent
         tag: 5.14.0
     browser:
-      id: 
-      key: 
+      id:
+      key:
 
 # Integration to XRay. Only needed in Standalone mode.
 xray:
-  token: 
-  url: 
-  user: 
+  token:
+  url:
+  user:
 
 # Integration to Sonarqube. Only needed in Standalone mode.
 sonarqube:
-  token: 
-  url: 
+  token:
+  url:

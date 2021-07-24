@@ -13,8 +13,8 @@ data:
   application.properties: |
     server.port=8080
     spring.data.mongodb.uri=mongodb://{{ $values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $values.global.database.mongodb.host }}:{{ $values.global.database.mongodb.port }}/boomerang
-    {{- range $k, $v := $values.service }}
-    boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $context "tier" "service" "component" $k ) }}
+    {{- range $k, $v := $values.services }}
+    boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
     boomerang.bosun.service.{{ $k }}.root={{ default "" $values.global.ingress.root }}/service/{{ $k }}
     {{- end }}
     {{ include "bmrg.core.services" $context | indent 4 }}

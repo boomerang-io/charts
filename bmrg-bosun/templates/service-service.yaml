@@ -1,7 +1,7 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "bosun" -}}
-{{- $tier := "service" -}}
-{{- range $k, $v := $.Values.service }}
+{{- $tier := "services" -}}
+{{- range $k, $v := $.Values.services }}
 apiVersion: v1
 kind: Service
 metadata:
