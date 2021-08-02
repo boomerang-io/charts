@@ -15,7 +15,7 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $values.global.database.mongodb.host }}:{{ $values.global.database.mongodb.port }}/boomerang
     {{- range $k, $v := $values.services }}
     boomerang.bosun.service.{{ $k }}.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
-    boomerang.bosun.service.{{ $k }}.root={{ default "" $values.global.ingress.root }}/service/{{ $k }}
+    boomerang.bosun.service.{{ $k }}.root={{ default "" $values.global.ingress.root }}/services/{{ $k }}
     {{- end }}
     {{ include "bmrg.core.services" $context | indent 4 }}
     boomerang.cicd.service.ci.host=bmrg-cicd-services-ci
