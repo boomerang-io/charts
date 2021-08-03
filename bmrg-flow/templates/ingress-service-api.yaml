@@ -31,4 +31,3 @@ spec:
       {{- if $.Values.global.ingress.tlsSecretName }}
       secretName: {{ $.Values.global.ingress.tlsSecretName }}
       {{- end }}
-{{- end }}
