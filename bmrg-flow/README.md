@@ -20,7 +20,7 @@ For more information on the dependencies please see the Application Architecture
 
 The worker priviledged RBAC is dependent on the IBM Cloud Private resources;
  - Pod Security Policy `ibm-privileged-psp`, and
- - Cluster Role `ibm-privileged-clusterrole` 
+ - Cluster Role `ibm-privileged-clusterrole`
 
 If you allow priviledge access by default then you can disable the creation of this service account by removing the value in the value yaml under `workers.rbac.role`
 
@@ -133,6 +133,18 @@ The following table lists the configurable parameters of the chart and their def
 | `nats.enable` | Enable NATS | `true` |
 | `nats.url` | The NATS Url | `nats://bmrg-nats:4222` |
 | `nats.cluster` | NATS Streaming Cluster | `bmrg-stan` |
+
+### Tekton Configuration
+
+| Parameter | Description | Default Value |
+|---|---|---|
+| `tekton.enabled` | Enable Tekton pipelines | `true` |
+
+### OAuth2 Proxy Configuration
+
+| Parameter | Description | Default Value |
+|---|---|---|
+| `auth2proxy.enabled` | Enable OAuth2 Proxy | `true` |
 
 ## Known Issues
 

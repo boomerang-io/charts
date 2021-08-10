@@ -1,0 +1,108 @@
+global:
+  database:
+    mongodb:
+      host: bmrg-mongodb
+      secretName: bmrg-mongodb
+  ingress:
+    enabled: true
+    root: /poc-standalone/flow
+    host: ocp2.cloud.boomerangplatform.net
+    class: "nginx"
+    annotationsPrefix: "ingress.kubernetes.io"
+    tlsSecretName: ocp-secret-tls
+  auth:
+    enabled: true
+    mode: oauth
+    serviceName: flow-auth2proxy
+    namespace: poc-standalone
+    prefix: /poc-standalone/oauth
+    tokenURL: http://flow-auth2proxy.poc-standalone.svc.cluster.local/auth/token/validate/external
+    signOutRedirect: /poc-standalone/flow/apps/flow
+
+nats:
+  enable: false
+
+services:
+  controller:
+    image:
+      repository: /flow-service-controller
+      tag: 6.1.3
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: semi-trusted
+  listener:
+    image:
+      repository: /flow-service-listener
+      tag: 1.7.2
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+  workflow:
+    image:
+      repository: /flow-service-workflow
+      tag: 3.0.8
+    replicaCount: 1
+    service:
+      type: ClusterIP
+    zone: untrusted
+
+
+auth2proxy:
+  enabled: true
+  config:
+    cookieName: bmrg_flow_stand_github
+    cookieSecret: RXNzY3RsT0F1dGgyUHJveHlTZWNyZXQ=
+    clientID: 1cb49e3cbcfb1293358f
+    clientSecret: 1ddb575e035dbadc2b63bd1bb3e24a7c09bd130f
+  extraArgs:
+    provider: github
+    cookie-path: /poc-standalone
+    cookie-secure: "true"
+    http-address: 0.0.0.0:4180
+    scope: "user:email read:user"
+    pass-basic-auth: "true"
+    proxy-prefix: /poc-standalone/oauth
+    redirect-url: /poc-standalone/oauth/callback
+    skip-provider-button: "true"
+    set-authorization-header: "true"
+    pass-authorization-header: "true"
+    pass-access-token: "true"
+    set-xauthrequest: "true"
+    pass-user-headers: "true"
+    cookie-expire: "24h0m0s"
+    skip-oidc-discovery: "true"
+    insecure-oidc-allow-unverified-email: "true"
+  image:
+    pullPolicy: IfNotPresent
+    repository: docker.io/boomerangio/oauth2-proxy
+    tag: 7.1.3-bmrg.3
+  ingress:
+    annotations:
+      ingress.kubernetes.io/client-body-buffer-size: 12M
+      ingress.kubernetes.io/client-max-body-size: 12M
+      ingress.kubernetes.io/configuration-snippet: |
+        proxy_pass_request_body       off;
+        proxy_cache                   authentication;
+        proxy_cache_key               $cookie_bmrg_flow_stand_github;
+        proxy_cache_valid             202 401 3s;
+        proxy_cache_lock              on;
+        proxy_ignore_headers          Set-Cookie;
+      ingress.kubernetes.io/proxy-body-size: 8M
+      ingress.kubernetes.io/proxy-buffer-size: 12M
+      ingress.kubernetes.io/proxy-buffering: "on"
+      ingress.kubernetes.io/proxy-buffers-number: "8"
+      kubernetes.io/ingress.class: nginx
+    enabled: true
+    hosts:
+    - ocp2.cloud.boomerangplatform.net
+    path: /poc-standalone/oauth
+    tls:
+    - hosts:
+      - ocp2.cloud.boomerangplatform.net
+      secretName: ocp-secret-tls
+  redis:
+    enabled: false
+  sessionStorage:
+    type: cookie
