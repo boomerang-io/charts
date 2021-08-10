@@ -43,6 +43,7 @@ The following table lists the helper methods of the `bmrg-common` chart and thei
 | `bmrg.util.time` | Uses the `$.Release.Time` global variable and removes certain string content | `{{ include "bmrg.util.time" }`
 | `bmrg.util.joinListWithNL` | Create a string from joining a list with new line. | `{{ include "bmrg.util.joinListWithNL" .Values.authorization.allowEmailList.emailList | b64enc }}`
 | `bmrg.ingress.config.auth_proxy_authorization` | Inserts nginx configuration snippet to set the Authorization header | `{{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}`
+| `bmrg.ingress.config.auth_proxy_user_email` | Inserts nginx configuration snippet to set the X-Forwarded-User and X-Forwarded-Email headers | `{{- include "bmrg.ingress.config.auth_proxy_user_email" $ | nindent 6 }}`
 | `bmrg.ingress.config.auth_proxy_access_control` | Inserts nginx configuration snippet for Access Control for auth proxy. | `{{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}`
 | `bmrg.ingress.config.auth_proxy_auth_annotations` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These rely on `auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}`
 | `bmrg.ingress.config.auth_proxy_auth_annotations.global` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These rely on `global.auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}`

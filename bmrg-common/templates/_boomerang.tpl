@@ -129,6 +129,16 @@ proxy_set_header Authorization $token;
 {{- end -}}
 
 {{/*
+Define the X-Forwarded-User and X-Forwarded-Email headers to be set up for up stream systems.
+*/}}
+{{- define "bmrg.ingress.config.auth_proxy_user_email" -}}
+auth_request_set $user   $upstream_http_x_auth_request_user;
+auth_request_set $email  $upstream_http_x_auth_request_email;
+proxy_set_header X-Forwarded-User  $user;
+proxy_set_header X-Forwarded-Email $email;
+{{- end -}}
+
+{{/*
 Get the http_origin from the values host, should return boomerangplatform.net
 */}}
 {{- define "bmrg.host.suffix" -}}

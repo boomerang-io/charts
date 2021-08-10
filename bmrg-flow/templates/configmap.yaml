@@ -43,7 +43,7 @@ data:
     boomerang.environment={{ .Release.Namespace }}
     boomerang.instance={{ .Release.Name }}
     boomerang.product={{ $.Values.general.namePrefix }}
-    boomerang.version={{ $.Chart.Version }}
+    boomerang.version={{ .Chart.AppVersion }}
     boomerang.otc=${FLOW_OTC}
     boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
     boomerang.signOutUrl={{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}

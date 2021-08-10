@@ -3,7 +3,7 @@ name: bmrg-flow
 description: Boomerang Flow
 type: application
 version: 4.9.5
-appVersion: 3.3.1
+appVersion: 3.4.0
 home: https://useboomerang.io
 dependencies:
   - name: bmrg-common
@@ -25,3 +25,4 @@ keywords:
 - flow
 - workflows
 - tekton-pipelines
+- oauth2-proxy
