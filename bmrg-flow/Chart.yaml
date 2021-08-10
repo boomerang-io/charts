@@ -8,9 +8,8 @@ home: https://useboomerang.io
 dependencies:
   - name: bmrg-common
     repository: https://raw.githubusercontent.com/boomerang-io/charts/index
-    version: 3.0.1
+    version: 3.0.2
     alias: ch
-    condition: mongodb.enabled
   - name: oauth2-proxy
     version: 4.1.0
     repository: https://oauth2-proxy.github.io/manifests
