@@ -18,6 +18,7 @@ metadata:
     {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
       {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_user_email" $ | nindent 6 }}
     {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
@@ -26,7 +27,7 @@ spec:
   rules:
     - host: {{ $.Values.global.ingress.host }}
       http:
-        paths:    
+        paths:
           - path: {{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}
             backend:
               serviceName: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}

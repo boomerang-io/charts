@@ -23,6 +23,7 @@ metadata:
       {{- if $.Values.global.auth.enabled }}
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
       {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_user_email" $ | nindent 6 }}
       {{- end }}
       if ($request_method = 'OPTIONS') {
       add_header 'Access-Control-Allow-Origin' $http_origin;
