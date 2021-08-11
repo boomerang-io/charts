@@ -17,6 +17,16 @@ global:
     tokenURL: http://flow-auth2proxy.default.svc.cluster.local/auth/token/validate/external
     signOutRedirect: /flow/apps/flow
 
+services:
+  controller:
+    resources:
+      requests:
+        memory: "128Mi"
+  workflow:
+    resources:
+      requests:
+        memory: "128Mi"
+
 nats:
   enable: false
 
