@@ -87,9 +87,7 @@ spec:
             periodSeconds: 5
             successThreshold: 1
             timeoutSeconds: 5
-          resources:
-            requests:
-              memory: 1Gi
+          {{- include "bmrg.resources.chart" (dict "context" $.Values "item" $v "tier" $tier ) | nindent 10 }}
           volumeMounts:
           - name: application-config
             mountPath: "/data"
