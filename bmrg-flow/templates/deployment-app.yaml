@@ -65,9 +65,7 @@ spec:
             periodSeconds: 60
             successThreshold: 1
             timeoutSeconds: 5
-          resources:
-            requests:
-              memory: 100Mi
+          {{- include "bmrg.resources.chart" (dict "context" $.Values "item" $v "tier" $tier ) | nindent 10 }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $values.image.pullSecret }}
