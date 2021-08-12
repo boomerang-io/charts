@@ -87,7 +87,7 @@ services:
     zone: semi-trusted
     resources:
       requests:
-        memory: "1Gi"
+        memory: "512Mi"
   listener:
     image:
       repository: /flow-service-listener
