@@ -173,3 +173,9 @@ nats:
   enable: true
   url: nats://bmrg-nats:4222
   cluster: bmrg-stan
+
+tekton:
+  enabled: true
+
+auth2proxy:
+  enabled: true
