@@ -1412,6 +1412,38 @@ entries:
   bmrg-flow:
   - apiVersion: v2
     appVersion: 3.4.0
+    created: "2021-08-27T00:33:52.449445153Z"
+    dependencies:
+    - alias: ch
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: 3.0.2
+    - alias: auth2proxy
+      condition: auth2proxy.enabled
+      name: oauth2-proxy
+      repository: https://oauth2-proxy.github.io/manifests
+      version: 4.1.0
+    - alias: tekton
+      condition: tekton.enabled
+      name: tekton-pipeline
+      repository: https://cdfoundation.github.io/tekton-helm-chart
+      version: 0.24.1
+    description: Boomerang Flow
+    digest: 4f8d5cb96561d5f15db3ee9455d432de9fda6fd76f9c4d9b89d694c32bacf83c
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - flow
+    - workflows
+    - tekton-pipelines
+    - oauth2-proxy
+    name: bmrg-flow
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.10.1/bmrg-flow-4.10.1.tgz
+    version: 4.10.1
+  - apiVersion: v2
+    appVersion: 3.4.0
     created: "2021-08-27T00:33:19.877413469Z"
     dependencies:
     - alias: ch
@@ -1792,4 +1824,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.1.1/bmrg-flow-4.1.1.tgz
     version: 4.1.1
-generated: "2021-08-27T00:33:19.868410617Z"
+generated: "2021-08-27T00:33:52.441267329Z"
