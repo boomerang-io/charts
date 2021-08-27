@@ -64,17 +64,6 @@ data:
     opentracing.jaeger.udp-sender.port={{ $.Values.monitoring.jaeger.agent.port }}
     opentracing.jaeger.http-sender.url=http://{{ $.Values.monitoring.jaeger.collector.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.collector.port }}/api/traces
     opentracing.jaeger.remote-controlled-sampler.host-port={{ $.Values.monitoring.jaeger.remoteControlledSampler.host }}.{{ $.Values.monitoring.jaeger.namespace }}:{{ $.Values.monitoring.jaeger.remoteControlledSampler.port }}
-    flow.feature.activity={{$values.general.enable.feature.activity }}
-    flow.feature.insights={{$values.general.enable.feature.insights }}
-    flow.feature.workflow.quotas={{$values.general.enable.feature.workflowQuotas }}
-    flow.feature.workflow.triggers={{$values.general.enable.feature.workflowTriggers }}
-    flow.feature.workflow.tokens={{$values.general.enable.feature.workflowTokens }}
-    flow.feature.team.parameters={{$values.general.enable.feature.teamParameters }}
-    flow.feature.global.parameters={{$values.general.enable.feature.globalParameters }}
-    flow.feature.team.management={{$values.general.enable.feature.teamManagement }}
-    flow.feature.user.management={{$values.general.enable.feature.userManagement }}
-    flow.feature.taskManager={{$values.general.enable.feature.taskManager }}
-    flow.feature.settings={{$values.general.enable.feature.settings }}
     flow.externalUrl.team={{$values.general.externalUrl.teams }}
     flow.externalUrl.user={{$values.general.externalUrl.users }}
     flow.externalUrl.navigation={{$values.general.externalUrl.navigation }}
