@@ -3,25 +3,12 @@
 # Declare variables to be passed into your templates.
 
 # General Configuration
-# - To enable or disable features, use the feature toggle flags under enable.
 general:
   namePrefix: bmrg-flow
   enable:
     apidocs: false
     debug: false
     eventing: true
-    feature:
-      activity: true
-      insights: true
-      workflowQuotas: true
-      workflowTriggers: true
-      workflowTokens: true
-      teamParameters: true
-      globalParameters: true
-      teamManagement: true
-      userManagement: true
-      taskManager: true
-      settings: true
   externalUrl:
     teams:
     users:
