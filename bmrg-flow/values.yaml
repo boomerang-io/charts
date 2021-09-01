@@ -156,10 +156,12 @@ monitoring:
       host: jaeger-dev-agent
       port: 5778
 
-nats:
+jetstream:
   enable: true
-  url: nats://bmrg-nats:4222
-  cluster: bmrg-stan
+  url: nats://localhost:4222
+
+azureEventGrid:
+  enable: false
 
 tekton:
   enabled: true
