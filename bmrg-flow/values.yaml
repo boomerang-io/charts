@@ -160,9 +160,6 @@ jetstream:
   enable: false
   url: nats://localhost:4222
 
-azureEventGrid:
-  enable: false
-
 tekton:
   enabled: true
 
