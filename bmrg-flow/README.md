@@ -36,11 +36,8 @@ The following table lists the configurable parameters of the chart and their def
 |---|---|---|
 | `general.namePrefix` | The name prefix used in the naming of all Kubernetes objects  | `$.Chart.Name` |
 | `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false` |
-| `general.enable.activation` | Enables needing the one time code when installing | `true` |
 | `general.enable.debug` | Enables additional logging and port forwarding advice on installation | `false` |
-| `general.enable.standalone` | Enables standalone mode and does not require the IBM Essentials Core services to run | `true` |
 | `general.enable.eventing` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
-| `general.enable.feature.*` | Enables different features. See the documentation for more inforamtion |  |
 
 ### Task Worker Configuration
 

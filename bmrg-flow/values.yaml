@@ -157,7 +157,7 @@ monitoring:
       port: 5778
 
 jetstream:
-  enable: true
+  enable: false
   url: nats://localhost:4222
 
 azureEventGrid:
