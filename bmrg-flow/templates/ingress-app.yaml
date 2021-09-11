@@ -5,7 +5,7 @@
 {{- $context := . -}}
 {{- if $.Values.global.ingress.enabled -}}
 {{- range $k, $v := $values.apps }}
-apiVersion: extensions/v1beta1
+apiVersion: {{ if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}extensions/v1beta1{{ else }}networking.k8s.io/v1{{ end }}
 kind: Ingress
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
