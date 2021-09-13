@@ -36,7 +36,7 @@ spec:
               service:
                 name: {{ include "bmrg.name" (dict "context" $context "tier" "services" "component" "workflow" ) }}
                 port:
-                  number: {{ $platform }}-port-svc
+                  name: {{ $platform }}-port-svc
             {{- else }}
             backend:
               serviceName:  {{ include "bmrg.name" (dict "context" $context "tier" "services" "component" "workflow" ) }}
