@@ -25,7 +25,7 @@ spec:
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       {{- if and (eq $k "controller") ($values.workers.security.enable) }}
-      serviceAccountName: {{ $platform }}-{{ $product }}-controller
+      serviceAccountName: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
       {{- end }}
       {{- if $.Values.monitoring.newrelic.apm.key }}
       initContainers:
