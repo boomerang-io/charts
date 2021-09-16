@@ -23,7 +23,7 @@ data:
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
     eventing.enabled={{ $values.general.enable.eventing }}
-    eventing.jetstream.enabled={{ $values.jetstream.enable }}
+    eventing.jetstream.enabled={{ $values.jetstream.enabled }}
     {{- if $.Values.jetstream.enable }}
     eventing.jetstream.server.url={{ $values.jetstream.url }}
     {{- end }}
