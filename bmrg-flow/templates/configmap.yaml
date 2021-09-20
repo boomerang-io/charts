@@ -39,7 +39,8 @@ data:
     kube.worker.logging.port={{ $values.workers.logging.port }}
     kube.worker.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
     kube.worker.logging.keystore.password=changeme
-    kube.worker.node.dedicated={{ $values.workers.enable.dedicatedNodes }}
+    kube.worker.nodeSelector={{ $values.workers.nodeSelector }}
+    kube.worker.tolerations={{ $values.workers.tolerations }}
     boomerang.environment={{ .Release.Namespace }}
     boomerang.instance={{ .Release.Name }}
     boomerang.product={{ $.Values.general.namePrefix }}

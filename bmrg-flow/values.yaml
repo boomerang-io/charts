@@ -24,8 +24,10 @@ workers:
     host:
     port:
     secret:
-  enable:
-    dedicatedNodes: false
+  nodeSelector:
+    #node-role.kubernetes.io/bmrg-worker: true
+  tolerations:
+    #dedicated=bmrg-worker:NoSchedule
 
 core:
   namePrefix: bmrg-core
