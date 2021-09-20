@@ -27,7 +27,10 @@ workers:
   nodeSelector:
     #node-role.kubernetes.io/bmrg-worker: true
   tolerations:
-    #dedicated=bmrg-worker:NoSchedule
+  # - key: dedicated
+  #   value: bmrg-worker
+  #   operator: Equal
+  #   effect: NoSchedule
 
 core:
   namePrefix: bmrg-core
