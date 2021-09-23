@@ -165,15 +165,6 @@ jetstream:
   enabled: false
   url: nats://localhost:4222
 
-  # If NATS Jetstream is enables, fill in the following values
-  # stream:
-  #   name:
-  #   subject:
-  # consumer:
-  #   pushBasedName:
-  #   pushBasedDeliverySubject:
-  #   pullBasedName:
-
 tekton:
   enabled: true
 
