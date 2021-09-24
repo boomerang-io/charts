@@ -24,8 +24,13 @@ data:
     {{- include "bmrg.core.services" $ | indent 4 }}
     eventing.enabled={{ $values.general.enable.eventing }}
     eventing.jetstream.enabled={{ $values.jetstream.enabled }}
-    {{- if $.Values.jetstream.enable }}
+    {{- if $.Values.jetstream.enabled }}
     eventing.jetstream.server.url={{ $values.jetstream.url }}
+    eventing.jetstream.stream.name={{ .Release.Name }}-event-stream
+    eventing.jetstream.stream.subject={{ .Release.Name }}-event-stream
+    eventing.jetstream.consumer.push.name={{ .Release.Name }}-event-push-consumer
+    eventing.jetstream.consumer.push.delivery-subject=out.flow.event
+    eventing.jetstream.consumer.pull.name={{ .Release.Name }}-event-pull-consumer
     {{- end }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
