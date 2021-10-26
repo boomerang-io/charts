@@ -102,6 +102,7 @@ The following table lists the configurable parameters of the chart and their def
 | `ingress.tlsSecretName` | If there is an associated TLS secret | `bmrg-tls-cloud` |
 | `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io` | `ingress.kubernetes.io` |
 | `ingress.class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx` |
+| `ingress.enableAppRoot` | If enabled it sets the `app-root` ingress annotation to the ingress.root provided value, in order to redirect to the flow app | `false` |
 
 ### Auth Configuration
 

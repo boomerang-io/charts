@@ -120,6 +120,8 @@ global:
     # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
     # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
     class: "nginx"
+    # Enable appRoot if you wish the 'app-root' i.e. '/' ingress annotation to redirect to the flow app
+    enableAppRoot: false
   auth:
     enabled: false
     mode: basic

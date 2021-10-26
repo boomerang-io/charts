@@ -29,6 +29,9 @@ metadata:
       {{- include "bmrg.ingress.config.auth_proxy_user_email" $ | nindent 6 }}
     {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
+    {{- if eq $.Values.global.ingress.enableAppRoot true }}
+    {{ $.Values.global.ingress.annotationsPrefix}}/app-root: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
+    {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
     kubernetes.io/ingress.class: {{ $.Values.global.ingress.class}}
 spec:
