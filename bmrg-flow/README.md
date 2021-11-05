@@ -18,13 +18,14 @@ For more information on the dependencies please see the Application Architecture
 
 ### Worker RBAC
 
-The worker priviledged RBAC is dependent on the Pod Security Policy and Cluster Role resources;
- - Pod Security Policy `ibm-privileged-psp`, and
- - Cluster Role `ibm-privileged-clusterrole`
+The worker privileged RBAC is dependent on the Pod Security Policy and Cluster Role resources;
 
-If you allow priviledge access by default then you can disable the creation of this service account by removing the value in the value yaml under `workers.rbac.role`
+- Pod Security Policy `ibm-privileged-psp`, and
+- Cluster Role `ibm-privileged-clusterrole`
 
-You can change the value to a Cluster Role that has priviledged access.
+If you allow privileged access by default then you can disable the creation of this service account by removing the value in the value yaml under `workers.rbac.role`
+
+You can change the value to a Cluster Role that has privileged access.
 
 ## Configuration
 
@@ -37,25 +38,26 @@ The following table lists the configurable parameters of the chart and their def
 | `general.namePrefix` | The name prefix used in the naming of all Kubernetes objects  | `$.Chart.Name` |
 | `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false` |
 | `general.enable.debug` | Enables additional logging and port forwarding advice on installation | `false` |
-| `general.enable.eventing` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
 
 ### Task Worker Configuration
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `workers.rbac.role` | The kubernetes service account name that allows priviledged access. | `ibm-privileged-clusterrole` |
+| `workers.rbac.role` | The kubernetes service account name that allows privileged access. | `ibm-privileged-clusterrole` |
 | `workers.logging.type` | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `loki` | `default` |
 | `workers.logging.host` | The elasticsearch host service name. _Only required if type is 'loki'_ | <ul><li>default:</li><li>loki: `loki.svc.cluster.local`</li></ul> |
 | `workers.logging.port` | The elasticsearch port. _Only required if type is 'loki'_ | <ul><li>default:</li><li>loki: `3100`</li></ul> |
 | `workers.logging.secrets` | The elastic logging certs secret. | <ul><li>default:</li><li>loki:</li></ul> |
 | `workers.enable.deletion` | Will delete any workers that are completed and in non error state. | `true` |
-| `workers.enable.dedicatedNodes` | Runs the Flow wokers to run on specific nodes with the taint `dedicated=bmrg-worker:NoSchedule` and also a label of `node-role.kubernetes.io/bmrg-worker=true` | `false` |
+| `workers.enable.dedicatedNodes` | Runs the Flow workers to run on specific nodes with the taint `dedicated=bmrg-worker:NoSchedule` and also a label of `node-role.kubernetes.io/bmrg-worker=true` | `false` |
 
 *Note:*
-1. If you choose `loki` make sure to adjust your retention period. https://www.ibm.com/support/knowledgecenter/en/SSBS6K_3.1.1/manage_metrics/log_change_retention.html
+
+1. If you choose `loki` make sure to adjust your retention period. <https://www.ibm.com/support/knowledgecenter/en/SSBS6K_3.1.1/manage_metrics/log_change_retention.html>
 2. If you choose `default` be aware of the kubernetes log rotation and storage requirements.
 
 *References:*
+
 - [Kubernetes Taints and Tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
 - [Kubernetes Node Selection](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector)
 
@@ -124,13 +126,12 @@ The following table lists the configurable parameters of the chart and their def
 | `mongodb.password` | Database user password | `passw0rd` |
 | `database.mongodb.secretName` | The secret to get the password from. | |
 
-### NATS Configuration
+### Eventing Configuration
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `nats.enable` | Enable NATS | `true` |
-| `nats.url` | The NATS Url | `nats://bmrg-nats:4222` |
-| `nats.cluster` | NATS Streaming Cluster | `bmrg-stan` |
+| `eventing.enables` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
+| `eventing.natsUrls` | A list of comma separated NATS server URLs | `nats://bmrg-dev-nats:4222` |
 
 ### Tekton Configuration
 
