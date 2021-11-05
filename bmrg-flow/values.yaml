@@ -8,7 +8,6 @@ general:
   enable:
     apidocs: false
     debug: false
-    eventing: true
   externalUrl:
     teams:
     users:
@@ -163,9 +162,10 @@ monitoring:
       host: jaeger-dev-agent
       port: 5778
 
-jetstream:
-  enabled: false
-  url: nats://localhost:4222
+# Eventing related values
+eventing:
+  enabled: true
+  natsUrls: nats://bmrg-dev-nats:4222
 
 tekton:
   enabled: true

@@ -22,15 +22,16 @@ data:
     {{ $k }}.service.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
-    eventing.enabled={{ $values.general.enable.eventing }}
-    eventing.jetstream.enabled={{ $values.jetstream.enabled }}
-    {{- if $.Values.jetstream.enabled }}
-    eventing.jetstream.server.url={{ $values.jetstream.url }}
+    eventing.enabled={{ $values.eventing.enabled }}
+    {{- if $.Values.eventing.enabled }}
+    eventing.nats.server.urls={{ $values.eventing.natsUrls }}
+    eventing.nats.server.reconnect-wait-time=PT10S
+    eventing.nats.server.reconnect-max-attempts=-1
     eventing.jetstream.stream.name={{ .Release.Name }}-event-stream
-    eventing.jetstream.stream.subject={{ .Release.Name }}-event-stream
-    eventing.jetstream.consumer.push.name={{ .Release.Name }}-event-push-consumer
-    eventing.jetstream.consumer.push.delivery-subject=out.flow.event
-    eventing.jetstream.consumer.pull.name={{ .Release.Name }}-event-pull-consumer
+    eventing.jetstream.stream.storage-type=File
+    eventing.jetstream.stream.subject={{ .Release.Name }}.event.cloudevent
+    eventing.jetstream.consumer.name={{ .Release.Name }}-event-consumer
+    eventing.jetstream.consumer.resub-wait-time=PT10S
     {{- end }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
