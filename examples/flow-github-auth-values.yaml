@@ -5,7 +5,7 @@ global:
       secretName: bmrg-mongodb
   ingress:
     enabled: true
-    root: /poc-standalone/flow
+    root: /standalone/flow
     host: ocp2.cloud.boomerangplatform.net
     class: "nginx"
     annotationsPrefix: "ingress.kubernetes.io"
@@ -14,10 +14,10 @@ global:
     enabled: true
     mode: oauth
     serviceName: flow-auth2proxy
-    namespace: poc-standalone
-    prefix: /poc-standalone/oauth
-    tokenURL: http://flow-auth2proxy.poc-standalone.svc.cluster.local/auth/token/validate/external
-    signOutRedirect: /poc-standalone/flow/apps/flow
+    namespace: standalone
+    prefix: /standalone/oauth
+    tokenURL: http://flow-auth2proxy.standalone.svc.cluster.local/auth/token/validate/external
+    signOutRedirect: /standalone/flow/apps/flow
 
 nats:
   enable: false
@@ -31,13 +31,13 @@ auth2proxy:
     clientSecret: 1ddb575e035dbadc2b63bd1bb3e24a7c09bd130f
   extraArgs:
     provider: github
-    cookie-path: /poc-standalone
+    cookie-path: /standalone
     cookie-secure: "true"
     http-address: 0.0.0.0:4180
     scope: "user:email read:user"
     pass-basic-auth: "true"
-    proxy-prefix: /poc-standalone/oauth
-    redirect-url: /poc-standalone/oauth/callback
+    proxy-prefix: /standalone/oauth
+    redirect-url: /standalone/oauth/callback
     skip-provider-button: "true"
     set-authorization-header: "true"
     pass-authorization-header: "true"
@@ -70,7 +70,7 @@ auth2proxy:
     enabled: true
     hosts:
     - ocp2.cloud.boomerangplatform.net
-    path: /poc-standalone/oauth
+    path: /standalone/oauth
     tls:
     - hosts:
       - ocp2.cloud.boomerangplatform.net
