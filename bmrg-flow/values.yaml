@@ -164,7 +164,7 @@ monitoring:
 
 # Eventing related values
 eventing:
-  enabled: true
+  enabled: false
   natsUrls: nats://bmrg-dev-nats:4222
 
 tekton:

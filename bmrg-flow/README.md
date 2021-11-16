@@ -130,7 +130,7 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `eventing.enables` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
+| `eventing.enabled` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
 | `eventing.natsUrls` | A list of comma separated NATS server URLs | `nats://bmrg-dev-nats:4222` |
 
 ### Tekton Configuration
