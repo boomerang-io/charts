@@ -8,7 +8,6 @@ general:
   enable:
     apidocs: false
     debug: false
-    eventing: true
   externalUrl:
     teams:
     users:
@@ -49,14 +48,14 @@ job:
     profile: flow
     image:
       repository: /flow-loader
-      tag: 0.4.74
+      tag: 0.4.78
 
 # App Configuration
 apps:
   flow:
     image:
       repository: /flow-client-web
-      tag: 3.4.2
+      tag: 3.4.18
     replicaCount: 1
     service:
       type: ClusterIP
@@ -91,7 +90,7 @@ services:
   workflow:
     image:
       repository: /flow-service-workflow
-      tag: 3.1.54
+      tag: 3.1.93
     replicaCount: 1
     service:
       type: ClusterIP
@@ -163,9 +162,10 @@ monitoring:
       host: jaeger-dev-agent
       port: 5778
 
-jetstream:
+# Eventing related values
+eventing:
   enabled: false
-  url: nats://localhost:4222
+  natsUrls: nats://bmrg-dev-nats:4222
 
 tekton:
   enabled: true
