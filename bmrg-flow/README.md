@@ -12,16 +12,16 @@ Boomerang Flow is a modern cloud native workflow automation tool built on top of
 - MongoDB \
 - NGINX Ingress Controller 0.22+
 - Helm v3
-- Boomerang Auth Proxy or an Authentication Provider
+- Auth2 Proxy or an Authentication Provider
 
 For more information on the dependencies please see the Application Architecture.
 
 ### Worker RBAC
 
-The worker privileged RBAC is dependent on the Pod Security Policy and Cluster Role resources;
-
-- Pod Security Policy `ibm-privileged-psp`, and
-- Cluster Role `ibm-privileged-clusterrole`
+The charts allows the end-user to configure the name of the security policy bound to a role depending on the underlying Kubernetes implementation.
+For example:
+ - running on a OpenShift Container Platform, the name depends on the existence of `securitycontextconstraints` named resource,
+ - running on a vanilla Kubernetes flavor, the name depends on the existence of `podsecuritypolicies` named resource.
 
 If you allow privileged access by default then you can disable the creation of this service account by removing the value in the value yaml under `workers.rbac.role`
 
