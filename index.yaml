@@ -1412,7 +1412,7 @@ entries:
   bmrg-flow:
   - apiVersion: v2
     appVersion: 3.5.0
-    created: "2021-11-16T03:10:59.231490612Z"
+    created: "2021-11-23T13:16:28.306638943Z"
     dependencies:
     - alias: ch
       name: bmrg-common
@@ -1429,7 +1429,7 @@ entries:
       repository: https://cdfoundation.github.io/tekton-helm-chart
       version: 0.26.0
     description: Boomerang Flow
-    digest: e257b6d8136b115e44bef3fb92457593f027a99d2ad0a38c06859b8d4d8cd60d
+    digest: f7da5ff5b41bb1dabf24c51d7d51d8c73bfa9349d1ec428daa7da76dc164d21e
     home: https://useboomerang.io
     keywords:
     - boomerang
@@ -2222,4 +2222,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.8.5/bmrg-flow-4.8.5.tgz
     version: 4.8.5
-generated: "2021-11-16T03:10:59.222048329Z"
+generated: "2021-11-23T13:16:28.299080608Z"
