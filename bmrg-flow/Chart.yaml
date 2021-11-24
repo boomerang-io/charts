@@ -2,7 +2,7 @@ apiVersion: v2
 name: bmrg-flow
 description: Boomerang Flow
 type: application
-version: 4.11.2
+version: 4.11.3
 appVersion: 3.5.0
 home: https://useboomerang.io
 dependencies:
@@ -16,7 +16,7 @@ dependencies:
     alias: auth2proxy
     condition: auth2proxy.enabled
   - name: tekton-pipeline
-    version: 0.26.0
+    version: 0.27.2
     repository: https://cdfoundation.github.io/tekton-helm-chart
     alias: tekton
     condition: tekton.enabled
