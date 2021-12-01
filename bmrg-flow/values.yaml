@@ -108,6 +108,9 @@ global:
       user: boomerang
       password: passw0rd
       secretName:
+      tls:
+        enable: false
+        cert:
   ingress:
     enabled: false
     root: /flow
