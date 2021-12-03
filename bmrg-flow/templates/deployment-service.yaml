@@ -140,16 +140,10 @@ spec:
       - name: apm-newrelic
         emptyDir: {}
       {{- end }}
-      {{- if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}
+      {{- if or (and (eq $k "controller") (eq $values.workers.logging.type "elastic" )) ( $.Values.database.mongodb.tls.enable ) }}
       - name: secret-volume
         secret:
           secretName: {{ include "bmrg.name" (dict "context" $ "tier" "certs" ) }}
-      {{- else }}
-      {{- if $.Values.database.mongodb.tls.enable }}
-      - name: secret-volume
-        secret:
-          secretName: {{ include "bmrg.name" (dict "context" $ "tier" "certs" ) }}
-      {{- end }}
       {{- end }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:

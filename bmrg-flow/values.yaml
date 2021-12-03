@@ -108,6 +108,8 @@ global:
       user: boomerang
       password: passw0rd
       secretName:
+      replicaSet:
+        enable: false
       tls:
         enable: false
         cert:

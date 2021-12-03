@@ -120,11 +120,14 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `mongodb.host` | Connection Host or Internal Service | `bmrg-mdb001-ibm-mongodb-dev` |
+| `mongodb.host` | Connection Host or Internal Service | `bmrg-mdb001-ibm-mongodb-dev` or `host1:27017,host2:27017,host3:27017?replicaSet=replset` when `mongodb.replicaSet.enable` is true |
 | `mongodb.port` | Connection Port| `27017` |
 | `mongodb.user` | Database user | `boomerang` |
 | `mongodb.password` | Database user password | `passw0rd` |
-| `database.mongodb.secretName` | The secret to get the password from. | |
+| `mongodb.secretName` | The secret to get the password from. | |
+| `mongodb.replicaSet.enable` | Enable replicaSet support | `false` |
+| `mongodb.tls.enable` | Enable TLS support | `false` |
+| `mongodb.tls.cert` | Base64 encoded certificate | |
 
 ### Eventing Configuration
 

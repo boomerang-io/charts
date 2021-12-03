@@ -12,7 +12,7 @@ metadata:
 data:
   application.properties: |
     server.port=8080
-    {{- if $.Values.global.database.mongodb.tls.enable }}
+    {{- if $.Values.global.database.mongodb.replicaSet.enable }}
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}
     {{- else }}
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang
