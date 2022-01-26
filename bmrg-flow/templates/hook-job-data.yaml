@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:{{ if $.Values.global.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.global.database.mongodb.password }}{{ end }}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang  -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }} "
+            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }} -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }} "
           {{- if $.Values.global.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:
@@ -38,6 +38,23 @@ spec:
                 name: {{ $.Values.global.database.mongodb.secretName }}
                 key: mongodb-password
           {{- end }}
+          {{- if $.Values.database.mongodb.tlsSecretName }}
+          volumeMounts:
+          - name: cert-vol-mongodb
+            readOnly: true
+            mountPath: "/etc/certs"
+          {{- end}}
+          command:
+          - "sh"
+          - "-c"
+          - "{{ if $.Values.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+          {{- end }}
+      {{- if $.Values.database.mongodb.tlsSecretName }}
+      volumes:
+      - name: cert-vol-mongodb
+        secret:
+          secretName: {{ $.Values.database.mongodb.tlsSecretName }}
+      {{- end }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ $values.image.pullSecret }}
