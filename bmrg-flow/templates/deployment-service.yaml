@@ -96,19 +96,20 @@ spec:
           - name: apm-newrelic
             mountPath: /opt/newrelic
           {{- end }}
-          {{- if or (and (eq $k "controller") (eq $values.workers.logging.type "elastic" )) ( $.Values.database.mongodb.tls.enable ) }}
-          - name: secret-volume
+          {{- if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}
+          - name: cert-vol-elastic
             readOnly: true
             mountPath: "/etc/secrets"
-          {{- if $.Values.database.mongodb.tls.enable }}
-          - name: cert-volume
+          {{- end}}
+          {{- if $.Values.database.mongodb.tlsSecretName }}
+          - name: cert-vol-mongodb
             readOnly: true
             mountPath: "/etc/certs"
           {{- end}}
           command:
           - "sh"
           - "-c"
-          - "{{ if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit &&{{ end }}{{ if $.Values.database.mongodb.tls.enable }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+          - "{{ if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit &&{{ end }}{{ if $.Values.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
           {{- end }}
       {{- with $.Values.hostAliases }}
       hostAliases:
@@ -126,14 +127,14 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}
-      - name: secret-volume
+      - name: cert-vol-elastic
         secret:
           secretName: {{ $values.workers.logging.secret }}
       {{- end }}
-      {{- if $.Values.database.mongodb.tls.enable }}
-      - name: cert-volume
+      {{- if $.Values.database.mongodb.tlsSecretName }}
+      - name: cert-vol-mongodb
         secret:
-          secretName: {{ include "bmrg.name" (dict "context" $ "tier" "certs" ) }}
+          secretName: {{ $.Values.database.mongodb.tlsSecretName }}
       {{- end }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:

@@ -13,7 +13,7 @@ data:
   application.properties: |
     server.port=8080
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}
-    {{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/boomerang{{ if $.Values.global.database.mongodb.extraParams }}?{{ $.Values.global.database.mongodb.extraParams }}{{ end }}    
+    {{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }}    
     flow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }}
     flow.apps.flow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/apps/flow
     flow.services.workflow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/services/workflow

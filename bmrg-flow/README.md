@@ -120,14 +120,13 @@ The following table lists the configurable parameters of the chart and their def
 
 | Parameter | Description | Default Value |
 |---|---|---|
-| `mongodb.host` | Connection Host or Internal Service | `bmrg-mdb001-ibm-mongodb-dev` or `host1:27017,host2:27017,host3:27017` |
-| `mongodb.port` | Connection Port.  Set to null if port specified in `mongodb.host` | `27017` |
+| `mongodb.host` | Connection Host or Internal Service | `mongodb` or `host1:27017,host2:27017,host3:27017` |
+| `mongodb.port` | Connection Port.  Leave empty if not port. | `27017` |
+| `mongodb.args` | Additional connection parameters. Leave empty if not needed. Example: `tlsEnable=true&authSource=xxx&authMechanism=xxx&replicaSet=xxx` | `` |
 | `mongodb.user` | Database user | `boomerang` |
 | `mongodb.password` | Database user password | `passw0rd` |
-| `mongodb.secretName` | The secret to get the password from | |
-| `mongodb.extraParams` | Additional connection parameters | |
-| `mongodb.tls.enable` | Enable TLS support | `false` |
-| `mongodb.tls.cert` | Base64 encoded certificate | |
+| `mongodb.secretName` | The secret to get the password from | `` |
+| `mongodb.tlsSecretName` | Secret name reference for the Base64 encoded certificate. Leave empty if you don't need to attach a TLS Secret. | `` |
 
 ### Eventing Configuration
 
@@ -151,7 +150,6 @@ The following table lists the configurable parameters of the chart and their def
 ## Known Issues
 
 - We are currently applying the `ingress.kubernetes.io/client-max-body-size: 1m` annotation to the ingress for [issue](https://github.com/kubernetes/ingress-nginx/issues/2494).
-- Starting with IBM Boomerang Flow helm chart version 2.0.0 the backwards compatibility is broken due to the ICP 3.2+ and NGINX Ingress Controller 0.22.0 versions
 - We only support single host ingresses
 
 ## Chart Development

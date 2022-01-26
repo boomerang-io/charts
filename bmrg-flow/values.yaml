@@ -105,13 +105,12 @@ global:
     mongodb:
       host: bmrg-mdb001-ibm-mongodb-dev
       port: 27017
+      database: boomerang
+      args:
       user: boomerang
       password: passw0rd
       secretName:
-      extraParams:
-      tls:
-        enable: false
-        cert:
+      tlsSecretName:
   ingress:
     enabled: false
     root: /flow
