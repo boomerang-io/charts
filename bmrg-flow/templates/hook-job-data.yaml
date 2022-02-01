@@ -48,7 +48,6 @@ spec:
           - "sh"
           - "-c"
           - "{{ if $.Values.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
-          {{- end }}
       {{- if $.Values.database.mongodb.tlsSecretName }}
       volumes:
       - name: cert-vol-mongodb
