@@ -110,7 +110,6 @@ spec:
           - "sh"
           - "-c"
           - "{{ if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit &&{{ end }}{{ if $.Values.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
-          {{- end }}
       {{- with $.Values.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
