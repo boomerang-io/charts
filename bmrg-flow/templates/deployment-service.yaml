@@ -101,7 +101,7 @@ spec:
             readOnly: true
             mountPath: "/etc/secrets"
           {{- end}}
-          {{- if $.Values.global.database.mongodb.secretName }}
+          {{- if $.Values.global.database.mongodb.tlsSecretName }}
           - name: cert-vol-mongodb
             readOnly: true
             mountPath: "/etc/certs"
@@ -109,7 +109,7 @@ spec:
           command:
           - "sh"
           - "-c"
-          - "{{ if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit &&{{ end }}{{ if $.Values.global.database.mongodb.secretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+          - "{{ if and (eq $k "controller") (eq $values.workers.logging.type "elastic" ) }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit &&{{ end }}{{ if $.Values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
       {{- with $.Values.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
@@ -130,10 +130,10 @@ spec:
         secret:
           secretName: {{ $values.workers.logging.secret }}
       {{- end }}
-      {{- if $.Values.global.database.mongodb.secretName }}
+      {{- if $.Values.global.database.mongodb.tlsSecretName }}
       - name: cert-vol-mongodb
         secret:
-          secretName: {{ $.Values.global.database.mongodb.secretName }}
+          secretName: {{ $.Values.global.database.mongodb.tlsSecretName }}
       {{- end }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:
