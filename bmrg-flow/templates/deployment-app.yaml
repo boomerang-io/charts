@@ -31,6 +31,13 @@ spec:
               value: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
+            {{- if $.Values.monitoring.instana.enable }}
+            - name: INSTANA_REPORTING_URL
+              value: "{{ $.Values.monitoring.instana.browser.reportingUrl }}"
+            - name: INSTANA_KEY
+              value: "{{ $.Values.monitoring.instana.browser.key }}"
+            {{- end }}
+            {{- if $.Values.monitoring.newrelic.enable }}
             - name: NEW_RELIC_APP_NAME
               value: "{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}"
             - name: NEW_RELIC_LICENSE_KEY
@@ -45,6 +52,7 @@ spec:
               value: "{{ $.Values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
+            {{- end }}
             - name: PRODUCT_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
             - name: PRODUCT_APPS_ENV_URL
