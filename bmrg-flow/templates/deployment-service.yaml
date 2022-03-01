@@ -27,7 +27,7 @@ spec:
       {{- if and (eq $k "controller") ($values.workers.security.enable) }}
       serviceAccountName: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
       {{- end }}
-      {{- if $.Values.monitoring.newrelic.apm.key }}
+      {{- if $.Values.monitoring.newrelic.enable }}
       initContainers:
         - name: util-newrelicapm-cntr
           image:  {{ $.Values.monitoring.newrelic.apm.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
@@ -42,13 +42,15 @@ spec:
           imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $.Values.monitoring.newrelic.apm.key }}{{- if $.Values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $.Values.proxy.host }} -Dnewrelic.config.proxy_port={{ $.Values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}{{- if eq $k "workflow" }} -Dmongo.encrypt.secret=${FLOW_ENCRYPT_SECRET}  -Dmongo.encrypt.salt=${FLOW_ENCRYPT_SALT}{{- end }}'
+            value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $.Values.monitoring.newrelic.enable }}{{- if $.Values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $.Values.proxy.host }} -Dnewrelic.config.proxy_port={{ $.Values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}{{- if eq $k "workflow" }} -Dmongo.encrypt.secret=${FLOW_ENCRYPT_SECRET}  -Dmongo.encrypt.salt=${FLOW_ENCRYPT_SALT}{{- end }}'
+          {{- if $.Values.monitoring.newrelic.enable }}
           - name: NEW_RELIC_LICENSE_KEY
             value: {{ $.Values.monitoring.newrelic.apm.key }}
           - name: NEW_RELIC_APP_NAME
             value: '{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}'
           - name: NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
             value: '{{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}'
+          {{- end }}
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -92,7 +94,7 @@ spec:
           - name: application-config
             mountPath: "/data"
             readOnly: true
-          {{- if $.Values.monitoring.newrelic.apm.key }}
+          {{- if $.Values.monitoring.newrelic.enable }}
           - name: apm-newrelic
             mountPath: /opt/newrelic
           {{- end }}
@@ -121,7 +123,7 @@ spec:
           items:
           - key: application.properties
             path: application.properties
-      {{- if $.Values.monitoring.newrelic.apm.key }}
+      {{- if $.Values.monitoring.newrelic.enable }}
       - name: apm-newrelic
         emptyDir: {}
       {{- end }}
