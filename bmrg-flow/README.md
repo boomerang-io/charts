@@ -128,6 +128,10 @@ The following table lists the configurable parameters of the chart and their def
 | `mongodb.secretName` | The secret to get the password from | `` |
 | `mongodb.tlsSecretName` | Secret name reference for the Base64 encoded certificate. Leave empty if you don't need to attach a TLS Secret. | `` |
 
+Note: For `mongodb.tlsSecretName` you will need to create a generic secret and import your certificate file, e.g.
+
+`kubectl -n <namespace> create secret generic <tlsSecretName> --from-file=mongodb.crt=<your certificate file>`
+
 ### Host Alias Configuration
 
 | Parameter | Description | Default Value |
