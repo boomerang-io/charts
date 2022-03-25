@@ -37,7 +37,7 @@ spec:
             - name: INSTANA_KEY
               value: "{{ $.Values.monitoring.instana.browser.key }}"
             {{- end }}
-            {{- if $.Values.monitoring.newrelic.enable }}
+            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.apm.key) ($.Values.monitoring.newrelic.browser.key) }}
             - name: NEW_RELIC_APP_NAME
               value: "{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}"
             - name: NEW_RELIC_LICENSE_KEY

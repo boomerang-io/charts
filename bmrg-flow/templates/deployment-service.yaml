@@ -27,7 +27,7 @@ spec:
       {{- if and (eq $k "controller") ($values.workers.security.enable) }}
       serviceAccountName: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
       {{- end }}
-      {{- if $.Values.monitoring.newrelic.enable }}
+      {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.apm.key) }}
       initContainers:
         - name: util-newrelicapm-cntr
           image:  {{ $.Values.monitoring.newrelic.apm.image.registry }}{{ $.Values.monitoring.newrelic.apm.image.repository }}:{{ $.Values.monitoring.newrelic.apm.image.tag }}
