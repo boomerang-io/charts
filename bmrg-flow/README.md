@@ -122,15 +122,33 @@ The following table lists the configurable parameters of the chart and their def
 |---|---|---|
 | `mongodb.host` | Connection Host or Internal Service | `mongodb` or `host1:27017,host2:27017,host3:27017` |
 | `mongodb.port` | Connection Port.  Leave empty if not port. | `27017` |
-| `mongodb.args` | Additional connection parameters. Leave empty if not needed. Example: `tlsEnable=true&authSource=xxx&authMechanism=xxx&replicaSet=xxx` | `` |
+| `mongodb.args` | Additional connection parameters. Leave empty if not needed. Example: `tlsEnable=true&authSource=xxx&authMechanism=xxx&replicaSet=xxx` | |
 | `mongodb.user` | Database user | `boomerang` |
 | `mongodb.password` | Database user password | `passw0rd` |
-| `mongodb.secretName` | The secret to get the password from | `` |
-| `mongodb.tlsSecretName` | Secret name reference for the Base64 encoded certificate. Leave empty if you don't need to attach a TLS Secret. | `` |
+| `mongodb.secretName` | The secret to get the password from | |
+| `mongodb.tlsSecretName` | Secret name reference for the Base64 encoded certificate. Leave empty if you don't need to attach a TLS Secret. | |
 
 Note: For `mongodb.tlsSecretName` you will need to create a generic secret and import your certificate file, e.g.
 
 `kubectl -n <namespace> create secret generic <tlsSecretName> --from-file=mongodb.crt=<your certificate file>`
+
+### Host Alias Configuration
+
+| Parameter | Description | Default Value |
+|---|---|---|
+| hostAliases | An array of hostname-IP address mappings. Adds entries to a Pod's `/etc/hosts` file. | `[]` |
+
+Example configuration:
+```
+hostAliases:
+- hostnames:
+  - my.example.com
+  ip: 10.200.0.4
+- hostnames:
+  - another.example.com
+  - and.another.example.com
+  ip: 10.200.0.5
+```
 
 ### Eventing Configuration
 
