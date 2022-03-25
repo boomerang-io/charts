@@ -43,7 +43,7 @@ spec:
           env:
           - name: JAVA_OPTS
             value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $.Values.monitoring.newrelic.enable }}{{- if $.Values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $.Values.proxy.host }} -Dnewrelic.config.proxy_port={{ $.Values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}{{- if eq $k "workflow" }} -Dmongo.encrypt.secret=${FLOW_ENCRYPT_SECRET}  -Dmongo.encrypt.salt=${FLOW_ENCRYPT_SALT}{{- end }}'
-          {{- if $.Values.monitoring.newrelic.enable }}
+          {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.apm.key) }}
           - name: NEW_RELIC_LICENSE_KEY
             value: {{ $.Values.monitoring.newrelic.apm.key }}
           - name: NEW_RELIC_APP_NAME
