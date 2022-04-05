@@ -69,10 +69,15 @@ data:
     proxy.host={{ $.Values.proxy.host }}
     proxy.port={{ $.Values.proxy.port }}
     proxy.ignore={{ $.Values.proxy.ignore }}
+    {{- if $.Values.monitoring.newrelic.enable }}
     newrelic.config.common.proxy_host={{ $.Values.proxy.host }}
     newrelic.config.common.proxy_port={{ $.Values.proxy.port }}
     newrelic.config.proxy_host={{ $.Values.proxy.host }}
     newrelic.config.proxy_port={{ $.Values.proxy.port }}
+    {{- end }}
+    {{- end }}
+    {{- if $.Values.monitoring.newrelic.enable }}
+    newrelic.config.distributed_tracing.enabled=true
     {{- end }}
     opentracing.jaeger.enabled={{ $.Values.monitoring.jaeger.enabled }}
     opentracing.jaeger.udp-sender.host={{ $.Values.monitoring.jaeger.agent.host }}.{{ $.Values.monitoring.jaeger.namespace }}
