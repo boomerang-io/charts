@@ -3,7 +3,7 @@ name: bmrg-flow
 description: Boomerang Flow
 type: application
 version: 4.12.11
-appVersion: 3.7.0
+appVersion: 3.9.0
 home: https://useboomerang.io
 dependencies:
   - name: bmrg-common
