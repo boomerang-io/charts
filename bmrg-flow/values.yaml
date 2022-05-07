@@ -116,11 +116,10 @@ global:
     root: /flow
     host: cloud.boomerangplatform.net
     tlsSecretName: bmrg-tls-cloud
-    # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
-    # you need to set it to "nginx.ingress.kubernetes.io"
-    annotationsPrefix: "ingress.kubernetes.io"
+    # The prefix for the annotations inside the ingress definition.
+    annotationsPrefix: "nginx.ingress.kubernetes.io"
     # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
-    # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
+    # controller.
     class: "nginx"
     # Enable appRoot if you wish the 'app-root' i.e. '/' ingress annotation to redirect to the flow app
     enableAppRoot: false
