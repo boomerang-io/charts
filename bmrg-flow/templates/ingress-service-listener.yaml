@@ -27,6 +27,7 @@ metadata:
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-connections: "3"
     kubernetes.io/ingress.class: {{ $.Values.global.ingress.class}}
 spec:
+  ingressClassName: {{ $.Values.global.ingress.class}}
   rules:
     - host: {{ $.Values.global.ingress.host }}
       http:
