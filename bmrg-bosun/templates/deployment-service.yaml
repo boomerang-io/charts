@@ -75,6 +75,15 @@ spec:
           - name: apm-newrelic
             mountPath: /opt/newrelic
           {{- end }}
+          {{- if $.Values.global.database.mongodb.tlsSecretName }}
+          - name: cert-vol-mongodb
+            readOnly: true
+            mountPath: "/etc/certs"
+          {{- end}}
+          command:
+          - "sh"
+          - "-c"
+          - "{{ if $.Values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
       {{- with $values.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
@@ -89,6 +98,11 @@ spec:
       {{- if $values.monitoring.newrelic.apm.key }}
       - name: apm-newrelic
         emptyDir: {}
+      {{- end }}
+      {{- if $.Values.global.database.mongodb.tlsSecretName }}
+      - name: cert-vol-mongodb
+        secret:
+          secretName: {{ $.Values.global.database.mongodb.tlsSecretName }}
       {{- end }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:
