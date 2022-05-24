@@ -48,14 +48,14 @@ job:
     profile: flow
     image:
       repository: /flow-loader
-      tag: 0.4.93
+      tag: 0.5.3
 
 # App Configuration
 apps:
   flow:
     image:
       repository: /flow-client-web
-      tag: 3.6.3
+      tag: 3.7.7
     replicaCount: 1
     service:
       type: ClusterIP
@@ -70,7 +70,7 @@ services:
   controller:
     image:
       repository: /flow-service-controller
-      tag: 6.4.5
+      tag: 6.5.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -82,7 +82,7 @@ services:
   listener:
     image:
       repository: /flow-service-listener
-      tag: 2.1.0
+      tag: 2.2.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -90,7 +90,7 @@ services:
   workflow:
     image:
       repository: /flow-service-workflow
-      tag: 3.3.17
+      tag: 3.4.1
     replicaCount: 1
     service:
       type: ClusterIP
