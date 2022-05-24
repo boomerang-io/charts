@@ -70,7 +70,7 @@ services:
   controller:
     image:
       repository: /flow-service-controller
-      tag: 6.4.5
+      tag: 6.5.0
     replicaCount: 1
     service:
       type: ClusterIP
