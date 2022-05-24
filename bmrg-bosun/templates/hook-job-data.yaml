@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $.Values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:{{ if $.Values.global.database.mongodb.secretName }}${MONGODB_PASSWORD}{{ else }}{{ $.Values.global.database.mongodb.password }}{{ end }}@{{ $.Values.global.database.mongodb.host }}:{{ $.Values.global.database.mongodb.port }}/boomerang"
+            value: "-Dspring.profiles.active={{ $.Values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }}"
           {{- if $.Values.global.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:
@@ -37,6 +37,26 @@ spec:
                 name: {{ $.Values.global.database.mongodb.secretName }}
                 key: mongodb-password
           {{- end }}
+          {{- if $.Values.global.database.mongodb.tlsSecretName }}
+          volumeMounts:
+          - name: cert-vol-mongodb
+            readOnly: true
+            mountPath: "/etc/certs"
+          {{- end}}
+          command:
+          - "sh"
+          - "-c"
+          - "{{ if $.Values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+      {{- with $values.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- if $.Values.global.database.mongodb.tlsSecretName }}
+      volumes:
+      - name: cert-vol-mongodb
+        secret:
+          secretName: {{ $.Values.global.database.mongodb.tlsSecretName }}
+      {{- end }}
       {{- if .Values.image.pullSecret }}
       imagePullSecrets:
       - name: {{ .Values.image.pullSecret }}
