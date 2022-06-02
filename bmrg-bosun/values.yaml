@@ -116,7 +116,13 @@ proxy:
   ignore:
 
 monitoring:
+  instana:
+    enable: false
+    browser:
+      reportingUrl:
+      key:
   newrelic:
+    enable: false
     apm:
       name: Boomerang Private
       key:

@@ -29,9 +29,20 @@ data:
     boomerang.environment={{ .Release.Namespace }}
     boomerang.standalone={{ $values.general.enable.standalone }}
     proxy.enable={{ $values.proxy.enable }}
-    proxy.host={{ $values.proxy.host }}
-    proxy.port={{ $values.proxy.port }}
-    proxy.ignore={{ $values.proxy.ignore }}
+    {{- if $.Values.proxy.enable }}
+    proxy.host={{ $.Values.proxy.host }}
+    proxy.port={{ $.Values.proxy.port }}
+    proxy.ignore={{ $.Values.proxy.ignore }}
+    {{- if $.Values.monitoring.newrelic.enable }}
+    newrelic.config.common.proxy_host={{ $.Values.proxy.host }}
+    newrelic.config.common.proxy_port={{ $.Values.proxy.port }}
+    newrelic.config.proxy_host={{ $.Values.proxy.host }}
+    newrelic.config.proxy_port={{ $.Values.proxy.port }}
+    {{- end }}
+    {{- end }}
+    {{- if $.Values.monitoring.newrelic.enable }}
+    newrelic.config.distributed_tracing.enabled=true
+    {{- end }}
     xray.url.api.base={{ $values.xray.url }}
     xray.boomerang.user={{ $values.xray.user }}
     xray.boomerang.apitoken={{ $values.xray.token }}

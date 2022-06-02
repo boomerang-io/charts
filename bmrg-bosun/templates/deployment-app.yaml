@@ -31,20 +31,32 @@ spec:
               value: "{{ default "" $values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
+            {{- if and ($.Values.monitoring.instana.enable) ($.Values.monitoring.instana.browser.key) }}
+            - name: INSTANA_REPORTING_URL
+              value: "{{ $.Values.monitoring.instana.browser.reportingUrl }}"
+            - name: INSTANA_KEY
+              value: "{{ $.Values.monitoring.instana.browser.key }}"
+            {{- end }}
+            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.apm.key) }}
             - name: NEW_RELIC_APP_NAME
-              value: "{{ $values.monitoring.newrelic.apm.name }} - {{ $tier }}"
+              value: "{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}"
             - name: NEW_RELIC_LICENSE_KEY
-              value: "{{ $values.monitoring.newrelic.apm.key }}"
-            - name: NEW_RELIC_PROXY_HOST
-              value: "{{ $values.proxy.host }}"
-            - name: NEW_RELIC_PROXY_PORT
-              value: "{{ $values.proxy.port }}"
+              value: "{{ $.Values.monitoring.newrelic.apm.key }}"
+            {{- end }}
+            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.browser.key) }}
             - name: NEW_RELIC_BROWSER_ID
-              value: "{{ $values.monitoring.newrelic.browser.id }}"
+              value: "{{ $.Values.monitoring.newrelic.browser.id }}"
             - name: NEW_RELIC_BROWSER_KEY
-              value: "{{ $values.monitoring.newrelic.browser.key }}"
+              value: "{{ $.Values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
-              value: {{ if $values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
+              value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
+            {{- end }}
+            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.proxy.enable) }}
+            - name: NEW_RELIC_PROXY_HOST
+              value: "{{ $.Values.proxy.host }}"
+            - name: NEW_RELIC_PROXY_PORT
+              value: "{{ $.Values.proxy.port }}"
+            {{- end }}
             - name: BASE_LAUNCH_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}"
             - name: BASE_APPS_ENV_URL

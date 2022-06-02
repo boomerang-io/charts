@@ -39,12 +39,14 @@ spec:
           env:
           - name: JAVA_OPTS
             value: '-Dspring.config.additional-location=file:/data/application.properties{{- if $values.monitoring.newrelic.apm.key }}{{- if $values.proxy.enable }} -Dnewrelic.config.proxy_host={{ $values.proxy.host }} -Dnewrelic.config.proxy_port={{ $values.proxy.port }} -Dnewrelic.config.distributed_tracing.enabled=true{{- end }} -javaagent:/opt/newrelic/newrelic.jar{{- end }}{{- if eq $k "urbancode" }} -Dspring.datasource.url=jdbc:mysql://10.190.20.153:3306/ibm_ucd{{- end }}{{- if eq $k "controller" }} -Dspring.profiles.active=cicd{{- end }}'
+          {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.apm.key) }}
           - name: NEW_RELIC_LICENSE_KEY
             value: {{ $values.monitoring.newrelic.apm.key }}
           - name: NEW_RELIC_APP_NAME
             value: '{{ $values.monitoring.newrelic.apm.name }} - {{ $tier }}'
           - name: NEW_RELIC_PROCESS_HOST_DISPLAY_NAME
             value: '{{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}'
+          {{- end }}
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
