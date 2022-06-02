@@ -31,38 +31,50 @@ spec:
               value: "{{ default "" $values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
             - name: PORT
               value: "3000"
+            {{- if and ($values.monitoring.instana.enable) ($values.monitoring.instana.browser.key) }}
+            - name: INSTANA_REPORTING_URL
+              value: "{{ $values.monitoring.instana.browser.reportingUrl }}"
+            - name: INSTANA_KEY
+              value: "{{ $values.monitoring.instana.browser.key }}"
+            {{- end }}
+            {{- if and ($values.monitoring.newrelic.enable) ($values.monitoring.newrelic.apm.key) }}
             - name: NEW_RELIC_APP_NAME
               value: "{{ $values.monitoring.newrelic.apm.name }} - {{ $tier }}"
             - name: NEW_RELIC_LICENSE_KEY
               value: "{{ $values.monitoring.newrelic.apm.key }}"
-            - name: NEW_RELIC_PROXY_HOST
-              value: "{{ $values.proxy.host }}"
-            - name: NEW_RELIC_PROXY_PORT
-              value: "{{ $values.proxy.port }}"
+            {{- end }}
+            {{- if and ($values.monitoring.newrelic.enable) ($values.monitoring.newrelic.browser.key) }}
             - name: NEW_RELIC_BROWSER_ID
               value: "{{ $values.monitoring.newrelic.browser.id }}"
             - name: NEW_RELIC_BROWSER_KEY
               value: "{{ $values.monitoring.newrelic.browser.key }}"
             - name: HTML_HEAD_INJECTED_SCRIPTS
               value: {{ if $values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
+            {{- end }}
+            {{- if and ($values.monitoring.newrelic.enable) ($values.proxy.enable) }}
+            - name: NEW_RELIC_PROXY_HOST
+              value: "{{ $values.proxy.host }}"
+            - name: NEW_RELIC_PROXY_PORT
+              value: "{{ $values.proxy.port }}"
+            {{- end }}
             - name: BASE_LAUNCH_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.core.ingressRoot }}"
             - name: BASE_APPS_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/apps"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.core.ingressRoot }}/apps"
             - name: BASE_SERVICE_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.core.ingressRoot }}/services"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.core.ingressRoot }}/services"
             - name: PRODUCT_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.global.ingress.root }}"
             - name: PRODUCT_APPS_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.global.ingress.root }}/apps"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/services"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.global.ingress.root }}/services"
             - name: PRODUCT_STANDALONE
-              value: "{{ $.Values.general.enable.standalone }}"
+              value: "{{ $values.general.enable.standalone }}"
             - name: CICD_PRODUCT_APP_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.global.ingress.root }}/apps"
             - name: CICD_PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/services"
+              value: "https://{{ $values.global.ingress.host }}{{ $values.global.ingress.root }}/services"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr
