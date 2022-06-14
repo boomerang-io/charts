@@ -8,7 +8,7 @@ Boomerang Flow is a modern cloud native workflow automation tool built on top of
 
 ## Dependencies
 
-- Kubernetes 1.13+
+- Kubernetes 1.20+
 - MongoDB \
 - NGINX Ingress Controller 0.22+
 - Helm v3

@@ -45,7 +45,7 @@ metadata:
     {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "false"
     {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
-    kubernetes.io/ingress.class: {{ $.Values.global.ingress.class}}
+    {{ $.Values.global.ingress.annotationsPrefix}}/use-regex: "true"
 spec:
   ingressClassName: {{ $.Values.global.ingress.class}}
   rules:
