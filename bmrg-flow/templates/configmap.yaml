@@ -37,14 +37,8 @@ data:
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
     logging.level.root=INFO
-    logging.level.net.boomerangplatform.service=DEBUG
-    {{- end }}
-    {{- if $.Values.general.enable.debug }}
-    logging.level.org.springframework.web.client.RestTemplate=DEBUG
-    logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
-    logging.level.root=INFO
-    logging.level.net.boomerangplatform.service.runner.misc=DEBUG
-    logging.level.net.boomerangplatform.service.crud=DEBUG
+    logging.level.io.boomerang.extensions=DEBUG
+    logging.level.io.boomerang.service=DEBUG
     {{- end }}
     kube.worker.logging.type={{ $values.workers.logging.type }}
     kube.worker.logging.host={{ $values.workers.logging.host }}
