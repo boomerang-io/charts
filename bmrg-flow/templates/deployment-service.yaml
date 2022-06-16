@@ -85,7 +85,7 @@ spec:
               path: /health
               port: {{ $platform }}-port-cntr
               scheme: HTTP
-            initialDelaySeconds: 20
+            initialDelaySeconds: 15
             periodSeconds: 5
             successThreshold: 1
             timeoutSeconds: 5
