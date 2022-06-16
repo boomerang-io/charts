@@ -555,6 +555,25 @@ entries:
   bmrg-bosun:
   - apiVersion: v2
     appVersion: 1.0.2
+    created: "2022-06-16T20:58:21.073462408Z"
+    dependencies:
+    - alias: ch
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: 3.0.1
+    description: Boomerang Bosun
+    digest: 2e76a897d6558bfc4d48c64dfabb7ea667212fb4f8167551f65f82f5b7566eb7
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - bosun
+    name: bmrg-bosun
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-bosun-2.3.4/bmrg-bosun-2.3.4.tgz
+    version: 2.3.4
+  - apiVersion: v2
+    appVersion: 1.0.2
     created: "2022-05-30T15:16:13.211940244Z"
     dependencies:
     - alias: ch
@@ -1449,6 +1468,38 @@ entries:
     version: 1.0.2
   bmrg-flow:
   - apiVersion: v2
+    appVersion: 3.10.0
+    created: "2022-06-16T20:58:22.041648474Z"
+    dependencies:
+    - alias: ch
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: 3.0.2
+    - alias: auth2proxy
+      condition: auth2proxy.enabled
+      name: oauth2-proxy
+      repository: https://oauth2-proxy.github.io/manifests
+      version: 4.1.0
+    - alias: tekton
+      condition: tekton.enabled
+      name: tekton-pipeline
+      repository: https://cdfoundation.github.io/tekton-helm-chart
+      version: 0.27.2
+    description: Boomerang Flow
+    digest: ac4d956aded759bec0f5d4c50a58dc5c0eba4f00778c9d0762bbb70aadb2f371
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - flow
+    - workflows
+    - tekton-pipelines
+    - oauth2-proxy
+    name: bmrg-flow
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.13.2/bmrg-flow-4.13.2.tgz
+    version: 4.13.2
+  - apiVersion: v2
     appVersion: 3.9.0
     created: "2022-05-24T21:25:25.481799811Z"
     dependencies:
@@ -1992,4 +2043,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.11.1/bmrg-flow-4.11.1.tgz
     version: 4.11.1
-    
+generated: "2022-06-16T20:58:22.032901849Z"
