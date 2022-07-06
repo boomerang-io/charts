@@ -20,7 +20,6 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
   annotations:
-  annotations:
     {{- if eq $.Values.global.auth.enabled true }}
     {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
     {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
@@ -33,7 +32,6 @@ metadata:
     {{ $.Values.global.ingress.annotationsPrefix}}/app-root: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
     {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
-    kubernetes.io/ingress.class: {{ $.Values.global.ingress.class}}
 spec:
   ingressClassName: {{ $.Values.global.ingress.class}}
   rules:
