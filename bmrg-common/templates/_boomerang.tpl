@@ -8,7 +8,8 @@
 Author:
  - Tyson Lawrie (twlawrie@us.ibm.com)
  - Costel Moraru (costel.moraru-germany@ibm.com)
-Last Updated:   16/12/2019
+ - Glen Hickman (gchickma@us.ibm.com)
+Last Updated:   07/07/2022
 */ -}}
 
 {{/*
@@ -85,13 +86,13 @@ Insert the core services
 {{- if hasKey .Values "core" }}
 {{- $prefix := .Values.core.namePrefix -}}
 {{- $namespace := .Values.core.namespace -}}
-{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" "metering" ) }}
+{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" "metering" "clamav" ) }}
 core.{{ . }}.service.host={{ $prefix }}-services-{{ . }}{{ if $namespace }}.{{ $namespace }}{{ end }}
 {{- end -}}
 {{- else -}}
 {{- $prefix := .Values.boomerang.core.namePrefix -}}
 {{- $namespace := .Values.boomerang.core.namespace -}}
-{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" "metering" ) }}
+{{- range (list "admin" "audit" "auth" "launchpad" "messaging" "slack" "mail" "notifications" "settings" "status" "support" "users" "metering" "clamav" ) }}
 core.{{ . }}.service.host={{ $prefix }}-services-{{ . }}{{ if $namespace }}.{{ $namespace }}{{ end }}
 {{- end -}}
 {{- end -}}
