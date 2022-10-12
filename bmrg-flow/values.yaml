@@ -172,8 +172,12 @@ monitoring:
 
 # Eventing related values
 eventing:
-  enabled: false
-  natsUrls: nats://bmrg-dev-nats:4222
+  nats:
+    host: bmrg-dev-nats
+    port: 4222
+    user: flow
+    password: flow
+    secretName:
 
 tekton:
   enabled: true
