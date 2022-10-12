@@ -22,17 +22,10 @@ data:
     {{ $k }}.service.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/services/{{ $k }}
     {{- end }}
     {{- include "bmrg.core.services" $ | indent 4 }}
-    eventing.enabled={{ $values.eventing.enabled }}
-    {{- if $.Values.eventing.enabled }}
-    eventing.nats.server.urls={{ $values.eventing.natsUrls }}
+    eventing.nats.server.urls=nats://{{ $.Values.eventing.nats.user }}:${NATS_PASSWORD}@{{ $.Values.eventing.nats.host }}{{ if $.Values.eventing.nats.port }}:{{ $.Values.eventing.nats.port }}{{ end }}
     eventing.nats.server.reconnect-wait-time=PT10S
     eventing.nats.server.reconnect-max-attempts=-1
-    eventing.jetstream.stream.name={{ .Release.Name }}-event-stream
-    eventing.jetstream.stream.storage-type=File
-    eventing.jetstream.stream.subject={{ .Release.Name }}.event.cloudevent
-    eventing.jetstream.consumer.name={{ .Release.Name }}-event-consumer
-    eventing.jetstream.consumer.resub-wait-time=PT10S
-    {{- end }}
+    eventing.jetstream.input-events.consumer.resub-wait-time=PT10S
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
