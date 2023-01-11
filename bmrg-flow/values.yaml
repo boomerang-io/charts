@@ -103,13 +103,13 @@ services:
 global:
   database:
     mongodb:
-      host: bmrg-mdb001-ibm-mongodb-dev
+      host: mongodb
       port: 27017
       database: boomerang
       args:
       user: boomerang
       password: passw0rd
-      secretName:
+      secretName: mongodb
       tlsSecretName:
   ingress:
     enabled: false

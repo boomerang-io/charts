@@ -31,13 +31,11 @@ spec:
           env:
           - name: JAVA_OPTS
             value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }} -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }} "
-          {{- if $.Values.global.database.mongodb.secretName }}
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ $.Values.global.database.mongodb.secretName }}
-                key: mongodb-password
-          {{- end }}
+                name: {{ if $.Values.global.database.mongodb.secretName }}{{ $.Values.global.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
+                key: {{ if $.Values.global.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
           {{- if $.Values.global.database.mongodb.tlsSecretName }}
           volumeMounts:
           - name: cert-vol-mongodb
