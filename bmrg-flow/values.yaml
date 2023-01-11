@@ -110,6 +110,7 @@ global:
       user: boomerang
       password: passw0rd
       secretName: mongodb
+      secretKey: mongodb-passwords
       tlsSecretName:
   ingress:
     enabled: false

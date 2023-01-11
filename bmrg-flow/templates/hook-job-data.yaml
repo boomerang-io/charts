@@ -32,10 +32,14 @@ spec:
           - name: JAVA_OPTS
             value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }} -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }} "
           - name: MONGODB_PASSWORD
+          {{- if $.Values.global.database.mongodb.secretName }}
             valueFrom:
               secretKeyRef:
-                name: {{ if $.Values.global.database.mongodb.secretName }}{{ $.Values.global.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
-                key: {{ if $.Values.global.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
+                name: {{ $.Values.global.database.mongodb.secretName }}
+                key: {{ $.Values.global.database.mongodb.secretKey }}
+          {{- else }}
+            value: {{ $.Values.global.database.mongodb.password }}
+          {{- end }}
           {{- if $.Values.global.database.mongodb.tlsSecretName }}
           volumeMounts:
           - name: cert-vol-mongodb

@@ -55,7 +55,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ if $.Values.global.database.mongodb.secretName }}{{ $.Values.global.database.mongodb.secretName }}{{ else }}{{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }}{{ end }}
-                key: {{ if $.Values.global.database.mongodb.secretName }}mongodb-password{{ else }}MONGODB_PASSWORD{{ end }}
+                key: {{ if $.Values.global.database.mongodb.secretName }}{{ $.Values.global.database.mongodb.secretKey }}{{ else }}MONGODB_PASSWORD{{ end }}
           {{- if and (eq $k "workflow") }}
           - name: FLOW_OTC
             valueFrom:
