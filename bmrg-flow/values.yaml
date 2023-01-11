@@ -24,10 +24,10 @@ workers:
     port:
     secret:
   nodeSelector:
-    #node-role.kubernetes.io/bmrg-worker: true
+    #node-role.boomerang.io/tasks: true
   tolerations:
   # - key: dedicated
-  #   value: bmrg-worker
+  #   value: tasks
   #   operator: Equal
   #   effect: NoSchedule
 
@@ -110,7 +110,7 @@ global:
       user: boomerang
       password: passw0rd
       secretName: mongodb
-      secretKey: mongodb-passwords
+      secretKey: mongodb-password
       tlsSecretName:
   ingress:
     enabled: false
@@ -175,9 +175,6 @@ monitoring:
 eventing:
   enabled: false
   natsUrls: nats://bmrg-dev-nats:4222
-
-tekton:
-  enabled: true
 
 auth2proxy:
   enabled: true

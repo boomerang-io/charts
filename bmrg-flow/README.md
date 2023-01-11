@@ -20,8 +20,9 @@ For more information on the dependencies please see the Application Architecture
 
 The charts allows the end-user to configure the name of the security policy bound to a role depending on the underlying Kubernetes implementation.
 For example:
- - running on a OpenShift Container Platform, the name depends on the existence of `securitycontextconstraints` named resource,
- - running on a vanilla Kubernetes flavor, the name depends on the existence of `podsecuritypolicies` named resource.
+
+- running on a OpenShift Container Platform, the name depends on the existence of `securitycontextconstraints` named resource,
+- running on a vanilla Kubernetes flavor, the name depends on the existence of `podsecuritypolicies` named resource.
 
 If you allow privileged access by default then you can disable the creation of this service account by removing the value in the value yaml under `workers.rbac.role`
 
@@ -33,100 +34,101 @@ The following table lists the configurable parameters of the chart and their def
 
 ### General Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `general.namePrefix` | The name prefix used in the naming of all Kubernetes objects  | `$.Chart.Name` |
-| `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false` |
-| `general.enable.debug` | Enables additional logging and port forwarding advice on installation | `false` |
+| Parameter                | Description                                                                  | Default Value  |
+| ------------------------ | ---------------------------------------------------------------------------- | -------------- |
+| `general.namePrefix`     | The name prefix used in the naming of all Kubernetes objects                 | `$.Chart.Name` |
+| `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false`        |
+| `general.enable.debug`   | Enables additional logging and port forwarding advice on installation        | `false`        |
 
 ### Task Worker Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `workers.rbac.role` | The kubernetes service account name that allows privileged access. | `ibm-privileged-clusterrole` |
-| `workers.logging.type` | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `loki` | `default` |
-| `workers.logging.host` | The elasticsearch host service name. _Only required if type is 'loki'_ | <ul><li>default:</li><li>loki: `loki.svc.cluster.local`</li></ul> |
-| `workers.logging.port` | The elasticsearch port. _Only required if type is 'loki'_ | <ul><li>default:</li><li>loki: `3100`</li></ul> |
-| `workers.logging.secrets` | The elastic logging certs secret. | <ul><li>default:</li><li>loki:</li></ul> |
-| `workers.enable.deletion` | Will delete any workers that are completed and in non error state. | `true` |
-| `workers.enable.dedicatedNodes` | Runs the Flow workers to run on specific nodes with the taint `dedicated=bmrg-worker:NoSchedule` and also a label of `node-role.kubernetes.io/bmrg-worker=true` | `false` |
+| Parameter                       | Description                                                                                                                                        | Default Value                                                     |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `workers.rbac.role`             | The kubernetes service account name that allows privileged access.                                                                                 | `ibm-privileged-clusterrole`                                      |
+| `workers.logging.type`          | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `loki`                                          | `default`                                                         |
+| `workers.logging.host`          | The elasticsearch host service name. _Only required if type is 'loki'_                                                                             | <ul><li>default:</li><li>loki: `loki.svc.cluster.local`</li></ul> |
+| `workers.logging.port`          | The elasticsearch port. _Only required if type is 'loki'_                                                                                          | <ul><li>default:</li><li>loki: `3100`</li></ul>                   |
+| `workers.logging.secrets`       | The elastic logging certs secret.                                                                                                                  | <ul><li>default:</li><li>loki:</li></ul>                          |
+| `workers.enable.deletion`       | Will delete any workers that are completed and in non error state.                                                                                 | `true`                                                            |
+| `workers.enable.dedicatedNodes` | Runs the Flow workers to run on specific nodes with the taint `dedicated=tasks:NoSchedule` and also a label of `node-role.boomerang.io/tasks=true` | `false`                                                           |
 
-*Note:*
+_Note:_
 
 1. If you choose `loki` make sure to adjust your retention period. <https://www.ibm.com/support/knowledgecenter/en/SSBS6K_3.1.1/manage_metrics/log_change_retention.html>
 2. If you choose `default` be aware of the kubernetes log rotation and storage requirements.
 
-*References:*
+_References:_
 
 - [Kubernetes Taints and Tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
 - [Kubernetes Node Selection](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector)
 
 ### Boomerang Core Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `core.namePrefix` | The name prefix used when installing Boomerang Core. Used to reference Core services  | `bmrg-core` |
+| Parameter         | Description                                                                          | Default Value |
+| ----------------- | ------------------------------------------------------------------------------------ | ------------- |
+| `core.namePrefix` | The name prefix used when installing Boomerang Core. Used to reference Core services | `bmrg-core`   |
 
 ### Image Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `image.registry` | Boomerang Docker Registry | `boomerangio` |
-| `image.pullPolicy` | Image Pull Policy | `IfNotPresent` |
-| `image.pullSecret` | Image Pull Secret. See [here](https://github.com/boomerang-io/charts) for more information on how to access the Boomerang-io docker containers. | |
+| Parameter          | Description                                                                                                                                     | Default Value  |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `image.registry`   | Boomerang Docker Registry                                                                                                                       | `boomerangio`  |
+| `image.pullPolicy` | Image Pull Policy                                                                                                                               | `IfNotPresent` |
+| `image.pullSecret` | Image Pull Secret. See [here](https://github.com/boomerang-io/charts) for more information on how to access the Boomerang-io docker containers. |                |
 
 ### Job Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `job.data.enabled` | Enable the data loader on installation and upgrade | `false` |
-| `job.data.profile` | The data loader profile to use | `flow` |
-| `job.data.image.repository` | Image Repository Path | `/ise/<image-name>`
-| `job.data.image.tag` | Image Version | `<sem_ver>`
+| Parameter                   | Description                                        | Default Value       |
+| --------------------------- | -------------------------------------------------- | ------------------- |
+| `job.data.enabled`          | Enable the data loader on installation and upgrade | `false`             |
+| `job.data.profile`          | The data loader profile to use                     | `flow`              |
+| `job.data.image.repository` | Image Repository Path                              | `/ise/<image-name>` |
+| `job.data.image.tag`        | Image Version                                      | `<sem_ver>`         |
 
 ### Per Image Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `replicaCount` | How many pods to spin up | `1` |
-| `image.repository` | Docker Registry Image Repository | `/ise/<image-name>` |
-| `image.tag` | Image Version | `<sem_ver>` |
-| `service.type` | Service Type to Expose | `NodePort` or `ClusterIP` |
-| `zone` | The network zone to be placed in if the corresponding network policy is used. Options are trusted, semitrusted, and untrusted | |
+| Parameter          | Description                                                                                                                   | Default Value             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `replicaCount`     | How many pods to spin up                                                                                                      | `1`                       |
+| `image.repository` | Docker Registry Image Repository                                                                                              | `/ise/<image-name>`       |
+| `image.tag`        | Image Version                                                                                                                 | `<sem_ver>`               |
+| `service.type`     | Service Type to Expose                                                                                                        | `NodePort` or `ClusterIP` |
+| `zone`             | The network zone to be placed in if the corresponding network policy is used. Options are trusted, semitrusted, and untrusted |                           |
 
 ### Ingress Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `ingress.enabled` | Enable creation of ingress definitions | `false` |
-| `ingress.root` | Chart root context path. Can be used for putting an environment designator in front such as `/dev`. | `""` |
-| `ingress.host` | An array of hosts to accept requests on | `cloud.boomerangplatform.net` |
-| `ingress.tlsSecretName` | If there is an associated TLS secret | `bmrg-tls-cloud` |
-| `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io` | `ingress.kubernetes.io` |
-| `ingress.class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx` |
-| `ingress.enableAppRoot` | If enabled it sets the `app-root` ingress annotation to the ingress.root provided value, in order to redirect to the flow app | `false` |
+| Parameter                   | Description                                                                                                                                                             | Default Value                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| `ingress.enabled`           | Enable creation of ingress definitions                                                                                                                                  | `false`                       |
+| `ingress.root`              | Chart root context path. Can be used for putting an environment designator in front such as `/dev`.                                                                     | `""`                          |
+| `ingress.host`              | An array of hosts to accept requests on                                                                                                                                 | `cloud.boomerangplatform.net` |
+| `ingress.tlsSecretName`     | If there is an associated TLS secret                                                                                                                                    | `bmrg-tls-cloud`              |
+| `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io`                   | `ingress.kubernetes.io`       |
+| `ingress.class`             | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx`                       |
+| `ingress.enableAppRoot`     | If enabled it sets the `app-root` ingress annotation to the ingress.root provided value, in order to redirect to the flow app                                           | `false`                       |
 
 ### Auth Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `auth.enabled` | Enable addition of auth annotations on ingress | `true` |
-| `auth.mode` | Type of auth being implemented. Relates to the Auth Proxy mode. Options are `basic` or `oauth` | `basic` |
-| `auth.serviceName` | The Boomerang Auth Proxy service to integrate to. | `bmrg-auth-proxy` |
-| `auth.namespace` | The Boomerang Auth Proxy namespace | |
-| `auth.prefix` | The Boomerang Auth Proxy context path. This is appended to the end of `ingress.root` | `/oauth` |
+| Parameter          | Description                                                                                    | Default Value     |
+| ------------------ | ---------------------------------------------------------------------------------------------- | ----------------- |
+| `auth.enabled`     | Enable addition of auth annotations on ingress                                                 | `true`            |
+| `auth.mode`        | Type of auth being implemented. Relates to the Auth Proxy mode. Options are `basic` or `oauth` | `basic`           |
+| `auth.serviceName` | The Boomerang Auth Proxy service to integrate to.                                              | `bmrg-auth-proxy` |
+| `auth.namespace`   | The Boomerang Auth Proxy namespace                                                             |                   |
+| `auth.prefix`      | The Boomerang Auth Proxy context path. This is appended to the end of `ingress.root`           | `/oauth`          |
 
 ### Database Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `mongodb.host` | Connection Host or Internal Service | `mongodb` or `host1:27017,host2:27017,host3:27017` |
-| `mongodb.port` | Connection Port.  Leave empty if not port. | `27017` |
-| `mongodb.args` | Additional connection parameters. Leave empty if not needed. Example: `tlsEnable=true&authSource=xxx&authMechanism=xxx&replicaSet=xxx` | |
-| `mongodb.user` | Database user | `boomerang` |
-| `mongodb.password` | Database user password | `passw0rd` |
-| `mongodb.secretName` | The secret to get the password from | |
-| `mongodb.tlsSecretName` | Secret name reference for the Base64 encoded certificate. Leave empty if you don't need to attach a TLS Secret. | |
+| Parameter               | Description                                                                                                                            | Default Value                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `mongodb.host`          | Connection Host or Internal Service                                                                                                    | `mongodb` or `host1:27017,host2:27017,host3:27017` |
+| `mongodb.port`          | Connection Port. Leave empty if not port.                                                                                              | `27017`                                            |
+| `mongodb.args`          | Additional connection parameters. Leave empty if not needed. Example: `tlsEnable=true&authSource=xxx&authMechanism=xxx&replicaSet=xxx` |                                                    |
+| `mongodb.user`          | Database user                                                                                                                          | `boomerang`                                        |
+| `mongodb.password`      | Database user password                                                                                                                 | `passw0rd`                                         |
+| `mongodb.secretName`    | The secret containing the password from                                                                                                |                                                    |
+| `mongodb.secretKey`     | The key reference inside the secret to get the password. Used in conjunction with `mongodb.secretName`. from                           |                                                    |
+| `mongodb.tlsSecretName` | Secret name reference for the Base64 encoded certificate. Leave empty if you don't need to attach a TLS Secret.                        |                                                    |
 
 Note: For `mongodb.tlsSecretName` you will need to create a generic secret and import your certificate file, e.g.
 
@@ -134,11 +136,12 @@ Note: For `mongodb.tlsSecretName` you will need to create a generic secret and i
 
 ### Host Alias Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| hostAliases | An array of hostname-IP address mappings. Adds entries to a Pod's `/etc/hosts` file. | `[]` |
+| Parameter   | Description                                                                          | Default Value |
+| ----------- | ------------------------------------------------------------------------------------ | ------------- |
+| hostAliases | An array of hostname-IP address mappings. Adds entries to a Pod's `/etc/hosts` file. | `[]`          |
 
 Example configuration:
+
 ```
 hostAliases:
 - hostnames:
@@ -152,22 +155,22 @@ hostAliases:
 
 ### Eventing Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `eventing.enabled` | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true` |
-| `eventing.natsUrls` | A list of comma separated NATS server URLs | `nats://bmrg-dev-nats:4222` |
+| Parameter           | Description                                                                                                                                           | Default Value               |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `eventing.enabled`  | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true`                      |
+| `eventing.natsUrls` | A list of comma separated NATS server URLs                                                                                                            | `nats://bmrg-dev-nats:4222` |
 
 ### Tekton Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `tekton.enabled` | Enable Tekton pipelines | `true` |
+| Parameter        | Description             | Default Value |
+| ---------------- | ----------------------- | ------------- |
+| `tekton.enabled` | Enable Tekton pipelines | `true`        |
 
 ### OAuth2 Proxy Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `auth2proxy.enabled` | Enable OAuth2 Proxy | `true` |
+| Parameter            | Description         | Default Value |
+| -------------------- | ------------------- | ------------- |
+| `auth2proxy.enabled` | Enable OAuth2 Proxy | `true`        |
 
 ## Known Issues
 
