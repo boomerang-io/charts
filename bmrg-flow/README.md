@@ -13,6 +13,7 @@ Boomerang Flow is a modern cloud native workflow automation tool built on top of
 - NGINX Ingress Controller 0.22+
 - Helm v3
 - Auth2 Proxy or an Authentication Provider
+- Tekton
 
 For more information on the dependencies please see the Application Architecture.
 
@@ -159,12 +160,6 @@ hostAliases:
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
 | `eventing.enabled`  | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true`                      |
 | `eventing.natsUrls` | A list of comma separated NATS server URLs                                                                                                            | `nats://bmrg-dev-nats:4222` |
-
-### Tekton Configuration
-
-| Parameter        | Description             | Default Value |
-| ---------------- | ----------------------- | ------------- |
-| `tekton.enabled` | Enable Tekton pipelines | `true`        |
 
 ### OAuth2 Proxy Configuration
 

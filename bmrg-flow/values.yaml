@@ -48,7 +48,7 @@ job:
     profile: flow
     image:
       repository: /flow-loader
-      tag: 0.5.9
+      tag: 1.0.0-beta.3
 
 # App Configuration
 apps:
@@ -70,7 +70,7 @@ services:
   controller:
     image:
       repository: /flow-service-controller
-      tag: 6.6.2
+      tag: 7.0.0-beta.1
     replicaCount: 1
     service:
       type: ClusterIP
@@ -79,14 +79,17 @@ services:
     resources:
       requests:
         memory: "512Mi"
-  listener:
+  engine:
     image:
-      repository: /flow-service-listener
-      tag: 2.2.0
+      repository: /flow-service-engine
+      tag: 0.6.5
     replicaCount: 1
     service:
       type: ClusterIP
-    zone: untrusted
+    zone: semi-trusted
+    resources:
+      requests:
+        memory: "512Mi"
   workflow:
     image:
       repository: /flow-service-workflow
@@ -97,7 +100,7 @@ services:
     zone: untrusted
     resources:
       requests:
-        memory: "1Gi"
+        memory: "512Mi"
 
 # Global configuration. This can be overriden by a parent chart.
 global:
