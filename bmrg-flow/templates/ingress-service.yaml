@@ -4,17 +4,9 @@
 {{- $values := .Values -}}
 {{- $context := . -}}
 {{- if $.Values.global.ingress.enabled -}}
-{{- $apiV1 := false -}}
-{{- $apiVersion := "extensions/v1beta1" -}}
-{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
-{{- $apiVersion = "networking.k8s.io/v1" -}}
-{{- $apiV1 = true -}}
-{{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" -}}
-{{- $apiVersion = "networking.k8s.io/v1beta1" -}}
-{{- end }}
 {{- range $k, $v := $values.services }}
-{{- if and (ne $k "controller") (ne $k "listener") }}
-apiVersion: {{ $apiVersion }}
+{{- if and (ne $k "controller") (ne $k "engine") }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
@@ -53,18 +45,12 @@ spec:
       http:
         paths:
           - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $tier }}/{{ $k }}(/|$)(.*)
-            {{- if $apiV1 }}
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
                 port:
                   name: {{ $platform }}-port-svc
-            {{- else }}
-            backend:
-              serviceName:  {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
-              servicePort: {{ $platform }}-port-svc
-            {{- end }}
   tls:
     - hosts:
         - {{ $.Values.global.ingress.host }}
