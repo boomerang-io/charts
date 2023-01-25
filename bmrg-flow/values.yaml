@@ -82,7 +82,7 @@ services:
   engine:
     image:
       repository: /flow-service-engine
-      tag: 0.6.5
+      tag: 0.6.7
     replicaCount: 1
     service:
       type: ClusterIP
