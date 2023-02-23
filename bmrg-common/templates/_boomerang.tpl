@@ -49,7 +49,7 @@ We truncate at 40 chars because some Kubernetes name fields are limited to 63 (b
 Example Usage: {{- include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
 */}}
 {{- define "bmrg.name.prefix" -}}
-{{- default .Chart.Name .Values.general.namePrefix | trunc 40 | trimSuffix "-" -}}
+{{- default .Release.Name .Values.general.namePrefix | trunc 40 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
