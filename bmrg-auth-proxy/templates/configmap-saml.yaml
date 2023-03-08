@@ -11,7 +11,7 @@ metadata:
     {{- include "bmrg.labels.chart" (dict "context" $ "component" $component "tier" $tier  ) | nindent 4 }}
 data:
   saml_sp.xml:  |
-    <EntityDescriptor entityID="https://poc.cloud.boomerangplatform.net" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <EntityDescriptor entityID="https://host.example.io" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
       <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <KeyDescriptor use="signing">
           <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -35,8 +35,8 @@ data:
             </ds:X509Data>
           </ds:KeyInfo>
         </KeyDescriptor>
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://poc.cloud.boomerangplatform.net/bmrg/mellon/logout"/>
-        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://poc.cloud.boomerangplatform.net/bmrg/mellon/postResponse" index="0"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://host.example.io/bmrg/mellon/logout"/>
+        <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://host.example.io/bmrg/mellon/postResponse" index="0"/>
       </SPSSODescriptor>
     </EntityDescriptor>
   saml_sp.cert:  |

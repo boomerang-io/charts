@@ -118,7 +118,7 @@ global:
   ingress:
     enabled: false
     root: /flow
-    host: cloud.boomerangplatform.net
+    host: host.example.io
     tlsSecretName: bmrg-tls-cloud
     # The prefix for the annotations inside the ingress definition.
     annotationsPrefix: "nginx.ingress.kubernetes.io"

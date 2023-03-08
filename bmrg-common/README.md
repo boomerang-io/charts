@@ -48,7 +48,7 @@ The following table lists the helper methods of the `bmrg-common` chart and thei
 | `bmrg.ingress.config.auth_proxy_auth_annotations` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These rely on `auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations" $ | nindent 4 }}`
 | `bmrg.ingress.config.auth_proxy_auth_annotations.global` | Inserts nginx auth-url, auth-signin and auth-response-headers ingress annotations. These rely on `global.auth.*` from the values yaml. | `{{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}`
 | `bmrg.ingress.config.auth_proxy_lua` | Define the Access-Control LUA block to set the header for up stream systems. | `{{- include "bmrg.ingress.config.auth_proxy_lua" $ | nindent 6 }}`
-| `bmrg.host.suffix` | Get the http_origin from the `global.ingress.host` or `ingress.host` values yaml, should return boomerangplatform.net | `{{ include "bmrg.host.suffix" $ }}`
+| `bmrg.host.suffix` | Get the http_origin from the `global.ingress.host` or `ingress.host` values yaml, should return subdomain.domain | `{{ include "bmrg.host.suffix" $ }}`
 | `bmrg.authorization.email-domains` | Creates a list of `--email-domain=` entries based on the provided `authorization.emailDomains` values yaml. | `{{- include "bmrg.authorization.email-domains" $ }}`
 | `bmrg.config.node_selector` | Define the `nodeSelector` section of the deployment based on the `nodeSelector` value yaml | `{{- include "bmrg.config.node_selector" $ }}`
 | `bmrg.config.affinity` | Define the `affinity` section of the deployment based on the `affinity` value yaml | `{{- include "bmrg.config.affinity" $ }}`
