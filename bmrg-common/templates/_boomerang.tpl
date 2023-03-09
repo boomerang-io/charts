@@ -140,7 +140,7 @@ proxy_set_header X-Forwarded-Email $email;
 {{- end -}}
 
 {{/*
-Get the http_origin from the values host, should return boomerangplatform.net
+Get the http_origin from the values host, should return subdomain.domain
 */}}
 {{- define "bmrg.host.suffix" -}}
 {{- $host := "" -}}
