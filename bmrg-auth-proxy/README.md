@@ -341,14 +341,14 @@ The following table lists the configurable parameters of the auth-proxy chart an
 | `config.cookieSecret` | server specific cookie for the secret; create a new one with `python -c 'import os,base64; print base64.b64encode(os.urandom(16))'` | `""`
 | `config.configFile` | custom [oauth2_proxy.cfg](https://github.com/bitly/oauth2_proxy/blob/master/contrib/oauth2_proxy.cfg.example) contents for settings not overridable via environment nor command line | `""`
 | `extraArgs` | key:value list of extra arguments to give the binary | `{}`
-| `image.registry` | Registry of the image | `tools.boomerangplatform.net:8500/ise`
+| `image.registry` | Registry of the image | `boomerangio/oauth2-proxy`
 | `image.pullPolicy` | Image pull policy | `IfNotPresent`
 | `image.pullSecret` | Specify image pull secret | `boomerang-io.registrykey`
 | `image.replicaCount` | desired number of pods | `1`
 | `general.zone` | The zone where the pod will be deployed. Check the platform's network architecture | `untrusted`
 | `ingress.enabled` | enable ingress | `false`
 | `ingress.path` | The ingress path where the auth-proxy will be exposed | `/oauth`
-| `ingress.host` | The host name where the auth-proxy will be exposed | `cloud.boomerangplatform.net`
+| `ingress.host` | The host name where the auth-proxy will be exposed | `host.example.io`
 | `ingress.tlsSecretName` | The TLS secret name object, that match the host attribute | `bmrg-tls-cloud`
 | `annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to "nginx.ingress.kubernetes.io" | `ingress.kubernetes.io`
 | `class` | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to "public-iks-k8s-nginx" | `nginx`

@@ -49,7 +49,7 @@ We truncate at 40 chars because some Kubernetes name fields are limited to 63 (b
 Example Usage: {{- include "bmrg.name" (dict "context" $ "tier" $tier "component" $k ) }}
 */}}
 {{- define "bmrg.name.prefix" -}}
-{{- default .Chart.Name .Values.general.namePrefix | trunc 40 | trimSuffix "-" -}}
+{{- default .Release.Name .Values.general.namePrefix | trunc 40 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -140,21 +140,20 @@ proxy_set_header X-Forwarded-Email $email;
 {{- end -}}
 
 {{/*
-Get the http_origin from the values host, should return boomerangplatform.net
+Get the http_origin from the values host, should return subdomain.domain
 */}}
 {{- define "bmrg.host.suffix" -}}
 {{- $host := "" -}}
-{{- if hasKey $.Values.global.ingress "host" }}
-{{- $host := $.Values.global.ingress.host -}}
-{{- else if hasKey $.Values.ingress "host" -}}
-{{- $host := $.Values.ingress.host -}}
+{{- if ((($.Values).global).ingress).host }}
+{{- $host = $.Values.global.ingress.host -}}
+{{- else if (($.Values).ingress).host -}}
+{{- $host = $.Values.ingress.host -}}
 {{- end -}}
 {{- if $host -}}
 {{- $parts := splitList "." $host -}}
 {{- $nElement := last $parts -}}
 {{- $firstElements := initial $parts -}}
 {{- $nMinusOneElement := last $firstElements -}}
-
 {{ printf "%s\\.%s" $nMinusOneElement $nElement }}
 {{- else -}}
 {{ printf "*" }}
