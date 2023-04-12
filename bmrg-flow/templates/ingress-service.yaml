@@ -5,7 +5,7 @@
 {{- $context := . -}}
 {{- if $.Values.global.ingress.enabled -}}
 {{- range $k, $v := $values.services }}
-{{- if and (ne $k "controller") (ne $k "engine") }}
+{{- if eq $k "workflow" }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -16,9 +16,7 @@ metadata:
     {{- if eq $.Values.global.auth.enabled true }}
     {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
     {{- end }}
-    {{- if eq $k "workflow" }}
     {{ $.Values.global.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
-    {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
       {{- if $.Values.global.auth.enabled }}
       {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}

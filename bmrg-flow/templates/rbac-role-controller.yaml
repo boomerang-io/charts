@@ -7,7 +7,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "component" "controller" ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "component" "handler" ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 rules:
@@ -31,7 +31,7 @@ rules:
   - use
 {{- end }}
 # objects used to create and execute tasks
-  # Controller needs to watch Pods created by TaskRuns to see them progress.
+  # Handler needs to watch Pods created by TaskRuns to see them progress.
   # logs get/watch are used to stream the pods logs
 - apiGroups:
   - ""
