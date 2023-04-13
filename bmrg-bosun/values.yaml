@@ -88,9 +88,9 @@ global:
       secretName:
       tlsSecretName:
   ingress:
-    enabled: false
+    enabled: true
     root: /bosun
-    host: host.example.io
+    host: cloud.boomerangplatform.net
     tlsSecretName: bmrg-tls-cloud
     # The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress
     # you need to set it to "nginx.global.ingress.kubernetes.io"
@@ -98,6 +98,7 @@ global:
     # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
     # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
     class: "nginx"
+    pathType: ImplementationSpecific
   auth:
     enabled: false
     mode: basic
