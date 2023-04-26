@@ -5,8 +5,16 @@
 {{- $context := . -}}
 {{- $svcPortName := print $platform "-port-svc" -}}
 {{- if $.Values.global.ingress.enabled -}}
-{{- range $k, $v := $.Values.apps }}
-apiVersion: {{ include "helper.ingress.apiVersion" $ }}
+{{- $apiV1 := false -}}
+{{- $apiVersion := "extensions/v1beta1" -}}
+{{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
+{{- $apiVersion = "networking.k8s.io/v1" -}}
+{{- $apiV1 = true -}}
+{{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" -}}
+{{- $apiVersion = "networking.k8s.io/v1beta1" -}}
+{{- end }}
+{{- range $k, $v := $.Values.services }}
+apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
   name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
@@ -21,27 +29,30 @@ metadata:
     {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
-    {{- if and $.Values.global.ingress.class ( eq "false" ( include "helper.ingress.supportsIngressClassname" $ ) ) }}
-    kubernetes.io/ingress.class: {{ $.Values.global.ingress.class }}
-    {{- end }}
 spec:
+  ingressClassName: {{ $.Values.global.ingress.class}}
   rules:
-    - http:
+    - host: {{ $.Values.global.ingress.host }}
+      http:
         paths:
-          - path: {{ $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}(/|$)(.*)
-            {{- if eq "true" (include "helper.ingress.supportsPathType" $)}}
-            pathType: {{ default "ImplementationSpecific" $.Values.global.ingress.pathType }}
-            {{- end }}
+          - path: {{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}
+            {{- if $apiV1 }}
+            pathType: ImplementationSpecific
             backend:
-              {{- include "helper.ingress.backend" (dict "serviceName" (include "bmrg.name" (dict "context" $ "tier" $tier "component" $k )) "servicePort" $svcPortName "context" $) | nindent 14  }}
-      {{- if $.Values.global.ingress.host }}
-      host: {{ $.Values.global.ingress.host }}
+              service:
+                name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+                port:
+                  name: {{ $platform }}-port-svc
+            {{- else }}
+            backend:
+              serviceName: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+              servicePort: {{ $platform }}-port-svc
+            {{- end }}
   tls:
     - hosts:
-        - {{ $values.global.ingress.host }}
-      {{- if $values.global.ingress.tlsSecretName }}
-      secretName: {{ $values.global.ingress.tlsSecretName }}
-      {{- end }}
+        - {{ $.Values.global.ingress.host }}
+      {{- if $.Values.global.ingress.tlsSecretName }}
+      secretName: {{ $.Values.global.ingress.tlsSecretName }}
       {{- end }}
 ---
 {{- end }}
