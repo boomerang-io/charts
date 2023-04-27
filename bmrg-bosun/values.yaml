@@ -98,6 +98,7 @@ global:
     # The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific
     # controller. For IKS Community Ingress set it to "public-iks-k8s-nginx"
     class: "nginx"
+    pathType: ImplementationSpecific
   auth:
     enabled: false
     mode: basic
