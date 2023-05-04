@@ -49,14 +49,14 @@ data:
     kube.worker.serviceaccount={{- if $values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
     kube.worker.nodeselector={{ $values.workers.nodeSelector | toJson }}
     kube.worker.tolerations={{ $values.workers.tolerations | toJson }}
-    boomerang.environment={{ .Release.Namespace }}
-    boomerang.instance={{ .Release.Name }}
-    boomerang.product={{ $.Values.general.namePrefix }}
-    boomerang.version={{ .Chart.AppVersion }}
-    boomerang.otc=${FLOW_OTC}
-    boomerang.authorization.basic.password=coronet-cottage-nave-idiom-resume
-    boomerang.signOutUrl={{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
-    boomerang.baseUrl=https://{{ $.Values.global.ingress.host }}
+    flow.environment={{ .Release.Namespace }}
+    flow.instance={{ .Release.Name }}
+    flow.product={{ $.Values.general.namePrefix }}
+    flow.version={{ .Chart.AppVersion }}
+    flow.otc=${FLOW_OTC}
+    flow.authorization.basic.password=coronet-cottage-nave-idiom-resume
+    flow.signOutUrl={{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
+    flow.baseUrl=https://{{ $.Values.global.ingress.host }}
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}

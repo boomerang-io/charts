@@ -1,11 +1,10 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "services" -}}
+{{- $k := "workflow" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
 {{- if $.Values.global.ingress.enabled -}}
-{{- range $k, $v := $values.services }}
-{{- if eq $k "workflow" }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -32,9 +31,12 @@ metadata:
       add_header 'Content-Length' 0;
       add_header 'Content-Type' 'text/plain charset=UTF-8';
       return 204;}
-    {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "false"
+    {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
     {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
+    {{ $.Values.global.ingress.annotationsPrefix}}/limit-rps: "10"
+    {{ $.Values.global.ingress.annotationsPrefix}}/limit-rpm: "300"
+    {{ $.Values.global.ingress.annotationsPrefix}}/limit-connections: "10"
     {{ $.Values.global.ingress.annotationsPrefix}}/use-regex: "true"
 spec:
   ingressClassName: {{ $.Values.global.ingress.class}}
@@ -56,6 +58,4 @@ spec:
       secretName: {{ $.Values.global.ingress.tlsSecretName }}
       {{- end }}
 ---
-{{- end }}
-{{- end }}
 {{- end }}
