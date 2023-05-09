@@ -62,7 +62,7 @@ spec:
             - name: PRODUCT_APPS_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/services"
+              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/api/v2"
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr

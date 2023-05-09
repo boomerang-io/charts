@@ -15,13 +15,12 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }}
     flow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }}
     flow.apps.flow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/apps/flow
-    flow.services.workflow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/services/workflow
     {{- range $k, $v := $values.services }}
     flow.{{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
-    flow.{{ $k }}.service.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/services/{{ $k }}
     {{- end }}
+    flow.api.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/api/v2
     {{- include "bmrg.core.services" $ | indent 4 }}
-    flow.events.sink.urls=http://{{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "handler" ) }}/api/v1/event
+    flow.events.sink.urls=http://{{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "handler" ) }}/api/v2/event
     eventing.enabled={{ $values.eventing.enabled }}
     {{- if $.Values.eventing.enabled }}
     eventing.nats.server.urls={{ $values.eventing.natsUrls }}

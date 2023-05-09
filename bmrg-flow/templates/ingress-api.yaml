@@ -1,6 +1,6 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
-{{- $tier := "services" -}}
+{{- $tier := "api" -}}
 {{- $k := "workflow" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
@@ -8,9 +8,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier ) }}
   labels:
-    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
   annotations:
     {{- if eq $.Values.global.auth.enabled true }}
     {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
@@ -32,7 +32,7 @@ metadata:
       add_header 'Content-Type' 'text/plain charset=UTF-8';
       return 204;}
     {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
-    {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $k }}/$2
+    {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $tier }}/v2/$2
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-rps: "10"
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-rpm: "300"
@@ -44,11 +44,11 @@ spec:
     - host: {{ $.Values.global.ingress.host }}
       http:
         paths:
-          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $tier }}/{{ $k }}(/|$)(.*)
+          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $tier }}/v2(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+                name: {{ include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
                 port:
                   name: {{ $platform }}-port-svc
   tls:
