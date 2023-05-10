@@ -46,7 +46,7 @@ spec:
     - host: {{ $.Values.global.ingress.host }}
       http:
         paths:
-          - path: {{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}
+          - path: {{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}(/|$)(.*)
             {{- if $apiV1 }}
             pathType: ImplementationSpecific
             backend:
