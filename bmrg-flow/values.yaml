@@ -62,7 +62,7 @@ apps:
     zone: untrusted
     resources:
       requests:
-        memory: "50Mi"
+        memory: "64Mi"
 
 # Micro Service Configuration
 # Note: There are if conditions in the template referencing the service name i.e. urbancode
@@ -89,7 +89,7 @@ services:
     zone: semi-trusted
     resources:
       requests:
-        memory: "256Mi"
+        memory: "512Mi"
   workflow:
     image:
       repository: /flow-service-workflow
@@ -100,7 +100,7 @@ services:
     zone: untrusted
     resources:
       requests:
-        memory: "256Mi"
+        memory: "512Mi"
 
 # Global configuration. This can be overriden by a parent chart.
 global:
