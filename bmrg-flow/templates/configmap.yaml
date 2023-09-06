@@ -20,18 +20,8 @@ data:
     {{- end }}
     flow.api.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/api/v2
     {{- include "bmrg.core.services" $ | indent 4 }}
-    flow.events.sink.urls=http://{{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "handler" ) }}/api/v2/event
-    eventing.enabled={{ $values.eventing.enabled }}
-    {{- if $.Values.eventing.enabled }}
-    eventing.nats.server.urls={{ $values.eventing.natsUrls }}
-    eventing.nats.server.reconnect-wait-time=PT10S
-    eventing.nats.server.reconnect-max-attempts=-1
-    eventing.jetstream.stream.name={{ .Release.Name }}-event-stream
-    eventing.jetstream.stream.storage-type=File
-    eventing.jetstream.stream.subject={{ .Release.Name }}.event.cloudevent
-    eventing.jetstream.consumer.name={{ .Release.Name }}-event-consumer
-    eventing.jetstream.consumer.resub-wait-time=PT10S
-    {{- end }}
+    flow.events.sink.urls={{- if $values.eventing.sinkURLs }}{{ $values.eventing.sinkURLs }}{{ else }}http://{{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "handler" ) }}/api/v2/event{{ end }}
+    flow.events.sink.enabled={{ $values.eventing.enabled }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG

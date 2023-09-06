@@ -98,15 +98,15 @@ _References:_
 
 ### Ingress Configuration
 
-| Parameter                   | Description                                                                                                                                                             | Default Value                 |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `ingress.enabled`           | Enable creation of ingress definitions                                                                                                                                  | `false`                       |
-| `ingress.root`              | Chart root context path. Can be used for putting an environment designator in front such as `/dev`.                                                                     | `""`                          |
-| `ingress.host`              | An array of hosts to accept requests on                                                                                                                                 | `host.example.io` |
-| `ingress.tlsSecretName`     | If there is an associated TLS secret                                                                                                                                    | `bmrg-tls-cloud`              |
-| `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io`                   | `ingress.kubernetes.io`       |
-| `ingress.class`             | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx`                       |
-| `ingress.enableAppRoot`     | If enabled it sets the `app-root` ingress annotation to the ingress.root provided value, in order to redirect to the flow app                                           | `false`                       |
+| Parameter                   | Description                                                                                                                                                             | Default Value           |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `ingress.enabled`           | Enable creation of ingress definitions                                                                                                                                  | `false`                 |
+| `ingress.root`              | Chart root context path. Can be used for putting an environment designator in front such as `/dev`.                                                                     | `""`                    |
+| `ingress.host`              | An array of hosts to accept requests on                                                                                                                                 | `host.example.io`       |
+| `ingress.tlsSecretName`     | If there is an associated TLS secret                                                                                                                                    | `bmrg-tls-cloud`        |
+| `ingress.annotationsPrefix` | The prefix for the annotations inside the ingress definition. Typically for IKS Community Ingress you need to set it to `nginx.ingress.kubernetes.io`                   | `ingress.kubernetes.io` |
+| `ingress.class`             | The class of the ingress, it is used to mark the ingress resources to be picked-up by a specific controller. For IKS Community Ingress set it to `public-iks-k8s-nginx` | `nginx`                 |
+| `ingress.enableAppRoot`     | If enabled it sets the `app-root` ingress annotation to the ingress.root provided value, in order to redirect to the flow app                                           | `false`                 |
 
 ### Auth Configuration
 
@@ -156,10 +156,10 @@ hostAliases:
 
 ### Eventing Configuration
 
-| Parameter           | Description                                                                                                                                           | Default Value               |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| `eventing.enabled`  | Enables eventing as part of the installation. This will install the listener service to accept incoming webhooks and events. Optionally requires NATS | `true`                      |
-| `eventing.natsUrls` | A list of comma separated NATS server URLs                                                                                                            | `nats://bmrg-dev-nats:4222` |
+| Parameter           | Description                                                                                                                                                                                   | Default Value                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| `eventing.enabled`  | Enables the producing of the WorkflowRun and TaskRun status and phase CloudEvents. If this is disabled, and you are using the default Tekton Handler, then the integration will stop working. | `true`                        |
+| `eventing.sinkUrls` | A list of comma separated sink URLs. This is where the CloudEvents will be sent everytime a WorkflowRun or TaskRun changes phase or status.                                                   | `http://flow-service-handler` |
 
 ### OAuth2 Proxy Configuration
 
