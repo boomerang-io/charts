@@ -180,3 +180,9 @@ tekton:
 
 auth2proxy:
   enabled: true
+
+extraConfig:
+  # services: |
+  #   server.max-http-header-size=64000
+  #   server.tomcat.max-http-header-size=65536
+  #   server.tomcat.max-http-post-size=2097152
