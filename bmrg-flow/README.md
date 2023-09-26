@@ -167,6 +167,21 @@ hostAliases:
 | -------------------- | ------------------- | ------------- |
 | `auth2proxy.enabled` | Enable OAuth2 Proxy | `true`        |
 
+### Extra Configuration
+
+| Parameter | Description | Default Value |
+|---|---|---|
+| `extraConfig.services` | Extra configuration for Java backend services | `""` |
+
+Example configuration:
+```
+extraConfig:
+  services: |
+    server.max-http-header-size=64000
+    server.tomcat.max-http-header-size=65536
+    server.tomcat.max-http-post-size=2097152
+```
+
 ## Known Issues
 
 - We are currently applying the `ingress.kubernetes.io/client-max-body-size: 1m` annotation to the ingress for [issue](https://github.com/kubernetes/ingress-nginx/issues/2494).
