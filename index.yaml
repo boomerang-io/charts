@@ -1554,6 +1554,32 @@ entries:
   bmrg-flow:
   - apiVersion: v2
     appVersion: 4.0.0
+    created: "2023-09-26T22:01:29.207822482Z"
+    dependencies:
+    - alias: ch
+      name: bmrg-common
+      repository: https://raw.githubusercontent.com/boomerang-io/charts/index
+      version: 3.0.2
+    - alias: auth2proxy
+      condition: auth2proxy.enabled
+      name: oauth2-proxy
+      repository: https://oauth2-proxy.github.io/manifests
+      version: 4.1.0
+    description: Boomerang Flow
+    digest: e66be44e4849300a28c0eb83430a4bae48309faab797b42f55ad37e563fb6f39
+    home: https://useboomerang.io
+    keywords:
+    - boomerang
+    - flow
+    - workflows
+    - oauth2-proxy
+    name: bmrg-flow
+    type: application
+    urls:
+    - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-5.0.13/bmrg-flow-5.0.13.tgz
+    version: 5.0.13
+  - apiVersion: v2
+    appVersion: 4.0.0
     created: "2023-09-26T21:51:38.262658061Z"
     dependencies:
     - alias: ch
@@ -2674,4 +2700,4 @@ entries:
     urls:
     - https://github.com/boomerang-io/charts/releases/download/bmrg-flow-4.11.1/bmrg-flow-4.11.1.tgz
     version: 4.11.1
-generated: "2023-09-26T21:51:38.246367279Z"
+generated: "2023-09-26T22:01:29.201685525Z"
