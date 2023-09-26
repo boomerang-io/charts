@@ -71,6 +71,6 @@ data:
     flow.externalUrl.user={{$values.general.externalUrl.users }}
     flow.externalUrl.navigation={{$values.general.externalUrl.navigation }}
     flow.externalUrl.platformNavigation={{$values.general.externalUrl.headerNavigation }}
-{{- if and (.Values.extraConfig) (.Values.extraConfig.services) }}    
-{{ .Values.extraConfig.services | indent 4 }}
-{{- end }}
+    {{- if and (.Values.extraConfig) (.Values.extraConfig.services) }}    
+    {{ .Values.extraConfig.services | indent 4 }}
+    {{- end }}
