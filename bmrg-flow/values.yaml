@@ -181,6 +181,7 @@ eventing:
 
 oauth2proxy:
   enabled: true
+  fullnameOverride: flow-auth-proxy
   extraArgs:
     custom-templates-dir: /custom/templates
     basic-auth-password: $(UPSTREAM_AUTH_PASSWORD)
@@ -196,7 +197,30 @@ oauth2proxy:
   extraEnv:
   - name: UPSTREAM_AUTH_PASSWORD
     value: coronet-cottage-nave-idiom-resume
-  fullnameOverride: flow-auth-proxy
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/client-body-buffer-size: 12M
+      nginx.ingress.kubernetes.io/client-max-body-size: 12M
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        proxy_pass_request_body     on;
+        proxy_cache                   authentication;
+        proxy_cache_key               $cookie_flowabl_app_dev;
+        proxy_cache_valid             202 401 3s;
+        proxy_cache_lock              on;
+        proxy_ignore_headers          Set-Cookie;
+      nginx.ingress.kubernetes.io/proxy-body-size: 8M
+      nginx.ingress.kubernetes.io/proxy-buffer-size: 12M
+      nginx.ingress.kubernetes.io/proxy-buffering: "on"
+      nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+    enabled: true
+    hosts:
+    - app.flowabl.io
+    path: /dev/oauth
+    pathType: ImplementationSpecific
+    tls:
+    - hosts:
+      - app.flowabl.io
   htpasswdFile:
     enabled: true
     entries:

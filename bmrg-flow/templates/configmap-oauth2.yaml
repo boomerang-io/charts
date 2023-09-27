@@ -5,7 +5,7 @@ metadata:
   name: flow-auth-proxy-templates
 data:
   sign_in.html: |
-    {{define "sign_in.html"}}
+    {{`{{define "sign_in.html"}}
     <!DOCTYPE html>
     <html lang="en" charset="utf-8">
       <head>
@@ -611,9 +611,9 @@ data:
       </script>
       </body>
     </html>
-    {{end}}
+    {{end}}`}}
   error.html: |
-    {{define "error.html"}}
+    {{`{{define "error.html"}}
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -1103,5 +1103,5 @@ data:
         </main>
       </body>
     </html>
-    {{end}}
+    {{end}}`}}
 {{- end }}
