@@ -205,7 +205,7 @@ oauth2proxy:
       nginx.ingress.kubernetes.io/configuration-snippet: |
         proxy_pass_request_body     on;
         proxy_cache                   authentication;
-        proxy_cache_key               $cookie_flowabl_app_dev;
+        proxy_cache_key               $cookie_flow_app_dev;
         proxy_cache_valid             202 401 3s;
         proxy_cache_lock              on;
         proxy_ignore_headers          Set-Cookie;
@@ -215,23 +215,21 @@ oauth2proxy:
       nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
     enabled: true
     hosts:
-    - app.flowabl.io
+    - app.useboomerang.io
     path: /dev/oauth
     pathType: ImplementationSpecific
     tls:
     - hosts:
-      - app.flowabl.io
+      - app.useboomerang.io
   htpasswdFile:
     enabled: true
     entries:
-    - admin@flowabl.io:$2y$05$SvuX7bfuQfAk0M4Q0nmZMO8pSrY7s8.i8dTH4WU9PcTqY89pjC71m
-    - marcus.d.roy@gmail.com:{SHA}z96VhoQ6mktKXKuICKEgdZkQiK4=
-    - tyson@lawrie.com.au:$2y$05$SvuX7bfuQfAk0M4Q0nmZMO8pSrY7s8.i8dTH4WU9PcTqY89pjC71m
+    - admin@useboomerang.io:$2y$05$SvuX7bfuQfAk0M4Q0nmZMO8pSrY7s8.i8dTH4WU9PcTqY89pjC71m
     existingSecret: ""
   extraVolumes:
     - name: custom-templates
       configMap:
-        name: flow-auth-proxy-templates
+        name: flowabl-auth-proxy-templates
   extraVolumeMounts:
     - name: custom-templates
       mountPath: /custom/templates
