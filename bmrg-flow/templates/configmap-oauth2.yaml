@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $.Values.oauth2proxy.extraVolumes.[name=custom-templates].configMap.name }}
+  name: {{ $.Values.oauth2proxy.fullnameOverride }}-templates
 data:
   sign_in.html: |
     {{`{{define "sign_in.html"}}

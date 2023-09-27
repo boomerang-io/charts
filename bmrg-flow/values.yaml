@@ -229,7 +229,8 @@ oauth2proxy:
   extraVolumes:
     - name: custom-templates
       configMap:
-        name: flowabl-auth-proxy-templates
+      # Value of fullNameOverride + '-templates'
+        name: flow-auth-proxy-templates
   extraVolumeMounts:
     - name: custom-templates
       mountPath: /custom/templates
