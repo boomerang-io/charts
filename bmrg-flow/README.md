@@ -163,17 +163,18 @@ hostAliases:
 
 ### OAuth2 Proxy Configuration
 
-| Parameter            | Description         | Default Value |
-| -------------------- | ------------------- | ------------- |
-| `auth2proxy.enabled` | Enable OAuth2 Proxy | `true`        |
+| Parameter             | Description         | Default Value |
+| --------------------- | ------------------- | ------------- |
+| `oauth2proxy.enabled` | Enable OAuth2 Proxy | `true`        |
 
 ### Extra Configuration
 
-| Parameter | Description | Default Value |
-|---|---|---|
-| `extraConfig.services` | Extra configuration for Java backend services | `""` |
+| Parameter              | Description                                   | Default Value |
+| ---------------------- | --------------------------------------------- | ------------- |
+| `extraConfig.services` | Extra configuration for Java backend services | `""`          |
 
 Example configuration:
+
 ```
 extraConfig:
   services: |

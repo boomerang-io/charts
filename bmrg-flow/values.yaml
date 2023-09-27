@@ -179,8 +179,38 @@ eventing:
   enabled: true
   sinkUrls: 
 
-auth2proxy:
+oauth2proxy:
   enabled: true
+  extraArgs:
+    custom-templates-dir: /custom/templates
+    basic-auth-password: $(UPSTREAM_AUTH_PASSWORD)
+    cookie-path: /dev
+    cookie-secure: "true"
+    http-address: 0.0.0.0:4180
+    pass-basic-auth: "true"
+    proxy-prefix: /dev/oauth
+    redirect-url: /dev/oauth/callback
+    set-basic-auth: "true"
+    skip-provider-button: "false"
+    upstream: file:///dev/null
+  extraEnv:
+  - name: UPSTREAM_AUTH_PASSWORD
+    value: coronet-cottage-nave-idiom-resume
+  fullnameOverride: flow-auth-proxy
+  htpasswdFile:
+    enabled: true
+    entries:
+    - admin@flowabl.io:$2y$05$SvuX7bfuQfAk0M4Q0nmZMO8pSrY7s8.i8dTH4WU9PcTqY89pjC71m
+    - marcus.d.roy@gmail.com:{SHA}z96VhoQ6mktKXKuICKEgdZkQiK4=
+    - tyson@lawrie.com.au:$2y$05$SvuX7bfuQfAk0M4Q0nmZMO8pSrY7s8.i8dTH4WU9PcTqY89pjC71m
+    existingSecret: ""
+  extraVolumes:
+    - name: custom-templates
+      configMap:
+        name: flow-auth-proxy-templates
+  extraVolumeMounts:
+    - name: custom-templates
+      mountPath: /custom/templates
 
 extraConfig:
   # services: |

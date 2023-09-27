@@ -2,7 +2,7 @@ apiVersion: v2
 name: bmrg-flow
 description: Boomerang Flow
 type: application
-version: 5.0.13
+version: 5.1.0
 appVersion: 4.0.0
 home: https://useboomerang.io
 dependencies:
@@ -11,10 +11,10 @@ dependencies:
     version: 3.0.2
     alias: ch
   - name: oauth2-proxy
-    version: 4.1.0
+    version: 6.17.1
     repository: https://oauth2-proxy.github.io/manifests
-    alias: auth2proxy
-    condition: auth2proxy.enabled
+    alias: oauth2proxy
+    condition: oauth2proxy.enabled
 keywords:
   - boomerang
   - flow
