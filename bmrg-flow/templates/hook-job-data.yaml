@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: "{{ $values.image.pullPolicy }}"
           env:
           - name: JAVA_OPTS
-            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }} -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }} "
+            value: "-Dspring.profiles.active={{ $values.job.data.profile }} -Dspring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }} -Dflow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }}_"
           - name: MONGODB_PASSWORD
           {{- if $.Values.global.database.mongodb.secretName }}
             valueFrom:
