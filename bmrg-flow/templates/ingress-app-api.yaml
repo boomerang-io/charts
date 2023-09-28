@@ -32,7 +32,7 @@ metadata:
       add_header 'Content-Type' 'text/plain charset=UTF-8';
       return 204;}
     {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
-    {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $tier }}/v2/$2
+    {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /api/v2/$2
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-rps: "10"
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-rpm: "300"
@@ -44,7 +44,7 @@ spec:
     - host: {{ $.Values.global.ingress.host }}
       http:
         paths:
-          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/_{{ $tier }}/v2(/|$)(.*)
+          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/_api/v2(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
