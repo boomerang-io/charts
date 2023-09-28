@@ -1,6 +1,6 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
-{{- $tier := "api" -}}
+{{- $tier := "app-api" -}}
 {{- $k := "workflow" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
@@ -12,8 +12,16 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
   annotations:
+    {{- if eq $.Values.global.auth.enabled true }}
+    {{- include "bmrg.ingress.config.auth_proxy_auth_annotations.global" $ | nindent 4 }}
+    {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
     {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
+      {{- if $.Values.global.auth.enabled }}
+      {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_user_email" $ | nindent 6 }}
+      {{- end }}
       if ($request_method = 'OPTIONS') {
       add_header 'Access-Control-Allow-Origin' $http_origin;
       add_header 'Access-Control-Allow-Credentials' 'true';
@@ -36,7 +44,7 @@ spec:
     - host: {{ $.Values.global.ingress.host }}
       http:
         paths:
-          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $tier }}/v2(/|$)(.*)
+          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/_app/{{ $tier }}/v2(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
