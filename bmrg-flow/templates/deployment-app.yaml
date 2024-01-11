@@ -37,26 +37,6 @@ spec:
             - name: INSTANA_KEY
               value: "{{ $.Values.monitoring.instana.browser.key }}"
             {{- end }}
-            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.apm.key) }}
-            - name: NEW_RELIC_APP_NAME
-              value: "{{ $.Values.monitoring.newrelic.apm.name }} - {{ $tier }}"
-            - name: NEW_RELIC_LICENSE_KEY
-              value: "{{ $.Values.monitoring.newrelic.apm.key }}"
-            {{- end }}
-            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.monitoring.newrelic.browser.key) }}
-            - name: NEW_RELIC_BROWSER_ID
-              value: "{{ $.Values.monitoring.newrelic.browser.id }}"
-            - name: NEW_RELIC_BROWSER_KEY
-              value: "{{ $.Values.monitoring.newrelic.browser.key }}"
-            - name: HTML_HEAD_INJECTED_SCRIPTS
-              value: {{ if $.Values.monitoring.newrelic.browser.key }}"newrelic-browser.js"{{ else }}""{{ end }}
-            {{- end }}
-            {{- if and ($.Values.monitoring.newrelic.enable) ($.Values.proxy.enable) }}
-            - name: NEW_RELIC_PROXY_HOST
-              value: "{{ $.Values.proxy.host }}"
-            - name: NEW_RELIC_PROXY_PORT
-              value: "{{ $.Values.proxy.port }}"
-            {{- end }}
             - name: PRODUCT_ENV_URL
               value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
             - name: PRODUCT_APPS_ENV_URL

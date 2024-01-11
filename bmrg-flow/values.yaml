@@ -149,18 +149,6 @@ monitoring:
     browser:
       reportingUrl:
       key:
-  newrelic:
-    enable: false
-    apm:
-      name: Boomerang Private
-      key:
-      image:
-        registry: boomerangio
-        repository: /util-newrelicjavaagent
-        tag: 5.14.0
-    browser:
-      id:
-      key:
   jaeger:
     enabled: false
     namespace:
