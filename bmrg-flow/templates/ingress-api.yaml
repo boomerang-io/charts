@@ -30,6 +30,9 @@ metadata:
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-rpm: "300"
     {{ $.Values.global.ingress.annotationsPrefix}}/limit-connections: "10"
     {{ $.Values.global.ingress.annotationsPrefix}}/use-regex: "true"
+    {{- with .Values.global.ingress.annotations }}
+    {{ toYaml . | indent 4 }}
+    {{- end }}
 spec:
   ingressClassName: {{ $.Values.global.ingress.class}}
   rules:
