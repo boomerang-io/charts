@@ -32,7 +32,7 @@ metadata:
     {{ $.Values.global.ingress.annotationsPrefix}}/app-root: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
     {{- end }}
     {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
-    {{- with .Values.global.ingress.annotations }}
+    {{- with $.Values.global.ingress.annotations }}
     {{ toYaml . | indent 4 }}
     {{- end }}
 spec:
