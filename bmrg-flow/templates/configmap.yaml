@@ -46,6 +46,7 @@ data:
     flow.authorization.basic.password=coronet-cottage-nave-idiom-resume
     flow.signOutUrl={{ $.Values.global.auth.prefix }}/sign_out{{ if $.Values.global.auth.signOutRedirect }}?rd={{ $.Values.global.auth.signOutRedirect }}{{ end }}
     flow.baseUrl=https://{{ $.Values.global.ingress.host }}
+    flow.audit.enabled=true
     swagger.enable={{ $.Values.general.enable.apidocs }}
     proxy.enable={{ $.Values.proxy.enable }}
     {{- if $.Values.proxy.enable }}
