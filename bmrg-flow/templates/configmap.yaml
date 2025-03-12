@@ -15,7 +15,6 @@ data:
     spring.data.mongodb.uri=mongodb://{{ $.Values.global.database.mongodb.user }}:${MONGODB_PASSWORD}@{{ $.Values.global.database.mongodb.host }}{{ if $.Values.global.database.mongodb.port }}:{{ $.Values.global.database.mongodb.port }}{{ end }}/{{ $.Values.global.database.mongodb.database }}{{ if $.Values.global.database.mongodb.args }}?{{ $.Values.global.database.mongodb.args }}{{ end }}
     flow.mongo.collection.prefix={{ default "bmrg-flow" $.Values.general.namePrefix | trimPrefix "bmrg-" | replace "-" "_" }}_
     org.jobrunr.database.database-name={{ $.Values.global.database.mongodb.database }}
-    org.quartz.jobStore.dbName={{ $.Values.global.database.mongodb.database }}
     flow.apps.flow.url=https://{{ $.Values.global.ingress.host }}{{- default "" $.Values.global.ingress.root }}/apps/flow
     {{- range $k, $v := $values.services }}
     flow.{{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
