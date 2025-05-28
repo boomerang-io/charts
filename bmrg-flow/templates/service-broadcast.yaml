@@ -11,7 +11,6 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
-  type: {{ $v.service.type }}
   clusterIP: None
   ports:
     - name: {{ $platform }}-port-svc
