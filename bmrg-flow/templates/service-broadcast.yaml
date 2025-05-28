@@ -20,5 +20,5 @@ spec:
       protocol: TCP
   selector:
     name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
-    {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 4 }}
+    {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k) | nindent 4 }}
   sessionAffinity: None
