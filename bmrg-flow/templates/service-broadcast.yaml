@@ -1,0 +1,24 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "flow" -}}
+{{- $tier := "services" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- $k := "workflow" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}-broadcast
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
+spec:
+  type: {{ $v.service.type }}
+  clusterIP: None
+  ports:
+    - name: {{ $platform }}-port-svc
+      port: 80
+      targetPort: {{ $platform }}-port-cntr
+      protocol: TCP
+  selector:
+    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+    {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 4 }}
+  sessionAffinity: None
