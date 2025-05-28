@@ -19,7 +19,7 @@ data:
     {{- range $k, $v := $values.services }}
     flow.{{ $k }}.service.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
     {{- end }}
-    flow.broadcast.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "workflow" ) }}-braodcast
+    flow.broadcast.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "workflow" ) }}-broadcast.{{ .Release.Namespace }}.svc.cluster.local
     flow.api.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/api/v2
     {{- include "bmrg.core.services" $ | indent 4 }}
     flow.events.sink.urls={{- if $values.eventing.sinkURLs }}{{ $values.eventing.sinkURLs }}{{ else }}http://{{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "handler" ) }}/api/v1/event{{ end }}
