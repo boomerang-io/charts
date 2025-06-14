@@ -22,7 +22,7 @@ data:
     flow.broadcast.host={{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "workflow" ) }}-broadcast.{{ .Release.Namespace }}.svc.cluster.local
     flow.api.root={{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/api/v2
     {{- include "bmrg.core.services" $ | indent 4 }}
-    flow.events.sink.urls={{- if $values.eventing.sinkURLs }}{{ $values.eventing.sinkURLs }}{{ else }}http://{{- include "bmrg.name" (dict "context" $context "tier" "services" "component" "handler" ) }}/api/v1/event{{ end }}
+    flow.events.sink.urls={{ $values.eventing.sinkURLs }}
     flow.events.sink.enabled={{ $values.eventing.enabled }}
     {{- if $.Values.general.enable.debug }}
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
@@ -31,15 +31,15 @@ data:
     logging.level.io.boomerang.extensions=DEBUG
     logging.level.io.boomerang.service=DEBUG
     {{- end }}
-    kube.worker.logging.type={{ $values.workers.logging.type }}
-    kube.worker.logging.host={{ $values.workers.logging.host }}
-    kube.worker.logging.port={{ $values.workers.logging.port }}
-    kube.worker.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
-    kube.worker.logging.keystore.password=changeme
-    kube.worker.hostaliases={{ $.Values.hostAliases | toJson }}
-    kube.worker.serviceaccount={{- if $values.workers.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
-    kube.worker.nodeselector={{ $values.workers.nodeSelector | toJson }}
-    kube.worker.tolerations={{ $values.workers.tolerations | toJson }}
+    agent.tasks.logging.type={{ $values.tasks.logging.type }}
+    agent.tasks.logging.host={{ $values.tasks.logging.host }}
+    agent.tasks.logging.port={{ $values.tasks.logging.port }}
+    agent.tasks.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
+    agent.tasks.logging.keystore.password=changeme
+    agent.tasks.hostaliases={{ $.Values.hostAliases | toJson }}
+    agent.tasks.serviceaccount={{- if $values.tasks.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
+    agent.tasks.nodeselector={{ $values.tasks.nodeSelector | toJson }}
+    agent.tasks.tolerations={{ $values.tasks.tolerations | toJson }}
     flow.environment={{ .Release.Namespace }}
     flow.instance={{ .Release.Name }}
     flow.product={{ $.Values.general.namePrefix }}

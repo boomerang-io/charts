@@ -14,7 +14,7 @@ general:
     navigation:
     headerNavigation:
 
-workers:
+tasks:
   security:
     enable: true
     policy: ibm-privileged-psp
@@ -67,10 +67,10 @@ apps:
 # Micro Service Configuration
 # Note: There are if conditions in the template referencing the service name i.e. urbancode
 services:
-  handler:
+  agent:
     image:
-      repository: /flow-service-handler
-      tag: 7.0.0-beta.11
+      repository: /flow-service-agent
+      tag: 1.0.0-beta.1
     replicaCount: 1
     service:
       type: ClusterIP
@@ -166,7 +166,7 @@ monitoring:
 
 # Eventing related values
 eventing:
-  enabled: true
+  enabled: false
   sinkUrls: 
 
 oauth2proxy:

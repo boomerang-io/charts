@@ -3,11 +3,11 @@
 {{- $tier := "rbac" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- if $values.workers.security.enable }}
+{{- if $values.tasks.security.enable }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "component" "handler" ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "component" "agent" ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 rules:
@@ -15,7 +15,7 @@ rules:
 - apiGroups:
   - security.openshift.io
   resourceNames:
-  - {{ $values.workers.security.policy }}
+  - {{ $values.tasks.security.policy }}
   resources:
   - securitycontextconstraints
   verbs:
@@ -24,7 +24,7 @@ rules:
 - apiGroups:
   - extensions
   resourceNames:
-  - {{ $values.workers.security.policy }}
+  - {{ $values.tasks.security.policy }}
   resources:
   - podsecuritypolicies
   verbs:

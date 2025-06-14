@@ -3,19 +3,19 @@
 {{- $tier := "rbac" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- if $values.workers.security.enable }}
+{{- if $values.tasks.security.enable }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "component" "handler" ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "component" "agent" ) }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "bmrg.name" (dict "context" $context "component" "handler" ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "component" "agent" ) }}
 subjects:
 - kind: ServiceAccount
-  name: {{ include "bmrg.name" (dict "context" $context "component" "handler" ) }}
+  name: {{ include "bmrg.name" (dict "context" $context "component" "agent" ) }}
   namespace: {{ $.Release.Namespace }}
 {{- end }}

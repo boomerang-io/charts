@@ -3,7 +3,7 @@
 {{- $tier := "rbac" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- if $values.workers.security.enable }}
+{{- if $values.tasks.security.enable }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
