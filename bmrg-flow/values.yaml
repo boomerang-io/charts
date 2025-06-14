@@ -22,7 +22,6 @@ tasks:
     type: default
     host:
     port:
-    secret:
   nodeSelector:
     #node-role.boomerang.io/tasks: true
   tolerations:

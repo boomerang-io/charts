@@ -31,11 +31,9 @@ data:
     logging.level.io.boomerang.extensions=DEBUG
     logging.level.io.boomerang.service=DEBUG
     {{- end }}
-    agent.tasks.logging.type={{ $values.tasks.logging.type }}
-    agent.tasks.logging.host={{ $values.tasks.logging.host }}
-    agent.tasks.logging.port={{ $values.tasks.logging.port }}
-    agent.tasks.logging.keystore.name=/etc/secrets/logstash-elasticsearch-keystore.jks
-    agent.tasks.logging.keystore.password=changeme
+    agent.logging.type={{ $values.tasks.logging.type }}
+    agent.logging.host={{ $values.tasks.logging.host }}
+    agent.logging.port={{ $values.tasks.logging.port }}
     agent.tasks.hostaliases={{ $.Values.hostAliases | toJson }}
     agent.tasks.serviceaccount={{- if $values.tasks.security.enable }}{{ $platform }}-{{ $product }}-worker{{ end }}
     agent.tasks.nodeselector={{ $values.tasks.nodeSelector | toJson }}

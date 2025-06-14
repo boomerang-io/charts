@@ -41,17 +41,16 @@ The following table lists the configurable parameters of the chart and their def
 | `general.enable.apidocs` | Enable the API Docs endpoint on the services to be picked up by the API Docs | `false`        |
 | `general.enable.debug`   | Enables additional logging and port forwarding advice on installation        | `false`        |
 
-### Task Worker Configuration
+### Tasks Configuration
 
-| Parameter                       | Description                                                                                                                                        | Default Value                                                     |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `workers.rbac.role`             | The kubernetes service account name that allows privileged access.                                                                                 | `ibm-privileged-clusterrole`                                      |
-| `workers.logging.type`          | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `loki`                                          | `default`                                                         |
-| `workers.logging.host`          | The elasticsearch host service name. _Only required if type is 'loki'_                                                                             | <ul><li>default:</li><li>loki: `loki.svc.cluster.local`</li></ul> |
-| `workers.logging.port`          | The elasticsearch port. _Only required if type is 'loki'_                                                                                          | <ul><li>default:</li><li>loki: `3100`</li></ul>                   |
-| `workers.logging.secrets`       | The elastic logging certs secret.                                                                                                                  | <ul><li>default:</li><li>loki:</li></ul>                          |
-| `workers.enable.deletion`       | Will delete any workers that are completed and in non error state.                                                                                 | `true`                                                            |
-| `workers.enable.dedicatedNodes` | Runs the Flow workers to run on specific nodes with the taint `dedicated=tasks:NoSchedule` and also a label of `node-role.boomerang.io/tasks=true` | `false`                                                           |
+| Parameter                     | Description                                                                                                                                        | Default Value                                                     |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `tasks.rbac.role`             | The kubernetes service account name that allows privileged access.                                                                                 | `ibm-privileged-clusterrole`                                      |
+| `tasks.logging.type`          | The logging implementation to use. Default is kubernetes log api. Available Options: `default` and `loki`                                          | `default`                                                         |
+| `tasks.logging.host`          | The elasticsearch host service name. _Only required if type is 'loki'_                                                                             | <ul><li>default:</li><li>loki: `loki.svc.cluster.local`</li></ul> |
+| `tasks.logging.port`          | The elasticsearch port. _Only required if type is 'loki'_                                                                                          | <ul><li>default:</li><li>loki: `3100`</li></ul>                   |
+| `tasks.enable.deletion`       | Will delete any workers that are completed and in non error state.                                                                                 | `true`                                                            |
+| `tasks.enable.dedicatedNodes` | Runs the Flow workers to run on specific nodes with the taint `dedicated=tasks:NoSchedule` and also a label of `node-role.boomerang.io/tasks=true` | `false`                                                           |
 
 _Note:_
 

@@ -75,11 +75,6 @@ spec:
           - name: application-config
             mountPath: "/data"
             readOnly: true
-          {{- if and (eq $k "agent") (eq $values.tasks.logging.type "elastic" ) }}
-          - name: cert-vol-elastic
-            readOnly: true
-            mountPath: "/etc/secrets"
-          {{- end}}
           {{- if $.Values.global.database.mongodb.tlsSecretName }}
           - name: cert-vol-mongodb
             readOnly: true
@@ -88,7 +83,7 @@ spec:
           command:
           - "sh"
           - "-c"
-          - "{{ if and (eq $k "agent") (eq $values.tasks.logging.type "elastic" ) }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/secrets/ca.crt -alias boomerang -keystore ./cacerts -storepass changeit &&{{ end }}{{ if $.Values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+          - "{{ if $.Values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
       {{- with $.Values.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
@@ -100,11 +95,6 @@ spec:
           items:
           - key: application.properties
             path: application.properties
-      {{- if and (eq $k "handler") (eq $values.tasks.logging.type "elastic" ) }}
-      - name: cert-vol-elastic
-        secret:
-          secretName: {{ $values.tasks.logging.secret }}
-      {{- end }}
       {{- if $.Values.global.database.mongodb.tlsSecretName }}
       - name: cert-vol-mongodb
         secret:
