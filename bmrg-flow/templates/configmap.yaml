@@ -28,6 +28,7 @@ data:
     logging.level.org.springframework.web.client.RestTemplate=DEBUG
     logging.level.org.springframework.core.env.PropertySourcesPropertyResolver=DEBUG
     logging.level.root=INFO
+    logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
     logging.level.io.boomerang.workflow=DEBUG
     logging.level.io.boomerang.integrations=DEBUG
     logging.level.io.boomerang.engine=DEBUG
