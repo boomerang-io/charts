@@ -54,7 +54,7 @@ apps:
   flow:
     image:
       repository: /flow-client-web
-      tag: 3.9.12
+      tag: 4.0.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -69,7 +69,7 @@ services:
   agent:
     image:
       repository: /flow-service-agent
-      tag: 1.0.0-beta.1
+      tag: 1.0.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -81,7 +81,7 @@ services:
   engine:
     image:
       repository: /flow-service-engine
-      tag: 1.0.0-beta.18
+      tag: 1.0.0
     replicaCount: 1
     service:
       type: ClusterIP
@@ -92,7 +92,7 @@ services:
   workflow:
     image:
       repository: /flow-service-workflow
-      tag: 4.0.0-beta.2
+      tag: 4.0.0
     replicaCount: 1
     service:
       type: ClusterIP
