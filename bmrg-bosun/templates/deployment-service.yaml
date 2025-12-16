@@ -80,12 +80,17 @@ spec:
           {{- if $values.global.database.mongodb.tlsSecretName }}
           - name: cert-vol-mongodb
             readOnly: true
-            mountPath: "/etc/certs"
+            mountPath: "/etc/certs/mongodb"
+          {{- end}}
+          {{- if $values.certs.boomerang }}
+          - name: cert-vol-boomerang
+            readOnly: true
+            mountPath: "/etc/certs/boomerang"
           {{- end}}
           command:
           - "sh"
           - "-c"
-          - "{{ if $values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
+          - "{{ if $values.global.database.mongodb.tlsSecretName }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/mongodb/mongodb.crt -alias mongodbcrt -keystore ./cacerts -storepass changeit &&{{ end }} {{ if $values.certs.boomerang }}$JAVA_HOME/bin/keytool -import -noprompt -trustcacerts -file /etc/certs/boomerang/boomerang.crt -alias boomerangcrt -keystore ./cacerts -storepass changeit &&{{ end }} java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=./cacerts -Djavax.net.ssl.trustStorePassword=changeit -jar ./service.jar"
       {{- with $values.hostAliases }}
       hostAliases:
 {{ toYaml . | indent 8 }}
@@ -105,6 +110,11 @@ spec:
       - name: cert-vol-mongodb
         secret:
           secretName: {{ $values.global.database.mongodb.tlsSecretName }}
+      {{- end }}
+      {{- if $values.certs.boomerang }}
+      - name: cert-vol-boomerang
+        secret:
+          secretName: {{ include "bmrg.name" (dict "context" $ "tier" "certs" ) }}
       {{- end }}
       {{- if $values.image.pullSecret }}
       imagePullSecrets:
