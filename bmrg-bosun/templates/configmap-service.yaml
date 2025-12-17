@@ -48,3 +48,6 @@ data:
     xray.boomerang.apitoken={{ $values.xray.token }}
     sonarqube.url.api.base={{ $values.sonarqube.url }}
     sonarqube.apitoken={{ $values.sonarqube.token }}
+{{- if (.Values.extraConfig).services }}    
+{{ .Values.extraConfig.services | indent 4 }}
+{{- end }}
