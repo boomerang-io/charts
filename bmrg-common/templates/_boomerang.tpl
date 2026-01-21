@@ -174,12 +174,24 @@ Define the email domain list based on csv string
 
 
 {{/*
+Get the http_origin from the values host, should return fully qualified domain
+*/}}
+{{- define "bmrg.host.fullname" -}}
+{{- $host := "" -}}
+{{- if ((($.Values).global).ingress).host }}
+{{- $host = $.Values.global.ingress.host -}}
+{{- else if (($.Values).ingress).host -}}
+{{- $host = $.Values.ingress.host -}}
+{{- end -}}
+{{ printf "%s" $host }}
+{{- end -}}
+
+{{/*
 Define the Access-Control-Allow header to be set up for up stream systems.
 */}}
 {{- define "bmrg.ingress.config.auth_proxy_access_control" -}}
-if ($http_origin ~* '^https?://.*\.{{ include "bmrg.host.suffix" $ }}$' ) {
-add_header Access-Control-Allow-Origin $http_origin;
-add_header 'Access-Control-Allow-Credentials' 'true';}
+add_header "Access-Control-Allow-Origin" "https://{{ include "bmrg.host.fullname" $ }}";
+add_header "Access-Control-Allow-Credentials" "true";
 {{- end -}}
 
 {{- define "bmrg.ingress.config.auth_proxy_auth_annotations" -}}
