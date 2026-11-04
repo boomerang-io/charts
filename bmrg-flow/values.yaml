@@ -1,110 +1,220 @@
-# Default values for bmrg-apps.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Default values for bmrg-flow (Boomerang Flow v5).
+#
+# v5 is one product line: an annotated tag builds flow-service-core, flow-service-dispatcher and
+# flow-client-web together. Every image tag defaults to .Chart.AppVersion; `image.tag` overrides it
+# for all three and `<component>.image.tag` for one.
 
 # General Configuration
 general:
+  # Prefix for every Kubernetes object name. Defaults to the release name when empty.
   namePrefix: bmrg-flow
   enable:
+    # Serve the OpenAPI spec and Swagger UI at <root>/api/docs
     apidocs: false
+    # DEBUG logging for io.boomerang.* in service-core and the dispatcher
     debug: false
-  externalUrl:
-    teams:
-    users:
-    navigation:
-    headerNavigation:
-
-tasks:
-  security:
-    enable: true
-    policy: ibm-privileged-psp
-  logging:
-    type: default
-    host:
-    port:
-  nodeSelector:
-    #node-role.boomerang.io/tasks: true
-  tolerations:
-  # - key: dedicated
-  #   value: tasks
-  #   operator: Equal
-  #   effect: NoSchedule
-
-core:
-  namePrefix: bmrg-core
-  ingressRoot: ""
 
 # General Image Configuration
 image:
   registry: boomerangio
   pullPolicy: IfNotPresent
   pullSecret:
+  # The product tag for all three images. Empty = .Chart.AppVersion
+  tag: ""
 
-# Job Configuraiton
-job:
-  data:
+# service-core: the API, engine and scheduler. Port 7700.
+core:
+  image:
+    repository: /flow-service-core
+    tag: ""
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  zone: semi-trusted
+  resources:
+    requests:
+      memory: "1Gi"
+  # service-core migrates the database as it starts and serves nothing until the migrations
+  # finish. A v3 database with a large run history can take minutes, and replicas that start
+  # together wait on the migration lock for up to 30 minutes. The startup probe covers that window
+  # (periodSeconds * failureThreshold) so the liveness probe never kills a migrating pod.
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 180
+  # The Deployment rolls one pod at a time (maxSurge 1, maxUnavailable 0) so a single replica
+  # runs the migrations and the rest start against a migrated database.
+  # Deployment shape. The two properties the web app's feature flags are derived from, together
+  # with the `features` settings an admin edits in Settings (seeded by the migrations, not chart values).
+  workspace:
+    # flow.workspace.single: serve the seeded `system` workspace alone, with no workspace or user
+    # management. Set it together with security.enabled=false for an embedded engine.
+    single: false
+  security:
+    # flow.security.enabled. Set false only for a headless embedded engine.
     enabled: true
-    profile: flow
-    image:
-      repository: /flow-loader
-      tag: 1.0.0
+    # flow.security.bootstrap-token: a `bfg_` token followed by at least 32 characters, registered
+    # at startup as a global service token. It is also the token the dispatcher authenticates to
+    # service-core with. Generated and kept across upgrades when empty.
+    bootstrapToken: ""
+    # Secret holding the token under key FLOW_BOOTSTRAP_TOKEN. Overrides the generated one.
+    existingSecret: ""
+    # The identity provider decides who is an admin: a token whose claim `name` (a string or an
+    # array such as roles or groups) holds any of the comma-separated `values` makes its holder an
+    # admin on each sign-in; one who no longer matches is demoted. Both empty leaves admin to the
+    # first sign-in. A verified OIDC id token is always read; the JWT an authenticating proxy
+    # forwards is read only with trustForwardedToken, when that proxy is the trust boundary.
+    adminClaim:
+      name: ""
+      values: ""
+      trustForwardedToken: false
+  # OpenID Connect sign-in. Seeded into the auth settings at startup while the stored values are
+  # empty, so a fresh install signs in with OIDC from its first start and an admin's later change in
+  # Settings > Auth wins. The issuer must be an absolute https URL (http only for loopback); an
+  # invalid value stops service-core. Both empty = proxy mode until an admin sets them.
+  auth:
+    oidc:
+      issuer: ""
+      clientId: ""
+  encrypt:
+    # flow.encrypt.secret / flow.encrypt.salt encrypt secured settings. Required on every install.
+    # Generated and kept across upgrades when empty.
+    secret: ""
+    salt: ""
+    # Secret holding FLOW_ENCRYPT_SECRET and FLOW_ENCRYPT_SALT. Overrides the generated pair.
+    existingSecret: ""
+    # Upgrading from v3: the pair v3 encrypted with (mongo.encrypt.secret / mongo.encrypt.salt),
+    # read once to decrypt v3 values. A v3 release upgraded in place keeps its generated
+    # FLOW_ENCRYPT_* Secret, which service-core reads for both pairs, so nothing needs to be set.
+    v3:
+      secret: ""
+      salt: ""
+      # Secret holding MONGO_ENCRYPT_SECRET and MONGO_ENCRYPT_SALT
+      existingSecret: ""
+  migration:
+    # flow.migration.reset-unreadable-settings: blank a v3 setting that does not decrypt instead of
+    # stopping the upgrade.
+    resetUnreadableSettings: false
+  # Run artifacts in an S3-compatible store (flow.artifacts.*)
+  artifacts:
+    enabled: false
+    store:
+      endpoint: ""
+      # The store address task pods reach, when it differs from service-core's
+      linkEndpoint: ""
+      region: us-east-1
+      bucket: flow-artifacts
+      pathStyle: true
+      accessKey: ""
+      secretKey: ""
+      # Secret holding FLOW_ARTIFACTS_STORE_ACCESS_KEY and FLOW_ARTIFACTS_STORE_SECRET_KEY
+      existingSecret: ""
+  # Status CloudEvents to external sinks (flow.events.sink.*)
+  eventing:
+    enabled: false
+    sinkUrls: ""
+  # Extra environment as NAME: value. Any application.properties key is settable this way through
+  # Spring's relaxed binding (flow.encrypt.secret -> FLOW_ENCRYPT_SECRET).
+  env: {}
+  # Extra environment as raw container env entries (for valueFrom)
+  extraEnv: []
 
-# App Configuration
-apps:
-  flow:
+# service-dispatcher: Flow's Kubernetes dispatcher. Claims tasks from service-core and runs each one
+# as a Tekton TaskRun or a batch/v1 Job in this namespace. Port 7702.
+dispatcher:
+  enabled: true
+  image:
+    repository: /flow-service-dispatcher
+    tag: ""
+  replicaCount: 1
+  zone: semi-trusted
+  resources:
+    requests:
+      memory: "512Mi"
+  # The name this dispatcher registers with. Empty = <namePrefix>-dispatcher
+  name: ""
+  # kube-jobs (plain batch/v1 Jobs, works on any cluster) or tekton (needs the Tekton Pipelines CRDs)
+  executor: kube-jobs
+  # The task types this dispatcher registers for
+  taskTypes: template,custom,script,ai,uploadartifact,downloadartifact
+  # The most tasks run at once; 0 is no cap
+  maxInFlight: 25
+  logs:
+    # Store a finished task's log with service-core (needs core.artifacts)
+    upload: true
+  # Where a running task's log is read from. default = the Kubernetes log API; loki = a Loki
+  # query selecting {boomerang_io_taskrun_ref, boomerang_io_workflow_ref, container=~"task|step-task"}.
+  # The log shipper must map the task pod labels onto the stream with labelmap
+  # (boomerang.io/taskrun-ref -> boomerang_io_taskrun_ref) and the container name as `container`.
+  logging:
+    type: default
+    host: ""
+    port: ""
+  # Workspace PersistentVolumeClaims created for runs
+  workspace:
+    storageClass: ""
+    size: 1Gi
+    # ReadWriteOnce on clusters whose StorageClass has no RWX support
+    accessMode: ReadWriteMany
+  # Task pods
+  tasks:
+    serviceAccount:
+      # The ServiceAccount task pods run under (<namePrefix>-tasks). It has no API access. On
+      # OpenShift, set securityPolicy to the SCC it must be allowed to `use`.
+      create: true
+      name: ""
+      securityPolicy: ""
+    nodeSelector: {}
+    tolerations: []
+    hostAliases: []
+    # Pod runtimeClassName (gVisor, Kata) for every task; blank leaves it unset
+    runtimeClassName: ""
     image:
-      repository: /flow-client-web
-      tag: 4.0.0
-    replicaCount: 1
-    service:
-      type: ClusterIP
-    zone: untrusted
+      pullPolicy: IfNotPresent
+      # Defaults to image.pullSecret
+      pullSecret: ""
+    # Compute resources applied to every task container. Blank leaves that value unset.
     resources:
+      limits:
+        memory: 16Gi
+        ephemeralStorage: 16Gi
+        cpu: ""
       requests:
-        memory: "64Mi"
+        memory: 2Gi
+        ephemeralStorage: 2Gi
+        cpu: ""
+  # The dispatcher's own ServiceAccount and namespace Role
+  serviceAccount:
+    create: true
+    name: ""
+  rbac:
+    create: true
+  env: {}
+  extraEnv: []
 
-# Micro Service Configuration
-# Note: There are if conditions in the template referencing the service name i.e. urbancode
-services:
-  agent:
-    image:
-      repository: /flow-service-agent
-      tag: 1.0.0
-    replicaCount: 1
-    service:
-      type: ClusterIP
-    serviceAccount: null
-    zone: semi-trusted
-    resources:
-      requests:
-        memory: "256Mi"
-  engine:
-    image:
-      repository: /flow-service-engine
-      tag: 1.0.0
-    replicaCount: 1
-    service:
-      type: ClusterIP
-    zone: semi-trusted
-    resources:
-      requests:
-        memory: "512Mi"
-  workflow:
-    image:
-      repository: /flow-service-workflow
-      tag: 4.0.0
-    replicaCount: 1
-    service:
-      type: ClusterIP
-    zone: untrusted
-    resources:
-      requests:
-        memory: "512Mi"
+# client-web: the browser-facing web app. Port 3000, served at /apps/flow.
+web:
+  image:
+    repository: /flow-client-web
+    tag: ""
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  zone: untrusted
+  resources:
+    requests:
+      memory: "128Mi"
+  env: {}
+  extraEnv: []
 
-# Global configuration. This can be overriden by a parent chart.
+# Global configuration. This can be overridden by a parent chart.
 global:
   database:
     mongodb:
+      # Either the full connection string in a Secret...
+      uriSecretName: ""
+      uriSecretKey: mongodb-uri
+      # ...or its parts. The password comes from secretName/secretKey when set, else from
+      # `password` written into the chart's own Secret.
       host: mongodb
       port: 27017
       database: boomerang
@@ -113,10 +223,21 @@ global:
       password: passw0rd
       secretName: mongodb
       secretKey: mongodb-password
-      tlsSecretName:
+      # TLS to MongoDB. The CA certificate (PEM) comes from a Secret and is handed to the driver as a
+      # Spring SSL bundle; no truststore import is needed. Leave caSecretName empty when the server
+      # certificate is signed by a public CA.
+      tls:
+        enabled: false
+        caSecretName: ""
+        caKey: ca.crt
+      # Collection prefix. A v3 install keeps the prefix its chart used: its namePrefix without
+      # `bmrg-`, dashes replaced with underscores (bmrg-flow -> flow).
+      collectionPrefix: flow
   ingress:
     enabled: false
-    root: /flow
+    # Path prefix for the API ingress (<root>/api/v2). The web app's base path /apps/flow is
+    # built into client-web and cannot be prefixed.
+    root: ""
     host: host.example.io
     tlsSecretName: bmrg-tls-cloud
     # The prefix for the annotations inside the ingress definition.
@@ -128,13 +249,20 @@ global:
     enableAppRoot: false
     # Allowance for extra custom ingress annotations
     annotations: {}
+    # Per-client-IP limits on the API ingress (nginx limit-rps / limit-connections). Empty disables.
+    api:
+      limitRps: "50"
+      limitConnections: "50"
+  # Proxy sign-in: an authenticating proxy (OAuth2 Proxy) in front of the web app ingress. The
+  # identity it forwards (X-Forwarded-Email, X-Forwarded-User) is exchanged for a Flow session.
+  # Flow v5 signs users in with OIDC itself (Settings > Auth), so a proxy is only for an identity
+  # provider that is not OIDC, such as GitHub OAuth or an htpasswd file.
   auth:
     enabled: false
-    mode: basic
-    serviceName: bmrg-auth-proxy
-    namespace: bmrg-core
+    mode: oauth
+    serviceName: flow-auth-proxy
+    namespace:
     prefix: /oauth
-    tokenURL: http://bmrg-core-services-auth.bmrg-core.svc.cluster.local/auth/token/validate/external
     signOutRedirect:
 
 hostAliases: []
@@ -144,59 +272,29 @@ proxy:
   host:
   port:
 
-monitoring:
-  instana:
-    enable: false
-    browser:
-      reportingUrl:
-      key:
-  jaeger:
-    enabled: false
-    namespace:
-    agent:
-      host: jaeger-dev-agent
-      port: 6831
-    collector:
-      host: jaeger-dev-collector
-      port: 14268
-    remoteControlledSampler:
-      host: jaeger-dev-agent
-      port: 5778
-
-# Eventing related values
-eventing:
-  enabled: false
-  sinkUrls: 
-
 oauth2proxy:
-  enabled: true
+  enabled: false
   fullnameOverride: flow-auth-proxy
   extraArgs:
     custom-templates-dir: /custom/templates
-    cookie-path: /dev
+    cookie-path: /
     cookie-secure: "true"
-    proxy-prefix: /dev/oauth
-    redirect-url: /dev/oauth/callback
+    proxy-prefix: /oauth
+    redirect-url: /oauth/callback
     skip-provider-button: "false"
     upstream: file:///dev/null
     http-address: 0.0.0.0:4180
-    # Uncomment if basic auth is enabled
-    # basic-auth-password: $(UPSTREAM_AUTH_PASSWORD)
-    # pass-basic-auth: "true"
-    # set-basic-auth: "true"
-  # Uncomment if basic auth is enabled and remove empty array
+    set-xauthrequest: "true"
   extraEnv: []
-  #- name: UPSTREAM_AUTH_PASSWORD
-  #  value: coronet-cottage-nave-idiom-resume
   ingress:
+    className: nginx
     annotations:
-      kubernetes.io/ingress.class: nginx
       nginx.ingress.kubernetes.io/client-body-buffer-size: 12M
       nginx.ingress.kubernetes.io/client-max-body-size: 12M
       nginx.ingress.kubernetes.io/configuration-snippet: |
         proxy_pass_request_body     on;
         proxy_cache                   authentication;
-        proxy_cache_key               $cookie_flow_app_dev;
+        proxy_cache_key               $cookie_flow_app;
         proxy_cache_valid             202 401 3s;
         proxy_cache_lock              on;
         proxy_ignore_headers          Set-Cookie;
@@ -206,28 +304,16 @@ oauth2proxy:
       nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
     enabled: true
     hosts:
-    - app.useboomerang.io
-    path: /dev/oauth
-    pathType: ImplementationSpecific
+    - host.example.io
+    path: /oauth
     tls:
-    - hosts:
-      - app.useboomerang.io
-  htpasswdFile:
-    enabled: true
-    entries:
-    - admin@useboomerang.io:$2y$05$SvuX7bfuQfAk0M4Q0nmZMO8pSrY7s8.i8dTH4WU9PcTqY89pjC71m
-    existingSecret: ""
+    - secretName: bmrg-tls-cloud
+      hosts:
+      - host.example.io
   extraVolumes:
-    - name: custom-templates
-      configMap:
-      # Value of fullNameOverride + '-templates'
-        name: flow-auth-proxy-templates
+  - name: custom-templates
+    configMap:
+      name: flow-auth-proxy-templates
   extraVolumeMounts:
-    - name: custom-templates
-      mountPath: /custom/templates
-
-extraConfig:
-  # services: |
-  #   server.max-http-header-size=64000
-  #   server.tomcat.max-http-header-size=65536
-  #   server.tomcat.max-http-post-size=2097152
+  - name: custom-templates
+    mountPath: /custom/templates

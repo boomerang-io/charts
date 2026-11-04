@@ -1,0 +1,18 @@
+{{- $tier := "rbac" -}}
+{{- $context := . -}}
+{{- if and .Values.dispatcher.enabled .Values.dispatcher.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $context "component" "dispatcher" ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "bmrg.name" (dict "context" $context "component" "dispatcher" ) }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "flow.dispatcher.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}

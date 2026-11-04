@@ -1,61 +1,71 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "apps" -}}
+{{- $k := "flow" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- range $k, $v := $values.apps }}
+{{- $v := $values.web -}}
+{{- $name := include "flow.web.serviceName" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+  name: {{ $name }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
   replicas: {{ $v.replicaCount }}
   selector:
     matchLabels:
-      name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+      name: {{ $name }}
       {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone ) | nindent 6 }}
   template:
     metadata:
       labels:
-        name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+        name: {{ $name }}
         {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
     spec:
       containers:
         - name: {{ $tier }}-{{ $k }}-cntr
-          image: "{{ $values.image.registry }}{{ $v.image.repository }}:{{ $v.image.tag }}"
+          image: {{ include "flow.image" (dict "context" $context "image" $v.image) | quote }}
           imagePullPolicy: {{ $values.image.pullPolicy }}
           env:
+            # The base path is built into client-web; it matches the /apps/flow ingress path.
             - name: APP_ROOT
-              value: "{{ default "" $.Values.global.ingress.root }}/{{ $tier }}/{{ $k }}"
+              value: "/apps/flow"
             - name: PORT
               value: "3000"
-            {{- if and ($.Values.monitoring.instana.enable) ($.Values.monitoring.instana.browser.key) }}
-            - name: INSTANA_REPORTING_URL
-              value: "{{ $.Values.monitoring.instana.browser.reportingUrl }}"
-            - name: INSTANA_KEY
-              value: "{{ $.Values.monitoring.instana.browser.key }}"
-            {{- end }}
-            - name: PRODUCT_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}"
-            - name: PRODUCT_APPS_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/apps"
+            # Browser-facing API URL, shown where the app surfaces a copyable webhook or event URL
             - name: PRODUCT_SERVICE_ENV_URL
-              value: "https://{{ $.Values.global.ingress.host }}{{ $.Values.global.ingress.root }}/_api/v2"
+              value: "{{ default "" $values.global.ingress.root }}/api/v2"
+            # Every service-core call is made server-side at this in-cluster address
+            - name: CORE_SERVICE_INTERNAL_ORIGIN
+              value: "http://{{ include "flow.core.serviceName" $ }}:7700"
+            {{- with $v.env }}
+            {{- include "flow.env.map" . | trim | nindent 12 }}
+            {{- end }}
+            {{- with $v.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
           - containerPort: 3000
             name: {{ $platform }}-port-cntr
             protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
+          livenessProbe:
             httpGet:
-              path: /health
+              path: /apps/flow/health
               port: {{ $platform }}-port-cntr
               scheme: HTTP
-            initialDelaySeconds: 20
-            periodSeconds: 60
-            successThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /apps/flow/health
+              port: {{ $platform }}-port-cntr
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
             timeoutSeconds: 5
           {{- include "bmrg.resources.chart" (dict "context" $.Values "item" $v "tier" $tier ) | nindent 10 }}
       {{- if $values.image.pullSecret }}
@@ -63,5 +73,3 @@ spec:
       - name: {{ $values.image.pullSecret }}
       {{- end }}
       restartPolicy: Always
----
-{{- end }}

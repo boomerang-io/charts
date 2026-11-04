@@ -1,0 +1,58 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "flow" -}}
+{{- $tier := "apps" -}}
+{{- $k := "flow" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- if $values.global.ingress.enabled -}}
+{{- $name := include "flow.web.serviceName" . -}}
+{{- $prefix := $values.global.ingress.annotationsPrefix -}}
+# The browser talks only to client-web. With global.auth.enabled the authenticating proxy guards
+# this route and the identity it returns (X-Forwarded-Email, X-Forwarded-User, Authorization) is
+# passed to client-web, whose server exchanges it for a Flow session.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
+  annotations:
+    {{- if $values.global.auth.enabled }}
+    {{- with $values.global.auth }}
+    {{ $prefix }}/auth-signin: "https://$host{{ .prefix }}/{{ if eq .mode "basic" }}sign_in{{ else }}start{{ end }}?rd=$escaped_request_uri"
+    {{ $prefix }}/auth-url: "http://{{ .serviceName }}.{{ default $.Release.Namespace .namespace }}.svc.cluster.local{{ .prefix }}/auth"
+    {{ $prefix }}/auth-response-headers: "Authorization, X-Auth-Request-User, X-Auth-Request-Email"
+    {{- end }}
+    {{ $prefix }}/configuration-snippet: |
+      {{- include "bmrg.ingress.config.auth_proxy_access_control" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_authorization" $ | nindent 6 }}
+      {{- include "bmrg.ingress.config.auth_proxy_user_email" $ | nindent 6 }}
+    {{- end }}
+    {{ $prefix }}/ssl-redirect: "true"
+    {{- if $values.global.ingress.enableAppRoot }}
+    {{ $prefix }}/app-root: "/apps/flow"
+    {{- end }}
+    {{ $prefix }}/proxy-body-size: 8m
+    {{- with $values.global.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ $values.global.ingress.class }}
+  rules:
+    - host: {{ $values.global.ingress.host }}
+      http:
+        paths:
+          - path: /apps/flow
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  name: {{ $platform }}-port-svc
+  tls:
+    - hosts:
+        - {{ $values.global.ingress.host }}
+      {{- if $values.global.ingress.tlsSecretName }}
+      secretName: {{ $values.global.ingress.tlsSecretName }}
+      {{- end }}
+{{- end }}

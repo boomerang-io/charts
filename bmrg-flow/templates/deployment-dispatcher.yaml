@@ -1,0 +1,155 @@
+{{- $platform := "bmrg" -}}
+{{- $product := "flow" -}}
+{{- $tier := "service" -}}
+{{- $k := "dispatcher" -}}
+{{- $values := .Values -}}
+{{- $context := . -}}
+{{- $v := $values.dispatcher -}}
+{{- if $v.enabled -}}
+{{- $secretName := include "flow.secretName" . -}}
+{{- $name := include "flow.dispatcher.serviceName" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
+spec:
+  replicas: {{ $v.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ $name }}
+      {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        name: {{ $name }}
+        {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 8 }}
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secrets.yaml") $ | sha256sum }}
+    spec:
+      serviceAccountName: {{ include "flow.dispatcher.serviceAccountName" $ }}
+      containers:
+        - name: "{{ $tier }}-{{ $k }}-cntr"
+          image: {{ include "flow.image" (dict "context" $context "image" $v.image) | quote }}
+          imagePullPolicy: "{{ $values.image.pullPolicy }}"
+          env:
+          {{- include "flow.env.common" $ | nindent 10 }}
+          {{- /* Engine (service-core) */}}
+          - name: {{ include "flow.dispatcher.engineUrlEnv" $ }}
+            value: {{ include "flow.dispatcher.engineUrl" $ | quote }}
+          - name: FLOW_ENGINE_DISPATCHER_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ default $secretName $values.core.security.existingSecret }}
+                key: FLOW_BOOTSTRAP_TOKEN
+          {{- /* Registration */}}
+          - name: FLOW_DISPATCHER_NAME
+            value: {{ include "flow.dispatcher.name" $ | quote }}
+          - name: FLOW_DISPATCHER_TASK_TYPES
+            value: {{ $v.taskTypes | quote }}
+          - name: FLOW_DISPATCHER_TASK_MAX_IN_FLIGHT
+            value: {{ $v.maxInFlight | quote }}
+          - name: FLOW_DISPATCHER_LOGS_URL
+            value: "http://{{ $name }}.{{ .Release.Namespace }}.svc.cluster.local:7702/api/v1/logs/stream"
+          - name: FLOW_DISPATCHER_LOGS_UPLOAD
+            value: {{ $v.logs.upload | quote }}
+          {{- /* Executor and namespace */}}
+          - name: DISPATCHER_EXECUTOR
+            value: {{ $v.executor | quote }}
+          - name: KUBE_NAMESPACE
+            value: {{ .Release.Namespace | quote }}
+          - name: KUBE_IMAGE_PULLPOLICY
+            value: {{ $v.tasks.image.pullPolicy | quote }}
+          - name: KUBE_IMAGE_PULLSECRET
+            value: {{ default $values.image.pullSecret $v.tasks.image.pullSecret | default "" | quote }}
+          {{- /* Workspaces */}}
+          - name: KUBE_WORKSPACE_STORAGE_CLASS
+            value: {{ $v.workspace.storageClass | quote }}
+          - name: KUBE_WORKSPACE_STORAGE_SIZE
+            value: {{ $v.workspace.size | quote }}
+          - name: KUBE_WORKSPACE_STORAGE_ACCESSMODE
+            value: {{ $v.workspace.accessMode | quote }}
+          {{- /* Task pods */}}
+          - name: DISPATCHER_TASKS_SERVICEACCOUNT
+            value: {{ include "flow.tasks.serviceAccountName" $ | quote }}
+          - name: DISPATCHER_TASKS_NODESELECTOR
+            value: {{ $v.tasks.nodeSelector | toJson | quote }}
+          - name: DISPATCHER_TASKS_TOLERATIONS
+            value: {{ $v.tasks.tolerations | toJson | quote }}
+          - name: DISPATCHER_TASKS_HOSTALIASES
+            value: {{ $v.tasks.hostAliases | toJson | quote }}
+          - name: DISPATCHER_TASKS_RUNTIMECLASSNAME
+            value: {{ $v.tasks.runtimeClassName | quote }}
+          {{- with $v.tasks.resources }}
+          - name: KUBE_RESOURCE_LIMIT_MEMORY
+            value: {{ .limits.memory | quote }}
+          - name: KUBE_RESOURCE_LIMIT_EPHEMERAL_STORAGE
+            value: {{ .limits.ephemeralStorage | quote }}
+          - name: KUBE_RESOURCE_LIMIT_CPU
+            value: {{ .limits.cpu | quote }}
+          - name: KUBE_RESOURCE_REQUEST_MEMORY
+            value: {{ .requests.memory | quote }}
+          - name: KUBE_RESOURCE_REQUEST_EPHEMERAL_STORAGE
+            value: {{ .requests.ephemeralStorage | quote }}
+          - name: KUBE_RESOURCE_REQUEST_CPU
+            value: {{ .requests.cpu | quote }}
+          {{- end }}
+          {{- /* Task logs */}}
+          - name: DISPATCHER_LOGGING_TYPE
+            value: {{ $v.logging.type | quote }}
+          {{- if eq $v.logging.type "loki" }}
+          - name: DISPATCHER_LOGGING_HOST
+            value: {{ $v.logging.host | quote }}
+          - name: DISPATCHER_LOGGING_PORT
+            value: {{ $v.logging.port | quote }}
+          {{- end }}
+          {{- if $values.general.enable.debug }}
+          - name: LOGGING_LEVEL_IO_BOOMERANG_DISPATCHER
+            value: DEBUG
+          {{- end }}
+          {{- with $v.env }}
+          {{- include "flow.env.map" . | trim | nindent 10 }}
+          {{- end }}
+          {{- with $v.extraEnv }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          ports:
+          - containerPort: 7702
+            name: {{ $platform }}-port-cntr
+            protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /health
+              port: {{ $platform }}-port-cntr
+              scheme: HTTP
+            periodSeconds: 5
+            failureThreshold: 36
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ $platform }}-port-cntr
+              scheme: HTTP
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ $platform }}-port-cntr
+              scheme: HTTP
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 5
+          {{- include "bmrg.resources.chart" (dict "context" $.Values "item" $v "tier" $tier ) | nindent 10 }}
+      {{- with $.Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $values.image.pullSecret }}
+      imagePullSecrets:
+      - name: {{ $values.image.pullSecret }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}

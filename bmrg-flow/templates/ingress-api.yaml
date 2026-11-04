@@ -1,10 +1,14 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "api" -}}
-{{- $k := "workflow" -}}
 {{- $values := .Values -}}
 {{- $context := . -}}
-{{- if $.Values.global.ingress.enabled -}}
+{{- if $values.global.ingress.enabled -}}
+{{- $root := default "" $values.global.ingress.root -}}
+{{- $prefix := $values.global.ingress.annotationsPrefix -}}
+# service-core's public API: direct API use with a Flow token, webhooks and CloudEvents, and the
+# GitHub and Slack callbacks (/api/v2/integration/...). Never behind the sign-in proxy: these
+# callers authenticate with tokens or signatures, not a browser session.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -12,45 +16,51 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
   annotations:
-    {{ $.Values.global.ingress.annotationsPrefix}}/proxy-connect-timeout: "600"
-    {{ $.Values.global.ingress.annotationsPrefix}}/configuration-snippet: |
-      if ($request_method = 'OPTIONS') {
-      add_header 'Access-Control-Allow-Origin' $http_origin;
-      add_header 'Access-Control-Allow-Credentials' 'true';
-      add_header 'Access-Control-Allow-Methods' 'GET,POST,PUT,PATCH,DELETE,OPTIONS';
-      add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
-      add_header 'Access-Control-Max-Age' 1728000;
-      add_header 'Content-Length' 0;
-      add_header 'Content-Type' 'text/plain charset=UTF-8';
-      return 204;}
-    {{ $.Values.global.ingress.annotationsPrefix}}/ssl-redirect: "true"
-    {{ $.Values.global.ingress.annotationsPrefix}}/rewrite-target: /{{ $tier }}/v2/$2
-    {{ $.Values.global.ingress.annotationsPrefix}}/client-max-body-size: 1m
-    {{ $.Values.global.ingress.annotationsPrefix}}/limit-rps: "10"
-    {{ $.Values.global.ingress.annotationsPrefix}}/limit-rpm: "300"
-    {{ $.Values.global.ingress.annotationsPrefix}}/limit-connections: "10"
-    {{ $.Values.global.ingress.annotationsPrefix}}/use-regex: "true"
-{{- with $.Values.global.ingress.annotations }}
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{ $prefix }}/proxy-connect-timeout: "600"
+    # Streamed responses (a running task's log, an artifact download) stay open for up to two hours
+    {{ $prefix }}/proxy-read-timeout: "7200"
+    {{ $prefix }}/proxy-send-timeout: "7200"
+    {{ $prefix }}/ssl-redirect: "true"
+    {{- if $root }}
+    {{ $prefix }}/rewrite-target: /$1
+    {{ $prefix }}/use-regex: "true"
+    {{- end }}
+    {{ $prefix }}/proxy-body-size: 16m
+    {{- with $values.global.ingress.api.limitRps }}
+    {{ $prefix }}/limit-rps: {{ . | quote }}
+    {{- end }}
+    {{- with $values.global.ingress.api.limitConnections }}
+    {{ $prefix }}/limit-connections: {{ . | quote }}
+    {{- end }}
+    {{- with $values.global.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  ingressClassName: {{ $.Values.global.ingress.class}}
+  ingressClassName: {{ $values.global.ingress.class }}
   rules:
-    - host: {{ $.Values.global.ingress.host }}
+    - host: {{ $values.global.ingress.host }}
       http:
         paths:
-          - path: {{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{- end }}/{{ $tier }}/v2(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: {{ $root }}/{{ if $root }}(api/v2(?:/.*)?)${{ else }}api/v2{{ end }}
+            pathType: {{ if $root }}ImplementationSpecific{{ else }}Prefix{{ end }}
             backend:
               service:
-                name: {{ include "bmrg.name" (dict "context" $context "tier" "services" "component" $k ) }}
+                name: {{ include "flow.core.serviceName" $ }}
                 port:
                   name: {{ $platform }}-port-svc
+          {{- if $values.general.enable.apidocs }}
+          - path: {{ $root }}/{{ if $root }}(api/docs(?:/.*)?)${{ else }}api/docs{{ end }}
+            pathType: {{ if $root }}ImplementationSpecific{{ else }}Prefix{{ end }}
+            backend:
+              service:
+                name: {{ include "flow.core.serviceName" $ }}
+                port:
+                  name: {{ $platform }}-port-svc
+          {{- end }}
   tls:
     - hosts:
-        - {{ $.Values.global.ingress.host }}
-      {{- if $.Values.global.ingress.tlsSecretName }}
-      secretName: {{ $.Values.global.ingress.tlsSecretName }}
+        - {{ $values.global.ingress.host }}
+      {{- if $values.global.ingress.tlsSecretName }}
+      secretName: {{ $values.global.ingress.tlsSecretName }}
       {{- end }}
----
 {{- end }}
