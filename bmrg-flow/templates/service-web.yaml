@@ -1,25 +1,24 @@
 {{- $platform := "bmrg" -}}
 {{- $product := "flow" -}}
 {{- $tier := "apps" -}}
-{{- $values := .Values -}}
+{{- $k := "flow" -}}
 {{- $context := . -}}
-{{- range $k, $v := $values.apps }}
+{{- $v := .Values.web -}}
+{{- $name := include "flow.web.serviceName" . -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+  name: {{ $name }}
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier "component" $k ) | nindent 4 }}
 spec:
   type: {{ $v.service.type }}
   ports:
     - name: {{ $platform }}-port-svc
-      port: 80
+      port: 3000
       targetPort: {{ $platform }}-port-cntr
       protocol: TCP
   selector:
-    name: {{ include "bmrg.name" (dict "context" $context "tier" $tier "component" $k ) }}
+    name: {{ $name }}
     {{- include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k "zone" $v.zone) | nindent 4 }}
   sessionAffinity: None
----
-{{- end }}

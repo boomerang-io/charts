@@ -1,0 +1,81 @@
+{{- $tier := "rbac" -}}
+{{- $context := . -}}
+{{- if and .Values.dispatcher.enabled .Values.dispatcher.rbac.create }}
+# The dispatcher's own namespace Role. Each verb is one the dispatcher's Kubernetes client
+# makes (service-dispatcher/src/main/java/io/boomerang/kube, dispatcher/TaskRuntimeReconciler.java,
+# dispatcher/WorkspaceReconciler.java). Task pods run under dispatcher.tasks.serviceAccount, not this.
+# Verify: kubectl auth can-i create jobs --as=system:serviceaccount:<namespace>:{{ include "flow.dispatcher.serviceAccountName" . }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "bmrg.name" (dict "context" $context "component" "dispatcher" ) }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
+rules:
+  # kube-jobs executor: a Job per task, watched by label, deleted with its pods
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - delete
+  # Task pods are found by label for their status, termination message and log
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  # Workspace volumes, created for a run and released by the workspace reconciler
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - get
+  - list
+  - delete
+  # A task's script, projected into its pod
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - delete
+{{- if eq .Values.dispatcher.executor "tekton" }}
+  # tekton executor: a TaskRun per task; cancel writes the status subresource
+- apiGroups:
+  - tekton.dev
+  resources:
+  - taskruns
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - tekton.dev
+  resources:
+  - taskruns/status
+  verbs:
+  - get
+  - update
+  - patch
+{{- end }}
+{{- end }}

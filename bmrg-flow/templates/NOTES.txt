@@ -1,30 +1,50 @@
-{{- $platform := "bmrg" -}}
-{{- $product := "flow" -}}
-{{- $tier := "apps" -}}
 {{- $values := .Values -}}
-{{- $context := . -}}
-** Activation **
-To complete the one time setup and activation of Core you need to retrieve the one time code and enter into the platform. This is only needed in some scenarios.
+Boomerang Flow {{ .Chart.AppVersion }} (chart {{ .Chart.Version }})
 
-1. Retrieve the code by running
+** Starting **
+service-core migrates the database before it serves anything. Follow it with:
 
-  kubectl get secret --namespace {{ .Release.Namespace }} {{ include "bmrg.name" (dict "context" $context "tier" "secrets" ) }} -o jsonpath="{.data.FLOW_OTC}" | base64 --decode
+  kubectl rollout status --namespace {{ .Release.Namespace }} deployment/{{ include "flow.core.serviceName" . }}
 
-2. Navigate to the application (link provided in Access below)
+A v3 database can take minutes; the startup probe allows {{ mul $values.core.startupProbe.periodSeconds $values.core.startupProbe.failureThreshold }} seconds.
+{{- if $values.global.ingress.enabled }}
 
-** Navigation **
-You can access this application by navigating to;
-{{- range $k, $v := $values.apps }}
-  https://{{ $.Values.global.ingress.host }}{{ if $.Values.global.ingress.root }}{{ $.Values.global.ingress.root }}{{ end }}/{{ $tier }}/{{ $k }}
+** Access **
+  Web app:  https://{{ $values.global.ingress.host }}/apps/flow
+  API:      {{ include "flow.externalUrl" . }}/api/v2
+{{- if $values.general.enable.apidocs }}
+  API docs: {{ include "flow.externalUrl" . }}/api/docs/swagger-ui
 {{- end }}
+{{- else }}
+
+** Access **
+No ingress was created (global.ingress.enabled=false). Port-forward the web app:
+
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "flow.web.serviceName" . }} 3000:3000
+  open http://localhost:3000/apps/flow
+{{- end }}
+
+** Sign-in **
+{{- if $values.global.auth.enabled }}
+Proxy mode: the authenticating proxy at {{ $values.global.auth.serviceName }}{{ if $values.global.auth.namespace }}.{{ $values.global.auth.namespace }}{{ end }} guards the web app.
+{{- else }}
+OIDC is configured in Settings > Auth (issuer and client id); until both are set, sign-in is proxy mode
+and expects an authenticating proxy in front of the web app (global.auth).
+{{- end }}
+
+** Activation **
+On an empty database the first person to sign in activates the instance and becomes its admin by
+entering the activation code. It works once; after activation it is inert.
+
+  kubectl get secret --namespace {{ .Release.Namespace }} {{ include "flow.secretName" . }} -o jsonpath="{.data.FLOW_ACTIVATION_CODE}" | base64 --decode
+
+** Service token **
+The bootstrap token (also the dispatcher's credential) is in the Secret:
+
+  kubectl get secret --namespace {{ .Release.Namespace }} {{ include "flow.secretName" . }} -o jsonpath="{.data.FLOW_BOOTSTRAP_TOKEN}" | base64 --decode
 {{- if $values.general.enable.debug }}
 
 ** Debug **
-To debug the backend services, you can access directly using;
-{{- $tier := "services" -}}
-  {{- range $k, $v := $values.services }}
- - {{ $k }}:
-  export POD_NAME=$(kubectl get pods --namespace {{ $.Release.Namespace }} -l {{ include "bmrg.labels.standard" (dict "context" $context "platform" $platform "product" $product "tier" $tier "component" $k) | replace ": " "=" | replace "\n" "," }} -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward $POD_NAME 8080:80
-  {{- end }}
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "flow.core.serviceName" . }} 7700:7700
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "flow.dispatcher.serviceName" . }} 7702:7702
 {{- end }}

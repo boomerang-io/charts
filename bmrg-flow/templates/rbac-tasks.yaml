@@ -1,0 +1,47 @@
+{{- $tier := "rbac" -}}
+{{- $context := . -}}
+{{- $tasks := .Values.dispatcher.tasks.serviceAccount -}}
+{{- if and .Values.dispatcher.enabled $tasks.create }}
+{{- $name := include "flow.tasks.serviceAccountName" . }}
+# The ServiceAccount task pods run under (dispatcher.tasks.serviceaccount). It needs no API access;
+# the Role below only exists to let it `use` a SecurityContextConstraint on OpenShift.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
+{{- if $tasks.securityPolicy }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - {{ $tasks.securityPolicy }}
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $name }}
+subjects:
+- kind: ServiceAccount
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- end }}
