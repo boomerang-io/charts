@@ -83,6 +83,7 @@ spec:
           - name: FLOW_AUTH_OIDC_CLIENT_ID
             value: {{ $v.auth.oidc.clientId | quote }}
           {{- end }}
+          # Always rendered: an absent FLOW_SECURITY_BOOTSTRAP_TOKEN revokes the stored token at start
           - name: FLOW_SECURITY_BOOTSTRAP_TOKEN
             valueFrom:
               secretKeyRef:

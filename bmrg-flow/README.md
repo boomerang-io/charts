@@ -6,7 +6,7 @@ Boomerang Flow is a modern cloud native workflow automation tool built on top of
 
 [How to install?](https://www.useboomerang.io/docs/boomerang-flow/installing/installing)
 
-This chart (6.x) deploys Flow v5 and needs Flow 5.0.0-beta.38 or later. Flow v5 is one product line: one tag builds the three images this chart runs, and every image tag defaults to the chart's `appVersion`.
+This chart (6.x) deploys Flow v5 and needs Flow 5.0.0-beta.39 or later. Flow v5 is one product line: one tag builds the three images this chart runs, and every image tag defaults to the chart's `appVersion`.
 
 | Component | Image | Port | Role |
 | --- | --- | --- | --- |
@@ -29,6 +29,7 @@ This chart (6.x) deploys Flow v5 and needs Flow 5.0.0-beta.38 or later. Flow v5 
 Chart 6.0.0 is a breaking change in values and objects:
 
 - The loader Job and the `flow-service-loader` image are gone. service-core migrates the database itself before it serves HTTP. Read the Flow release notes on upgrading from v3 first: back up the database, check for users sharing an email, and expect no HTTP until the migrations finish.
+- The migration accepts a database left by chart 4.13.5 to 4.14.3 (flow-loader 0.5.9). An older v3 install is refused at startup and must upgrade to one of those charts first. A v4 database (chart 5.x) is refused as well; restore the v3 database it came from.
 - `apps.*` and `services.*` are replaced by `core`, `dispatcher` and `web`. The agent, engine and workflow services are now service-core; the agent is now the dispatcher.
 - The agent and worker RBAC is replaced by the dispatcher's own ServiceAccount and Role (`templates/rbac-role-dispatcher.yaml`) and an optional task ServiceAccount (`dispatcher.tasks.serviceAccount`).
 - `tasks.*` moved under `dispatcher.*`. `database.mongodb.*` stays under `global.database.mongodb` and gains `uriSecretName` and `collectionPrefix`.
@@ -67,7 +68,7 @@ The following tables list the configurable parameters of the chart and their def
 | `core.security.enabled` | `flow.security.enabled`. Set false only for a headless embedded engine. | `true` |
 | `core.auth.oidc.issuer`, `core.auth.oidc.clientId` | OIDC sign-in, seeded into the auth settings while they are empty (an admin's later change wins). The issuer must be an absolute https URL. | `""` |
 | `core.security.adminClaim.name`, `values`, `trustForwardedToken` | Let the identity provider decide who is an admin: a token whose claim `name` holds any of the comma-separated `values`. A proxy-forwarded JWT is read only with `trustForwardedToken`. Both empty leaves admin to the first sign-in. | `""`, `""`, `false` |
-| `core.security.bootstrapToken` | `flow.security.bootstrap-token`: a `bfg_` token with 32+ further characters, registered as a global service token and used by the dispatcher. Generated and kept when empty. | generated |
+| `core.security.bootstrapToken` | `flow.security.bootstrap-token`: a `bfg_` token with 32+ further characters, registered as a global service token and used by the dispatcher. Generated and kept when empty. The chart always sets it; clearing the variable on service-core revokes the stored token at the next start. | generated |
 | `core.security.existingSecret` | Secret with key `FLOW_BOOTSTRAP_TOKEN` | |
 | `core.encrypt.secret`, `core.encrypt.salt` | `flow.encrypt.*`, the key secured settings are encrypted with. Required; generated and kept when empty. | generated |
 | `core.encrypt.existingSecret` | Secret with keys `FLOW_ENCRYPT_SECRET`, `FLOW_ENCRYPT_SALT` | |
