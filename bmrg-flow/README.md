@@ -107,10 +107,10 @@ The dispatcher reaches service-core at `http://<core service>:7700`, passed as `
 
 #### Dispatcher RBAC
 
-The Role in `templates/rbac-role-dispatcher.yaml` grants only what the dispatcher's Kubernetes client calls: `jobs` create/get/list/watch/delete, `pods` get/list, `pods/log` get, `persistentvolumeclaims` and `configmaps` create/get/list/delete, and with the Tekton executor `taskruns` create/get/list/watch/delete plus `taskruns/status` get/update/patch. Verify with:
+The Role in `templates/rbac-role-dispatcher.yaml` grants only what the dispatcher's Kubernetes client calls: `jobs` create/get/list/watch/delete/deletecollection, `pods` get/list, `pods/log` get, `persistentvolumeclaims` create/get/list/watch/delete/deletecollection, `configmaps` create/deletecollection, and with the Tekton executor `taskruns` create/get/list/watch/delete/deletecollection plus `taskruns/status` get/update. The `deletecollection` verbs matter: the client removes finished Jobs, ConfigMaps, TaskRuns and run-workspace PVCs with one label-selected DELETE on the collection, and without them cleanup answers 403 and the resources accumulate. Verify with:
 
 ```sh
-kubectl auth can-i create jobs --namespace <namespace> --as=system:serviceaccount:<namespace>:<namePrefix>-dispatcher
+kubectl auth can-i deletecollection jobs --namespace <namespace> --as=system:serviceaccount:<namespace>:<namePrefix>-dispatcher
 ```
 
 ### client-web (`web`)
