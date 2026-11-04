@@ -1,10 +1,12 @@
 {{- $tier := "rbac" -}}
 {{- $context := . -}}
 {{- if and .Values.dispatcher.enabled .Values.dispatcher.rbac.create }}
-# The dispatcher's own namespace Role. Each verb is one the dispatcher's Kubernetes client
+# The dispatcher's own namespace Role. Each verb is one the dispatcher's Kubernetes client (fabric8)
 # makes (service-dispatcher/src/main/java/io/boomerang/kube, dispatcher/TaskRuntimeReconciler.java,
-# dispatcher/WorkspaceReconciler.java). Task pods run under dispatcher.tasks.serviceAccount, not this.
-# Verify: kubectl auth can-i create jobs --as=system:serviceaccount:<namespace>:{{ include "flow.dispatcher.serviceAccountName" . }}
+# dispatcher/WorkspaceReconciler.java). A label-selected delete (withLabels(..).delete()) is sent as
+# one DELETE on the collection, which Kubernetes authorises as `deletecollection`, not `delete`.
+# Task pods run under dispatcher.tasks.serviceAccount, not this account.
+# Verify: kubectl auth can-i deletecollection jobs --as=system:serviceaccount:<namespace>:{{ include "flow.dispatcher.serviceAccountName" . }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -12,7 +14,7 @@ metadata:
   labels:
     {{- include "bmrg.labels.chart" (dict "context" $context "tier" $tier ) | nindent 4 }}
 rules:
-  # kube-jobs executor: a Job per task, watched by label, deleted with its pods
+  # kube-jobs executor: a Job per task, watched by label, removed by label with its pods
 - apiGroups:
   - batch
   resources:
@@ -23,6 +25,7 @@ rules:
   - list
   - watch
   - delete
+  - deletecollection
   # Task pods are found by label for their status, termination message and log
 - apiGroups:
   - ""
@@ -37,7 +40,7 @@ rules:
   - pods/log
   verbs:
   - get
-  # Workspace volumes, created for a run and released by the workspace reconciler
+  # Workspace volumes: created and waited on until bound, released by label by the workspace reconciler
 - apiGroups:
   - ""
   resources:
@@ -46,19 +49,19 @@ rules:
   - create
   - get
   - list
+  - watch
   - delete
-  # A task's script, projected into its pod
+  - deletecollection
+  # A task's script, projected into its pod and removed by label with the Job
 - apiGroups:
   - ""
   resources:
   - configmaps
   verbs:
   - create
-  - get
-  - list
-  - delete
+  - deletecollection
 {{- if eq .Values.dispatcher.executor "tekton" }}
-  # tekton executor: a TaskRun per task; cancel writes the status subresource
+  # tekton executor: a TaskRun per task, removed by label; cancel updates the status subresource
 - apiGroups:
   - tekton.dev
   resources:
@@ -69,6 +72,7 @@ rules:
   - list
   - watch
   - delete
+  - deletecollection
 - apiGroups:
   - tekton.dev
   resources:
@@ -76,6 +80,5 @@ rules:
   verbs:
   - get
   - update
-  - patch
 {{- end }}
 {{- end }}
